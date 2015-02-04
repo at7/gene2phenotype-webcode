@@ -1,0 +1,79 @@
+.display_attributes {
+  float: left;
+  width: 60%
+}
+
+.edit_attributes {
+  float: right;
+  display: block;
+  margin-right: 23%
+}
+
+.header_gene_disease {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.content_gene_disease {
+  display: none;
+}
+
+.title {
+  float: left;
+}
+
+.switch {
+  margin-left: 1em;
+  margin-top: 2em;
+  padding: 0;
+}
+
+.chart svg {
+  height: 400px;
+}
+
+dl {
+ width:100%;
+ overflow:hidden;
+}
+
+dt {
+  float: left;
+  background: #D4D8D1;
+  clear: left;
+}
+
+dd {
+  margin-left: 1em;
+  float: left;
+}
+
+.edit_account_link {
+  margin-left: 0.5em;
+  float: left;
+}
+
+.clear {
+  clear: both;
+}
+
+.edit_gene_disease {
+  background: #D4D8D1;
+  border-top-style: solid;
+  display: none;
+  margin-bottom: 8em;
+}
+
+#register_form {
+  display: none;
+}
+
+#register_item {
+  display: none;
+}
+
+#account dd form {
+  display: inline;
+}
+
+
