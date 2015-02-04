@@ -1,0 +1,27 @@
+<div id="search" class="container">
+  <TMPL_IF NAME=message>
+    <div class="alert alert-<TMPL_VAR NAME=message_type>" role="alert">
+      <p><TMPL_VAR NAME=message></p>
+    </div>
+  </TMPL_IF>
+  <div id="search-body">
+    <form id="search_field" method="get" action="./handler.cgi" style='width:100%'>
+      <fieldset>
+        <p class="ui-widget">
+          <input id="query" type="text" name="search_term" style='width:70%'/>
+          <input id="button" type="submit" class="btn btn-primary btn-sm"/>
+        </p>
+      </fieldset>
+    </form>
+    <div class="hint">
+      <p>
+        For example:
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">CRYBA1</var>,
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">ZEB2</var>,
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">TBX1</var>,
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">CHANARIN-DORFMAN SYNDROME</var> or 
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">MITOCHONDRIAL COMPLEX III DEFICIENCY, NUCLEAR TYPE 1</var> 
+      </p>
+    </div>
+  </div> <!-- End search body-->
+</div> <!--End search container-->

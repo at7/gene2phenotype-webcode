@@ -1,0 +1,69 @@
+<div class="gene">
+  <h3>Gene</h3>
+  <div>
+  <dl>
+    <TMPL_IF NAME=gene_mim>
+      <dt>MIM</dt>
+      <dd><a href="http://omim.org/entry/<TMPL_VAR NAME=gene_mim>"><TMPL_VAR NAME=gene_mim></a></dd>
+    </TMPL_IF>
+    <TMPL_IF NAME=ensembl_stable_id>
+      <dt>Ensembl stable ID</dt>
+      <dd><TMPL_VAR NAME=ensembl_stable_id></dd>
+    </TMPL_IF>
+      <dt>Organ specificity</dt>
+      <dd><TMPL_VAR NAME=organ_specificity_list></dd>
+  </dl>
+  </div>
+  <div class="clear"></div>
+  <div class="variations">
+    <TMPL_IF NAME=variations>
+    <h4>Variants</h4>
+    <div class="chart" data="<TMPL_VAR NAME=consequence_counts ESCAPE=HTML>" >
+      <svg></svg>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Mutation</th>
+          <th>Consequence</th>
+          <th>Variant names</th>
+          <th>Publication</th>
+        </tr>
+      </thead>
+      <tbody>
+        <TMPL_LOOP NAME=variations>
+          <tr>
+            <td><TMPL_VAR NAME=mutation></td>
+            <td><TMPL_VAR NAME=consequence></td>
+            <td>
+              <TMPL_IF NAME=dbsnp_ids>
+                <ul>
+                  <TMPL_LOOP NAME=dbsnp_ids>
+                    <li><a href="http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=<TMPL_VAR NAME=name>"><TMPL_VAR NAME=name></a></li>
+                  </TMPL_LOOP>
+                </ul>
+              </TMPL_IF>
+              <TMPL_IF NAME=clinvar_ids>
+                <ul>
+                  <TMPL_LOOP NAME=clinvar_ids>
+                    <li><a href="http://www.ncbi.nlm.nih.gov/clinvar?term=<TMPL_VAR NAME=name>"><TMPL_VAR NAME=name></a></li>
+                  </TMPL_LOOP>
+                </ul>
+              </TMPL_IF>
+            </td>
+            <TMPL_IF NAME=title>
+              <TMPL_IF NAME=pmid>
+                <td><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></td>
+              <TMPL_ELSE>
+                <td><TMPL_VAR NAME=title></td>
+            </TMPL_IF>
+            <TMPL_ELSE>
+              <td>No reference information associated</td>
+            </TMPL_IF>
+          </tr>
+        </TMPL_LOOP> <!-- end variation loop-->
+      </tbody>
+    </table>
+    </TMPL_IF>
+  </div> <!--end variations-->
+</div>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+  <head>
+    <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8"/-->
+    <title>gene2phenotype</title>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/nv.d3.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/G2P.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/docs.min.css"/>
+    <script type="text/javascript" src="../htdocs/js/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="../htdocs/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../htdocs/js/nv.d3.js"></script>
+    <script type="text/javascript" src="../htdocs/js/behavior.js"></script>
+    <script type="text/javascript" src="../htdocs/js/piecharts.js"></script>
+  </head>
+
+  <body>
+    <TMPL_INCLUDE NAME="Header.tmpl">
+    <TMPL_INCLUDE NAME="Search.tmpl">
+
+    <TMPL_IF NAME="display_search_results">
+      <TMPL_INCLUDE NAME="SearchResults.tmpl">
+    </TMPL_IF> 
+ 
+    <TMPL_IF NAME=display_gfd>
+      <div class="container">
+        <h3 class="title" >Gene: <em><TMPL_VAR NAME=gene_symbol></em> Disease: <em><TMPL_VAR NAME=disease_name></em></h3>
+        <TMPL_INCLUDE NAME="GeneDiseaseAttributes.tmpl">
+        <TMPL_INCLUDE NAME="Disease.tmpl">
+        <TMPL_INCLUDE NAME="Gene.tmpl">
+      </div> <!-- END Results-->
+    </TMPL_IF>
+    <TMPL_IF NAME=display_disease>
+      <div class="container">
+        <TMPL_INCLUDE NAME="Disease.tmpl">
+      </div> <!-- END Results-->
+    </TMPL_IF>
+    <TMPL_IF NAME=display_gene>
+      <div class="container">
+        <TMPL_INCLUDE NAME="Gene.tmpl">
+      </div> <!-- END Results-->
+    </TMPL_IF>
+
+    <TMPL_INCLUDE NAME="Footer.tmpl">
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<div>
+  <div class="clear"></div>
+  <h3>Gene-Disease Attributes</h3>
+  <div id="DDD_category">
+    <div class="gene_disease_attributes">
+      <div class="display_attributes">    
+        <dl>
+          <dt>DDD category</dt>
+          <dd><TMPL_VAR NAME=DDD_category></dd>
+        </dl>
+      </div> <!--End display attributes-->
+      <div class="edit_attributes">
+        <TMPL_IF NAME=edit_gene_disease>
+          <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
+        <TMPL_ELSE>
+          <form id="login_form" action="./handler.cgi" method=get>
+            <input id="button" type="submit" name="login" value="Edit" class="btn btn-primary btn-sm edit"/>
+          </form>
+        </TMPL_IF>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <TMPL_VAR NAME=edit_DDD_category>
+  </div> <!--End DDD category-->
+
+  <TMPL_LOOP NAME=gfd_actions>
+    <div class="gene_disease_attributes">
+      <div class="display_attributes">
+        <dl>
+          <dt>Allelic requirement</dt>
+          <dd><TMPL_VAR NAME=allelic_requirement></dd>
+          <dt>Mutation consequence summary</dt>
+          <dd><TMPL_VAR NAME=mutation_consequence_summary></dd>
+        </dl>
+      </div>
+      <div class="edit_attributes">
+        <TMPL_IF NAME=edit_gene_disease>
+          <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
+        <TMPL_ELSE>
+          <form id="login_form" action="./handler.cgi" method=get>
+            <input id="button" type="submit" name="login" value="Edit" class="btn btn-primary btn-sm edit"/>
+          </form>
+        </TMPL_IF>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <TMPL_VAR NAME=edit_gfd_action>
+  </TMPL_LOOP>  
+
+  <div class="gene_disease_attributes">
+    <div class="edit_attributes">
+      <TMPL_IF NAME=edit_gene_disease>
+        <input type="button" name="show_edit_content" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
+      <TMPL_ELSE>
+        <form id="login_form" action="./handler.cgi" method=get>
+          <input id="button" type="submit" name="login" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
+        </form>
+      </TMPL_IF>
+    </div>
+    <div class="clear"></div>
+  </div>
+  <TMPL_VAR NAME=add_gfd_action_form>
+</div> <!--End gene-disease-->

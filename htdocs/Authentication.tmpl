@@ -1,0 +1,39 @@
+<div id="login">
+  <ul>
+    <TMPL_IF NAME=logged_in>
+      <li>
+        <form id="logout_form" action="./handler.cgi" method="get">
+          <fieldset>
+            <input type="hidden" name="logout" value="logout"/>
+            <a href='#' onclick="document.getElementById('logout_form').submit();">Sign out</a>
+          </fieldset>
+        </form>
+      </li>
+      <li>
+        <form id="account_form" action="./handler.cgi" method="get">
+          <fieldset>
+            <input type="hidden" name="account" value="account"/>
+            <a href='#' onclick="document.getElementById('account_form').submit();">Account</a>
+          </fieldset>
+        </form>
+      </li>
+    <TMPL_ELSE>
+      <li>
+        <form id="login_form" action="./handler.cgi" method="get">
+          <fieldset>
+            <input type="hidden" name="login" value="login"/>
+            <a href='#' onclick="document.getElementById('login_form').submit();">Sign in</a>
+          </fieldset>
+        </form>
+      </li>
+      <li id="register_item">
+        <form id="register_form" action="./handler.cgi" method="get">
+          <fieldset>
+            <input type="hidden" name="login" value="register"/>
+            <a href='#' onclick="document.getElementById('register_form').submit();">Register</a>
+          </fieldset>
+        </form>
+      </li>
+    </TMPL_IF>
+  </ul>
+</div>

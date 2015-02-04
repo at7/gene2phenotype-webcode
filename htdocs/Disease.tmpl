@@ -1,0 +1,10 @@
+<div class="disease">
+  <h3>Disease</h3>
+  <dl>
+    <TMPL_IF NAME=disease_mim>
+      <dt>MIM</dt>
+      <dd><a href="http://omim.org/entry/<TMPL_VAR NAME=disease_mim>"><TMPL_VAR NAME=disease_mim></a></dd>
+    </TMPL_IF>
+  </dl>
+  <div class="clear"></div>
+</div>

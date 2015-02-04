@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+  <head>
+    <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8"/-->
+    <title>gene2phenotype</title>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/nv.d3.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/G2P.css"/>
+    <link rel="stylesheet" type="text/css" href="../htdocs/css/docs.min.css"/>
+    <script type="text/javascript" src="../htdocs/js/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="../htdocs/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../htdocs/js/nv.d3.js"></script>
+    <script type="text/javascript" src="../htdocs/js/behavior.js"></script>
+    <script type="text/javascript" src="../htdocs/js/piecharts.js"></script>
+  </head>
+  <body>
+    <TMPL_INCLUDE NAME="Header.tmpl">
+    <div class="container">
+      <TMPL_IF NAME=message>
+        <div class="alert alert-<TMPL_VAR NAME=message_type>" role="alert">
+          <p><TMPL_VAR NAME=message></p>
+        </div>
+      </TMPL_IF>
+      <TMPL_IF NAME=show_login> 
+      <div id="login" class="container">
+        <h2>Login</h2>
+        <form id="login_form" method="post" action="./handler.cgi">
+          <div class="form-group">
+            <label>Email address</label>
+            <fieldset>
+              <input type="text" class="form-control" name="email" placeholder="Enter email">
+            </fieldset>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <fieldset>
+              <input type="password" class="form-control" name="password" placeholder="Password">
+            </fieldset>
+          </div>
+          <input id="button" type="submit" class="btn btn-primary" name="login_button" value="Sign in"/>
+        </form> 
+
+        <form id="forgot_pwd" action="./handler.cgi" method="get">
+          <fieldset>
+            <input type="hidden" name="forgot_pwd" value="forgot_pwd"/>
+          </fieldset>
+          <a href='#' onclick="document.getElementById('forgot_pwd').submit();">Forgot password?</a>
+        </form>
+      </div> <!--End login-->
+      </TMPL_IF>
+
+      <TMPL_IF NAME=recover_pwd> 
+      <div id="login" class="container">
+        <h2>Recover password</h2>
+        <form id="send_mail_form" role="form" method="post" action="./handler.cgi">
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <fieldset>
+              <input type="text" class="form-control" name="email" placeholder="Enter email">
+            </fieldset>
+          </div>
+          <input id="button" type="submit" class="btn btn-primary" name="send_recover_pwd_mail_button" value="Send mail"/>
+        </form> 
+      </div> <!--End login-->
+      </TMPL_IF>
+
+      <TMPL_IF NAME=recover_pwd_enter_new_pwd>
+        <div id="login" class="container">
+          <h2>Recover password</h2>
+          <form id="reset_pwd_form" role="form" method="post" action="./handler.cgi">
+            <div class="form-group">
+              <label>Email address</label>
+              <fieldset>
+                <input type="text" class="form-control" name="email" placeholder="<TMPL_VAR NAME=email>" value="<TMPL_VAR NAME=email>"  readonly>
+              </fieldset>
+            </div>
+            <div class="form-group">
+              <label>New password</label>
+              <fieldset>
+                <input type="password" class="form-control" name="new_password" placeholder="New password">
+              </fieldset>
+            </div>
+            <div class="form-group">
+              <label>Retype password</label>
+              <fieldset>
+                <input type="password" class="form-control" name="retyped_password" placeholder="Retype password">
+              </fieldset>
+            </div>
+            <input id="button" type="submit" class="btn btn-primary" name="send_recover_pwd_enter_new_pwd_button" value="Reset"/>
+          </form> 
+        </div> <!--End login-->
+      </TMPL_IF>
+
+      <TMPL_IF NAME=account_info>
+        <h2>Account</h2>
+        <dl>
+          <dt>Username</dt>
+          <dd><TMPL_VAR NAME=username></dd>
+          <span class="edit_account_link">
+            <form id="edit_username_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="edit_username" value="edit_username"/>
+                <a href='#' onclick="document.getElementById('edit_username_form').submit();">Edit</a>
+              </fieldset>
+            </form>
+          </span>
+
+          <dt>Email</dt>
+          <dd><TMPL_VAR NAME=email></dd>
+          <span class="edit_account_link">
+            <form id="edit_email_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="edit_email" value="edit_email"/>
+                <a href='#' onclick="document.getElementById('edit_email_form').submit();">Edit</a>
+              </fieldset>
+            </form>
+          </span>
+
+          <dt>Password</dt>
+          <dd>
+            <form id="edit_pwd_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="edit_pwd" value="edit_pwd"/>
+                <a href='#' onclick="document.getElementById('edit_pwd_form').submit();">Edit</a>
+              </fieldset>
+            </form>
+          </dd>
+        </dl>
+        <div class="clear"></div>
+      </TMPL_IF>
+
+      <TMPL_IF NAME=edit_pwd>
+        <form method="post" action="./handler.cgi">
+          <div class="form-group">
+            <label>Current password</label>
+            <input type="password" class="form-control" name="current_pwd" placeholder="Enter current password">
+          </div>
+          <div class="form-group">
+            <label>New password</label>
+            <input type="password" class="form-control" name="new_pwd" placeholder="Enter new password">
+          </div>
+          <div class="form-group">
+            <label>Retype new password</label>
+            <input type="password" class="form-control" name="retyped_pwd" placeholder="Retype new password">
+          </div>
+          <input id="button" type="submit" class="btn btn-primary" name="change_pwd_button" value="Change password"/>
+          <input id="button" type="submit" class="btn btn-primary" name="cancel_edit_account_data_button" value="Cancel"/>
+        </form> 
+      </TMPL_IF>
+
+      <TMPL_IF NAME=edit_username>
+        <form method="post" action="./handler.cgi">
+          <div class="form-group">
+            <label>Current username</label>
+            <input type="text" class="form-control" name="current_username" placeholder="<TMPL_VAR NAME=current_username>" value="<TMPL_VAR NAME=current_username>"  readonly>
+          </div>
+          <div class="form-group">
+            <label>New username</label>
+            <input type="text" class="form-control" name="new_username" placeholder="Enter new username">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" name="pwd" placeholder="Enter password">
+          </div>
+          <input id="button" type="submit" class="btn btn-primary" name="change_username_button" value="Change username"/>
+          <input id="button" type="submit" class="btn btn-primary" name="cancel_edit_account_data_button" value="Cancel"/>
+        </form> 
+      </TMPL_IF>
+
+      <TMPL_IF NAME=edit_email>
+        <form method="post" action="./handler.cgi">
+          <div class="form-group">
+            <label>Current email</label>
+            <input type="text" class="form-control" name="current_email" placeholder="<TMPL_VAR NAME=current_email>" value="<TMPL_VAR NAME=current_email>"  readonly>
+          </div>
+          <div class="form-group">
+            <label>New email</label>
+            <input type="text" class="form-control" name="new_email" placeholder="Enter new email">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" name="pwd" placeholder="Enter password">
+          </div>
+          <input id="button" type="submit" class="btn btn-primary" name="change_email_button" value="Change email"/>
+          <input id="button" type="submit" class="btn btn-primary" name="cancel_edit_account_data_button" value="Cancel"/>
+        </form> 
+      </TMPL_IF>
+
+      <TMPL_IF NAME=show_register>
+      <div id="register" class="container">
+        <h2>Register</h2>
+        <form method="post" action="./handler.cgi">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" name="username" placeholder="Enter a username">
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="text" class="form-control" name="email" placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" name="password" placeholder="Enter a password">
+          </div>
+          <input type="button" class="btn btn-primary" name="register_button" value="submit"/>
+        </form> 
+      </div> <!--End login-->
+      </TMPL_IF>
+    </div>
+    <TMPL_INCLUDE NAME="Footer.tmpl">
+  </body>
+</html>
