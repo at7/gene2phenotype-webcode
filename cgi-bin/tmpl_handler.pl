@@ -4,13 +4,13 @@ use warnings;
 use HTML::Template;
 use DBI;
 use JSON;
-use lib "../lib/gene2phenotype/modules";
+use lib "../../lib/gene2phenotype/modules";
 
 use G2P::Registry;
 use constant TMPL_FILE => "../htdocs/G2P.tmpl";
 my $tmpl = new HTML::Template( filename => TMPL_FILE );
 
-my $configuration_file = '../htdocs/registry';
+my $configuration_file = '../../config/registry';
 
 my $registry = G2P::Registry->new($configuration_file);
 
