@@ -12,16 +12,12 @@ use warnings;
 
 require "./tmpl_handler.pl"; # cgi-bin
 
-my $password_file = "../gene2phenotype_users";
-my $db_config = "../config/registry";
+my $password_file = "../../gene2phenotype_users";
+my $db_config = "../../config/registry";
 my $config = init_CGI();
 my $cgi = $config->{cgi};
 my $session = $config->{session};
 my $search_term = $config->{search_term};
-
-foreach my $key (sort(keys %ENV)) {
-    print "$key = $ENV{$key}<br>\n";
-}
 
 sub init_CGI {
   my $config = {};
