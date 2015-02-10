@@ -162,17 +162,21 @@ sub send_recover_pwd_mail {
     return;
   }
 
-  my $session_id = $session->id();
-  my $to = 'anja@ebi.ac.uk';
-  my $from = 'anja@ebi.ac.uk';
-  my $subject = 'Test Email';
-  my $message = 'http://localhost/~anjathormann/ddg2p/cgi-bin/handler.cgi?recover_pwd=recover_pwd&CGISESSID=' . $session_id;
+  my $server_name = $ENV{SERVER_NAME};
+  my $request_uri = $ENV{REQUEST_URI};
 
-  my %mail = (To      => 'anja@ebi.ac.uk',
-              From    => 'anja@ebi.ac.uk',
+  my $session_id = $session->id();
+  my $to = $email;
+  my $from = 'anja@ebi.ac.uk';
+  my $subject = 'Reset your password for gene2phenotype website';
+  my $message = "http://$server_name" . $request_uri . "?recover_pwd=recover_pwd&CGISESSID=$session_id";
+
+  my %mail = (To      => $to,
+              From    => $from,
               Subject => $subject,
               Message => $message,
            );
+
   $mail{smtp} = 'smtp.ebi.ac.uk';
   my $success = sendmail(%mail);
   if ($success) {
