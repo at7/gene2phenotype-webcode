@@ -369,7 +369,7 @@ sub get_edit_DDD_category_form {
     '<div class="form-group">',
     '<label>DDD category:</label>',
     '<select name="DDD_category">', "\n");
-  foreach my $value (keys %$attribs) {
+  foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
     if ($value eq $DDD_category) {
       $form .= "<option value=\"$id\" selected>$value</option>\n"
@@ -399,7 +399,7 @@ sub get_add_gfd_action {
 
   my $allelic_requirement_form = "<div class=\"form-group\">\n<label>Allelic requirement:</label><br>\n";
   
-  foreach my $value (keys %$attribs) {
+  foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
     $allelic_requirement_form .= "<input type=\"checkbox\" name=\"allelic_requirement\" value=\"$id\">$value<br>\n";
   }
@@ -411,7 +411,7 @@ sub get_add_gfd_action {
     '<div class="form-group">',
     '<label>Mutation consequence summary:</label>',
     '<select name="mutation_consequence">', "\n");
-  foreach my $value (keys %$attribs) {
+  foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
     $mutation_consequence_form .= "<option value=\"$id\">$value</option>\n"
   }
@@ -467,7 +467,7 @@ sub get_allelic_requirement_form {
 
   my $form = "<div class=\"form-group\">\n<label>Allelic requirement:</label><br>\n";
   
-  foreach my $value (keys %$attribs) {
+  foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
     if (grep $_ eq $value, @requirements) {
       $form .= "<input type=\"checkbox\" name=\"allelic_requirement\" value=\"$id\" checked>$value<br>\n";
@@ -489,7 +489,7 @@ sub get_mutation_consequence_form {
     '<div class="form-group">',
     '<label>Mutation consequence summary:</label>',
     '<select name="mutation_consequence">', "\n");
-  foreach my $value (keys %$attribs) {
+  foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
     if ($value eq $mutation_consequence) {
       $form .= "<option value=\"$id\" selected>$value</option>\n"
