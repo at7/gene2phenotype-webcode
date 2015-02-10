@@ -2,6 +2,7 @@
  
 # PERL MODULES WE WILL BE USING
 use strict;
+use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/share/perl5';
 use CGI;
 use DBI;
 use DBD::mysql;
@@ -14,7 +15,7 @@ print "Content-type: application/json\n\n";
 # CONFIG VARIABLES
 my $platform = "mysql";
 
-my $configuration_file = '../../config/registry';
+my $configuration_file = '../../../config/registry';
 my $fh = FileHandle->new($configuration_file, 'r');
 my $params = {};
 while (<$fh>) {
