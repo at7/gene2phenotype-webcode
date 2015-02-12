@@ -15,7 +15,7 @@ print "Content-type: application/json\n\n";
 # CONFIG VARIABLES
 my $platform = "mysql";
 
-my $configuration_file = '../../../config/registry';
+my $configuration_file = '../../../../config/registry';
 my $fh = FileHandle->new($configuration_file, 'r');
 my $params = {};
 while (<$fh>) {
