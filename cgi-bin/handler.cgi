@@ -120,7 +120,9 @@ elsif ($cgi->param('add_GFD_action')) {
   $session->flush();
   store_GFD_action($session);
 }
-
+elsif ($cgi->param('new_gene_disease')) {
+  new_gene_disease($session);
+}
 else {
   show_default_page($session);
 }
