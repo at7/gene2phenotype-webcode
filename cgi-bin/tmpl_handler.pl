@@ -310,6 +310,7 @@ sub add_new_gene_disease {
   my $disease_name = shift;
   if (!$gene_name || !$disease_name) {
     new_gene_disease($session, 'add_gene_disease_pair');
+    return; 
   }
 
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
