@@ -50,6 +50,9 @@ my $constants = {
     type => 'danger',},
   'session_ids_dont_match' => {
     msg => 'Session ids don\'t match. Please contact g2p-help@ebi.ac.uk.',
+    type => 'danger',},
+  'add_gene_disease_pair' => {
+    msg => 'You must provide a gene name and a disease name.',
     type => 'danger',
   },
 };
@@ -293,10 +296,45 @@ sub display_data {
 
 sub new_gene_disease {
   my $session = shift;
+  my $message = shift;
   my $logged_in = set_login_status($tmpl, $session);
+  set_message($tmpl, $message) if ($message);
   $tmpl->param(new_gene_disease => 1);
   $tmpl->param(add_new_gene_disease => $logged_in);
   print $tmpl->output();
+}
+
+sub add_new_gene_disease {
+  my $session = shift;
+  my $gene_name = shift;
+  my $disease_name = shift;
+  if (!$gene_name || !$disease_name) {
+    new_gene_disease($session, 'add_gene_disease_pair');
+  }
+
+  my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
+  my $disease_adaptor = $registry->get_adaptor('disease');
+  my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
+
+  my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($gene_name);
+
+  my $disease = $disease_adaptor->fetch_by_name($disease_name);
+  if (!$disease) {
+    $disease = G2P::Disease->new({name => $disease_name});
+    $disease = $disease_adaptor->store($disease); 
+  }
+
+  my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_GenomicFeature_Disease($genomic_feature, $disease);
+
+  if (!$genomic_feature_disease) {
+    $genomic_feature_disease = G2P::GenomicFeatureDisease->new({
+      genomic_feature_id => $genomic_feature->dbID(),
+      disease_id => $disease->dbID(),
+    });
+    $genomic_feature_disease = $genomic_feature_disease_adaptor->store($genomic_feature_disease);
+  }
+
+  display_data($session, 'gfd', $genomic_feature_disease->dbID);
 }
 
 sub get_genomic_feature_attributes {
