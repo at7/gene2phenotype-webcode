@@ -9,7 +9,12 @@
       <label>Disease name</label>
       <input id="query_disease_name" type="text" name="disease_name" placeholder="Select disease name" class="form-control">
     </div>
-    <input type="hidden" name="add_gene_disease" value="add_gene_disease"/>
-    <button type="submit" class="btn btn-primary btn-sm">Add</button>    
+    <TMPL_IF NAME=add_new_gene_disease>
+      <input id="button" type="submit" name="add_gene_disease" value="Add" class="btn btn-primary btn-sm"/>
+    <TMPL_ELSE>
+      <form id="login_form" action="./handler.cgi" method=get>
+        <input id="button" type="submit" name="login" value="Add" class="btn btn-primary btn-sm"/>
+      </form>
+    </TMPL_IF>
   </form>
 </div>
