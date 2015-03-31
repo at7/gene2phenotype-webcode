@@ -4,6 +4,16 @@ $(document).ready(function(){
     minLength: 2,
     select: function(event, ui) {}
   });
+  $("#query_gene_name").autocomplete({
+    source: "autocomplete_gene_name.cgi",
+    minLength: 2,
+    select: function(event, ui) {}
+  });
+  $("#query_disease_name").autocomplete({
+    source: "autocomplete_disease_name.cgi",
+    minLength: 2,
+    select: function(event, ui) {}
+  });
 
   $(".header_gene_disease").click(function(){
     $header = $(this);
