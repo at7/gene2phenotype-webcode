@@ -294,8 +294,8 @@ sub display_data {
 sub new_gene_disease {
   my $session = shift;
   $tmpl->param(new_gene_disease => 1);
-  my $DDD_category_form = get_DDD_category_form();
-  $tmpl->param(DDD_category_form => $DDD_category_form);
+#  my $DDD_category_form = get_DDD_category_form();
+#  $tmpl->param(DDD_category_form => $DDD_category_form);
   print $tmpl->output();
 }
 
