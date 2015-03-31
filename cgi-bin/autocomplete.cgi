@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
  
 # PERL MODULES WE WILL BE USING
+# http://www.jensbits.com/2011/05/09/jquery-ui-autocomplete-widget-with-perl-and-mysql/
 use strict;
 use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/share/perl5';
 use CGI;
