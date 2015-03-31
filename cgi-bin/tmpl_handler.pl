@@ -293,7 +293,9 @@ sub display_data {
 
 sub new_gene_disease {
   my $session = shift;
+  my $logged_in = set_login_status($tmpl, $session);
   $tmpl->param(new_gene_disease => 1);
+  $tmpl->param(add_new_gene_disease => $logged_in);
   print $tmpl->output();
 }
 
