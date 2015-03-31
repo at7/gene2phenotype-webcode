@@ -1,6 +1,10 @@
+.new_gene_disease {
+  width: 80%;
+}
+
 .display_attributes {
   float: left;
-  width: 60%
+  width: 60%;
 }
 
 .edit_attributes {
