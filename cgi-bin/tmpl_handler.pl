@@ -369,20 +369,14 @@ sub get_DDD_category_form {
   my $attribs = $attribute_adaptor->get_attribs_by_type_value('DDD_Category');
   my $form = join("\n",
     '<div>',
-    '<form role="form" method="get" action="./handler.cgi">',
-    '<div class="form-group">',
     '<label>DDD category:</label>',
     '<select name="DDD_category">', "\n");
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
     $form .= "<option value=\"$id\">$value</option>\n"
   }
+  $form .= "</select>\n</div>\n";
   return $form;
-}
-
-sub get_GFD_action {
-
-
 }
 
 sub get_edit_DDD_category_form {
