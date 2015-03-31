@@ -291,6 +291,14 @@ sub display_data {
   }
 }
 
+sub new_gene_disease {
+  my $session = shift;
+  $tmpl->param(new_gene_disease => 1);
+  my $DDD_category_form = get_DDD_category_form();
+  $tmpl->param(DDD_category_form => $DDD_category_form);
+  print $tmpl->output();
+}
+
 sub get_genomic_feature_attributes {
   my $genomic_feature = shift;
   my $gene_symbol = $genomic_feature->gene_symbol;
@@ -354,6 +362,27 @@ sub get_variations {
     };
   }
   return \@variations_tmpl;
+}
+
+sub get_DDD_category_form {
+  my $attribute_adaptor = $registry->get_adaptor('attribute');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('DDD_Category');
+  my $form = join("\n",
+    '<div>',
+    '<form role="form" method="get" action="./handler.cgi">',
+    '<div class="form-group">',
+    '<label>DDD category:</label>',
+    '<select name="DDD_category">', "\n");
+  foreach my $value (sort keys %$attribs) {
+    my $id = $attribs->{$value};
+    $form .= "<option value=\"$id\">$value</option>\n"
+  }
+  return $form;
+}
+
+sub get_GFD_action {
+
+
 }
 
 sub get_edit_DDD_category_form {
