@@ -123,6 +123,11 @@ elsif ($cgi->param('add_GFD_action')) {
 elsif ($cgi->param('new_gene_disease')) {
   new_gene_disease($session);
 }
+elsif ($cgi->param('add_gene_disease')) {
+  my $gene_name = $cgi->param('gene_name');
+  my $disease_name = $cgi->param('disease_name');
+  add_new_gene_disease($session, $gene_name, $disease_name);
+}
 else {
   show_default_page($session);
 }
