@@ -61,5 +61,13 @@
         </div>
       </li>
     </TMPL_IF>     
+    <li>
+      <form id="new_gene_disease" action="./handler.cgi" method="get">
+        <fieldset>
+          <input type="hidden" name="new_gene_disease" value="new_gene_disease"/>
+        </fieldset>  
+        <h4><a href='#' onclick="document.getElementById('new_gene_disease').submit();"><strong>New Gene-Disease</strong></a></h4>
+      </form>
+    </li>
   </ul>
 </div>
