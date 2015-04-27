@@ -1,0 +1,24 @@
+<div>
+  <TMPL_IF NAME=gfd_logs>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Date</th>
+          <th>Action</th>
+          <th>DDD category</th>
+        </tr>
+      </thead>
+      <tbody>
+        <TMPL_LOOP NAME=gfd_logs>
+          <tr>
+            <td><TMPL_VAR NAME=user></td>
+            <td><TMPL_VAR NAME=date></td>
+            <td><TMPL_VAR NAME=action></td>
+            <td><TMPL_VAR NAME=DDD_category></td>
+          </tr>
+        </TMPL_LOOP> <!-- end gfd_logs-->
+      </tbody>
+    </table>
+  </TMPL_IF>
+</div>
