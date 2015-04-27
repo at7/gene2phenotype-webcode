@@ -315,6 +315,10 @@ sub add_new_gene_disease {
     return; 
   }
 
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
   my $disease_adaptor = $registry->get_adaptor('disease');
   my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
@@ -334,7 +338,7 @@ sub add_new_gene_disease {
       genomic_feature_id => $genomic_feature->dbID(),
       disease_id => $disease->dbID(),
     });
-    $genomic_feature_disease = $genomic_feature_disease_adaptor->store($genomic_feature_disease);
+    $genomic_feature_disease = $genomic_feature_disease_adaptor->store($genomic_feature_disease, $user);
   }
 
   display_data($session, 'gfd', $genomic_feature_disease->dbID);
@@ -582,12 +586,17 @@ sub variation_consequence_counts {
 
 sub update_DDD_category {
   my $session = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
   my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
   my $DDD_category_attrib = $session->param('DDD_category_attrib');
   my $genomic_feature_disease_id = $session->param('genomic_feature_disease_id');
   my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_dbID($genomic_feature_disease_id);
   $genomic_feature_disease->DDD_category_attrib($DDD_category_attrib);
-  $genomic_feature_disease = $genomic_feature_disease_adaptor->update($genomic_feature_disease); 
+  $genomic_feature_disease = $genomic_feature_disease_adaptor->update($genomic_feature_disease, $user); 
   my $GFD_id = $genomic_feature_disease->dbID;
   display_data($session, 'gfd', $GFD_id); 
 }
