@@ -266,6 +266,8 @@ sub display_data {
       consequence_counts => $counts,
       edit_gene_disease => $logged_in,
     });  
+    my $gfd_logs = get_gfd_logs($genomic_feature_disease);
+    $tmpl->param(gfd_logs => $gfd_logs);
     $tmpl->param(display_gfd => 1);
     print $tmpl->output();
   } elsif ($search_type eq 'disease') {
@@ -401,6 +403,22 @@ sub get_variations {
     };
   }
   return \@variations_tmpl;
+}
+
+sub get_gfd_logs {
+  my $genomic_feature_disease = shift;
+  my $gfda = $registry->get_adaptor('genomic_feature_disease');
+  my $gfd_log_entries = $gfda->fetch_log_entries();
+  my @log_entries = ();
+  foreach my $entry (@$gfd_log_entries) {
+    push @log_entries, {
+      user => $entry->get_User()->username, 
+      date => $entry->created,
+      action => $entry->action,
+      DDD_category => $entry->DDD_category,
+    };    
+  } 
+  return \@log_entries;
 }
 
 sub get_edit_DDD_category_form {
