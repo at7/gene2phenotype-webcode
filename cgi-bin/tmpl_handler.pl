@@ -408,7 +408,7 @@ sub get_variations {
 sub get_gfd_logs {
   my $genomic_feature_disease = shift;
   my $gfda = $registry->get_adaptor('genomic_feature_disease');
-  my $gfd_log_entries = $gfda->fetch_log_entries();
+  my $gfd_log_entries = $gfda->fetch_log_entries($genomic_feature_disease);
   my @log_entries = ();
   foreach my $entry (@$gfd_log_entries) {
     push @log_entries, {
