@@ -34,7 +34,9 @@ sub init_CGI {
 
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
-  print $cgi->header( -cookie => $cookie );
+  if (!$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action')) {
+    print $cgi->header( -cookie => $cookie );
+  }
   $cgi->param('CGISESSID', $session_id);
 
   my $search_term = $session->param('search_term');
@@ -43,6 +45,7 @@ sub init_CGI {
   $config->{cgi} = $cgi;
   $config->{session} = $session;
   $config->{search_term} = $search_term;  
+  $config->{cookie} = $cookie;
   return $config;
 }
 
@@ -98,7 +101,12 @@ elsif ($cgi->param('edit_DDD_category')) {
   $session->param('DDD_category_attrib', $DDD_category_attrib);
   $session->param('genomic_feature_disease_id', $genomic_feature_disease_id);
   $session->flush(); 
-  update_DDD_category($session);
+  my $gfd_id = update_DDD_category($session);
+  my $cookie = $config->{cookie};
+  my $server_name = $ENV{SERVER_NAME};
+  my $script_name = $ENV{SCRIPT_NAME};
+  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$gfd_id";
+  print $cgi->redirect(-URL => $url, -cookie => $cookie);
 }
 elsif ($cgi->param('edit_GFD_action')) {
   my $allelic_requirement_attribs = join(',', $cgi->param('allelic_requirement'));
@@ -108,7 +116,12 @@ elsif ($cgi->param('edit_GFD_action')) {
   $session->param('mutation_consequence_attrib', $mutation_consequence_attrib);
   $session->param('GFD_action_id', $GFD_action_id);
   $session->flush();
-  update_GFD_action($session);
+  my $gfd_id = update_GFD_action($session);
+  my $cookie = $config->{cookie};
+  my $server_name = $ENV{SERVER_NAME};
+  my $script_name = $ENV{SCRIPT_NAME};
+  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$gfd_id";
+  print $cgi->redirect(-URL => $url, -cookie => $cookie);
 }
 elsif ($cgi->param('add_GFD_action')) {
   my $allelic_requirement_attribs = join(',', $cgi->param('allelic_requirement'));
