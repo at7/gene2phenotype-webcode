@@ -597,8 +597,7 @@ sub update_DDD_category {
   my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_dbID($genomic_feature_disease_id);
   $genomic_feature_disease->DDD_category_attrib($DDD_category_attrib);
   $genomic_feature_disease = $genomic_feature_disease_adaptor->update($genomic_feature_disease, $user); 
-  my $GFD_id = $genomic_feature_disease->dbID;
-  display_data($session, 'gfd', $GFD_id); 
+  return $genomic_feature_disease->dbID;
 }
 
 sub update_GFD_action {
@@ -611,9 +610,7 @@ sub update_GFD_action {
   $GFD_action->allelic_requirement_attrib($allelic_requirement_attribs);  
   $GFD_action->mutation_consequence_attrib($mutation_consquence_attrib);
   $GFD_action = $GFD_action_adaptor->update($GFD_action);
- 
-  my $GFD_id = $GFD_action->genomic_feature_disease_id;
-  display_data($session, 'gfd', $GFD_id); 
+  return $GFD_action->genomic_feature_disease_id;
 }
 
 sub store_GFD_action {
