@@ -664,6 +664,5 @@ sub store_GFD_action {
   my $GFD_adaptor = $registry->get_adaptor('genomic_feature_disease');
   my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
   my $gene_symbol = $GFD->get_GenomicFeature->gene_symbol;
-  display_data($session, 'gfd', $GFD_id); 
 }
 
