@@ -432,7 +432,7 @@ sub get_gfda_logs {
   my $gfdaa = $registry->get_adaptor('genomic_feature_disease_action');
   my $gfd_actions = $genomic_feature_disease->get_all_GenomicFeatureDiseaseActions;
   my @log_entries = ();
-  foreach my $gfd_action (@$gfd_acions) {
+  foreach my $gfd_action (@$gfd_actions) {
     my $gfd_action_log_entries = $gfdaa->fetch_log_entries($gfd_action);
     foreach my $entry (@$gfd_action_log_entries) {
       push @log_entries, {
