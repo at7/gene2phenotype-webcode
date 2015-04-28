@@ -34,7 +34,7 @@ sub init_CGI {
 
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
-  if (!$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action')) {
+  if (!$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action') && !$cgi->param('add_GFD_action')) {
     print $cgi->header( -cookie => $cookie );
   }
   $cgi->param('CGISESSID', $session_id);
@@ -132,6 +132,11 @@ elsif ($cgi->param('add_GFD_action')) {
   $session->param('GFD_id', $GFD_id);
   $session->flush();
   store_GFD_action($session);
+  my $cookie = $config->{cookie};
+  my $server_name = $ENV{SERVER_NAME};
+  my $script_name = $ENV{SCRIPT_NAME};
+  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$GFD_id";
+  print $cgi->redirect(-URL => $url, -cookie => $cookie);
 }
 elsif ($cgi->param('new_gene_disease')) {
   new_gene_disease($session);
