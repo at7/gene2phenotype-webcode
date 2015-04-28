@@ -267,7 +267,9 @@ sub display_data {
       edit_gene_disease => $logged_in,
     });  
     my $gfd_logs = get_gfd_logs($genomic_feature_disease);
+    my $gfda_logs = get_gfda_logs($genomic_feature_disease);
     $tmpl->param(gfd_logs => $gfd_logs);
+    $tmpl->param(gfda_logs => $gfda_logs);
     $tmpl->param(display_gfd => 1);
     print $tmpl->output();
   } elsif ($search_type eq 'disease') {
@@ -422,6 +424,26 @@ sub get_gfd_logs {
       DDD_category => $entry->DDD_category,
     };    
   } 
+  return \@log_entries;
+}
+
+sub get_gfda_logs {
+  my $genomic_feature_disease = shift;
+  my $gfdaa = $registry->get_adaptor('genomic_feature_disease_action');
+  my $gfd_actions = $genomic_feature_disease->get_all_GenomicFeatureDiseaseActions;
+  my @log_entries = ();
+  foreach my $gfd_action (@$gfd_acions) {
+    my $gfd_action_log_entries = $gfdaa->fetch_log_entries($gfd_action);
+    foreach my $entry (@$gfd_action_log_entries) {
+      push @log_entries, {
+        user => $entry->get_User()->username, 
+        date => $entry->created,
+        action => $entry->action,
+        allelic_requirement => $entry->allelic_requirement,
+        mutation_consequence => $entry->mutation_consequence,
+      };    
+    } 
+  }
   return \@log_entries;
 }
 
@@ -602,6 +624,11 @@ sub update_DDD_category {
 
 sub update_GFD_action {
   my $session = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
   my $GFD_action_adaptor = $registry->get_adaptor('genomic_feature_disease_action');
   my $allelic_requirement_attribs = $session->param('allelic_requirement_attribs');
   my $mutation_consquence_attrib = $session->param('mutation_consequence_attrib');
@@ -609,7 +636,7 @@ sub update_GFD_action {
   my $GFD_action = $GFD_action_adaptor->fetch_by_dbID($GFD_action_id);
   $GFD_action->allelic_requirement_attrib($allelic_requirement_attribs);  
   $GFD_action->mutation_consequence_attrib($mutation_consquence_attrib);
-  $GFD_action = $GFD_action_adaptor->update($GFD_action);
+  $GFD_action = $GFD_action_adaptor->update($GFD_action, $user);
   return $GFD_action->genomic_feature_disease_id;
 }
 
