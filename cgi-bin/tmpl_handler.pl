@@ -643,6 +643,10 @@ sub update_GFD_action {
 sub store_GFD_action {
   my $session = shift;
 
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
   my $allelic_requirement_attrib = $session->param('allelic_requirement_attribs');
   my $mutation_consequence_attrib = $session->param('mutation_consequence_attrib');
   my $GFD_id = $session->param('GFD_id');
@@ -655,7 +659,7 @@ sub store_GFD_action {
   });
 
   my $GFD_action_adaptor = $registry->get_adaptor('genomic_feature_disease_action');
-  $GFD_action = $GFD_action_adaptor->store($GFD_action);
+  $GFD_action = $GFD_action_adaptor->store($GFD_action, $user);
 
   my $GFD_adaptor = $registry->get_adaptor('genomic_feature_disease');
   my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
