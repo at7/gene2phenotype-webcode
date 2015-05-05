@@ -434,10 +434,34 @@ sub get_GFD_publications {
       source =>  $publication->source,
       pmid => $publication->pmid,
       GFD_publication_id => $GFD_publication->dbID,
+      GFD_id => $GFD->dbID,
     };
   }
   return \@GFD_publications_tmpl;
 }
+
+sub add_GFD_publication_comment {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $GFD_publication_id = shift;
+  my $comment = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $gfd_p_c_a = $registry->get_adaptor('GFD_publication_comment');
+  my $GFD_publication_comment = G2P::GFDPublicationComment->new({
+    comment_text => $comment,
+    GFD_publication_id => $GFD_publication_id,
+    registry => $registry,
+  });
+
+  $gfd_p_c_a->store($GFD_publication_comment, $user);
+
+  display_data($session, 'gfd', $GFD_id);
+}
+
 
 sub get_gfd_logs {
   my $genomic_feature_disease = shift;
