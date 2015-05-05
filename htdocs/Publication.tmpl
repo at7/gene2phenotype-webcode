@@ -1,31 +1,38 @@
 <div>
   <h3>Publications</h3>
-  <p>Title.</p>
-  <ul>
-  <li>More info.</li>
-  <li>PMID: 123456789</li>
-  </ul>
-  <p>Comments:</p>
-  <ul>
-    <li>a comment. user. date</li>
-    <li>another comment. user. date</li>
-  </ul>
-  <form action="">
-    <textarea class="form-control" rows="3"></textarea>
-    <br/>
-    <input type="submit" />
-  </form>
-  <br/>
-  <p>Title.</p>
-  <ul>
-  <li>More info.</li>
-  <li>PMID: 123456789</li>
-  </ul>
-  <p>Comments:</p>
-  <form action="">
-    <textarea class="form-control" rows="3"></textarea>
-    <br/>
-    <input type="submit" />
-  </form>
-  <input type="submit"/>
+  <TMPL_LOOP NAME=GFD_publications>
+    <TMPL_IF NAME=title>
+      <p><TMPL_VAR NAME=title></p>
+    <TMPL_ELSE>
+      <p>PMID:<TMPL_VAR NAME=pmid></p>
+    </TMPL_IF>
+    <ul>
+      <TMPL_IF NAME=source>
+        <li><TMPL_VAR NAME=source></li>
+      </TMPL_IF>
+      <TMPL_IF NAME=pmid>
+        <li>PMID:<TMPL_VAR NAME=pmid></li>
+      </TMPL_IF>
+    </ul>
+    <TMPL_IF NAME=comments>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Date</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <TMPL_LOOP NAME=comments>
+            <tr>
+              <td><TMPL_VAR NAME=user></td>
+              <td><TMPL_VAR NAME=date></td>
+              <td><TMPL_VAR NAME=comment_text></td>
+            </tr>
+          </TMPL_LOOP> <!-- end comments-->
+        </tbody>
+      </table>
+    </TMPL_IF> <!-- end comments-->
+  </TMPL_LOOP>  
 </div>
