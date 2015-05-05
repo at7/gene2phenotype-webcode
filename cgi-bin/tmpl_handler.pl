@@ -433,6 +433,7 @@ sub get_GFD_publications {
       title => $publication->title, 
       source =>  $publication->source,
       pmid => $publication->pmid,
+      GFD_publication_id => $GFD_publication->dbID,
     };
   }
   return \@GFD_publications_tmpl;
