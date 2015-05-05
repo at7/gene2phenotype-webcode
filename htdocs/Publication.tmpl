@@ -1,38 +1,50 @@
 <div>
   <h3>Publications</h3>
   <TMPL_LOOP NAME=GFD_publications>
-    <TMPL_IF NAME=title>
-      <p><TMPL_VAR NAME=title></p>
-    <TMPL_ELSE>
-      <p>PMID:<TMPL_VAR NAME=pmid></p>
-    </TMPL_IF>
-    <ul>
-      <TMPL_IF NAME=source>
-        <li><TMPL_VAR NAME=source></li>
+    <div class="publication">
+      <TMPL_IF NAME=title>
+        <p><TMPL_VAR NAME=title></p>
+      <TMPL_ELSE>
+        <p>PMID:<TMPL_VAR NAME=pmid></p>
       </TMPL_IF>
-      <TMPL_IF NAME=pmid>
-        <li>PMID:<TMPL_VAR NAME=pmid></li>
-      </TMPL_IF>
-    </ul>
-    <TMPL_IF NAME=comments>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Date</th>
-            <th>Comment</th>
-          </tr>
-        </thead>
-        <tbody>
-          <TMPL_LOOP NAME=comments>
+      <ul>
+        <TMPL_IF NAME=source>
+          <li><TMPL_VAR NAME=source></li>
+        </TMPL_IF>
+        <TMPL_IF NAME=pmid>
+          <li>PMID:<TMPL_VAR NAME=pmid></li>
+        </TMPL_IF>
+      </ul>
+      <TMPL_IF NAME=comments>
+        <table class="table">
+          <thead>
             <tr>
-              <td><TMPL_VAR NAME=user></td>
-              <td><TMPL_VAR NAME=date></td>
-              <td><TMPL_VAR NAME=comment_text></td>
+              <th>User</th>
+              <th>Date</th>
+              <th>Comment</th>
             </tr>
-          </TMPL_LOOP> <!-- end comments-->
-        </tbody>
-      </table>
-    </TMPL_IF> <!-- end comments-->
+          </thead>
+          <tbody>
+            <TMPL_LOOP NAME=comments>
+              <tr>
+                <td><TMPL_VAR NAME=user></td>
+                <td><TMPL_VAR NAME=date></td>
+                <td><TMPL_VAR NAME=comment_text></td>
+              </tr>
+            </TMPL_LOOP> <!-- end comments-->
+          </tbody>
+        </table>
+      </TMPL_IF> <!-- end comments-->
+        <div class="show_add_comment">
+          <input type="button" name="show_add_comment" value="Add Comment" class="btn btn-primary btn-sm show"/>
+        </div>
+        <div class="add_comment">
+          <form id="add_comment_form" action="./handler.cgi" method=get>
+            <textarea class="form-control" rows="3"></textarea>
+            <input id="button" type="submit" name="add_comment" value="Add" class="btn btn-primary btn-sm"/>
+            <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment"/>
+          </form>
+        </div>
+    </div> <!-- end class publication -->
   </TMPL_LOOP>  
 </div>
