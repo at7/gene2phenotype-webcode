@@ -255,6 +255,8 @@ sub display_data {
         edit_gfd_action => $form,
       };
     }   
+    my $GFD_publications = get_GFD_publications($genomic_feature_disease);
+    $tmpl->param($GFD_publications);
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param($disease_attributes);
     $tmpl->param({
@@ -410,6 +412,33 @@ sub get_variations {
   }
   return \@variations_tmpl;
 }
+
+sub get_GFD_publications {
+  my $GFD = shift;
+  my @GFD_publications_tmpl = ();
+  my $GFD_publications = $GFD->get_all_GFDPublications;
+  foreach my $GFD_publication (@$GFD_publications) {
+    my $publication = $GFD_publication->get_Publication;
+    my $comments = $GFD_publication->get_all_GFDPublicationComments; 
+    my @comments_tmpl = ();
+    foreach my $comment () {
+      push @comments_tmpl, {
+        user => $comment->get_User()->username,
+        date => $comment->created,
+        comment_text => $comment->comment_text,
+      }; 
+    }
+    push @GFD_publications_tmp, {
+      comments => \@comments_tmpl,
+      title => $publication->title, 
+      source =>  $publication->source,
+      pmid => $publication->pmid,
+    };
+  }
+  return \@GFD_publications_tmpl;
+}
+
+
 
 sub get_gfd_logs {
   my $genomic_feature_disease = shift;
