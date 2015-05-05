@@ -146,6 +146,12 @@ elsif ($cgi->param('add_gene_disease')) {
   my $disease_name = $cgi->param('disease_name');
   add_new_gene_disease($session, $gene_name, $disease_name);
 }
+elsif ($cgi->param('add_GFD_publication_comment')) {
+  my $GFD_id = $cgi->param('GFD_id');
+  my $GFD_publication_id = $cgi->param('GFD_publication_id');
+  my $comment = $cgi->param('GFD_publication_comment');
+  add_GFD_publication_comment($session, $GFD_id, $GFD_publication_id, $comment); 
+}
 else {
   show_default_page($session);
 }
