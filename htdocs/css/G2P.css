@@ -72,6 +72,10 @@ dd {
   margin-bottom: 8em;
 }
 
+.add_comment {
+  display: none;
+}
+
 #register_form {
   display: none;
 }
