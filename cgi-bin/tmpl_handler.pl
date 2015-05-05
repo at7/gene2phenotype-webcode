@@ -256,7 +256,7 @@ sub display_data {
       };
     }   
     my $GFD_publications = get_GFD_publications($genomic_feature_disease);
-    $tmpl->param($GFD_publications);
+    $tmpl->param(GFD_publications => $GFD_publications);
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param($disease_attributes);
     $tmpl->param({
@@ -421,14 +421,14 @@ sub get_GFD_publications {
     my $publication = $GFD_publication->get_Publication;
     my $comments = $GFD_publication->get_all_GFDPublicationComments; 
     my @comments_tmpl = ();
-    foreach my $comment () {
+    foreach my $comment (@$comments) {
       push @comments_tmpl, {
         user => $comment->get_User()->username,
         date => $comment->created,
         comment_text => $comment->comment_text,
       }; 
     }
-    push @GFD_publications_tmp, {
+    push @GFD_publications_tmpl, {
       comments => \@comments_tmpl,
       title => $publication->title, 
       source =>  $publication->source,
@@ -437,8 +437,6 @@ sub get_GFD_publications {
   }
   return \@GFD_publications_tmpl;
 }
-
-
 
 sub get_gfd_logs {
   my $genomic_feature_disease = shift;
