@@ -76,6 +76,10 @@ dd {
   display: none;
 }
 
+.show_add_comment {
+  display: block; 
+}
+
 #register_form {
   display: none;
 }
@@ -87,5 +91,4 @@ dd {
 #account dd form {
   display: inline;
 }
-
 
