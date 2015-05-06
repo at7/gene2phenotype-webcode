@@ -152,6 +152,11 @@ elsif ($cgi->param('add_GFD_publication_comment')) {
   my $comment = $cgi->param('GFD_publication_comment');
   add_GFD_publication_comment($session, $GFD_id, $GFD_publication_id, $comment); 
 }
+elsif ($cgi->param('delete_GFD_publication_comment')) {
+  my $GFD_id = $cgi->param('GFD_id');
+  my $GFD_publication_comment_id = $cgi->param('GFD_publication_comment_id');
+  delete_GFD_publication_comment($session, $GFD_id, $GFD_publication_comment_id); 
+}
 else {
   show_default_page($session);
 }
