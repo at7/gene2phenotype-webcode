@@ -33,6 +33,7 @@
                 <td><TMPL_VAR NAME=comment_text></td>
                 <td>
                   <form id="delete_GFD_publication_comment" action="./handler.cgi" method=post>
+                    <input type="hidden" name="GFD_publication_comment_id" value="<TMPL_VAR NAME=GFD_publication_comment_id>"/>
                     <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
                     <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete" class="btn btn-primary btn-sm"/>
                   </form>
