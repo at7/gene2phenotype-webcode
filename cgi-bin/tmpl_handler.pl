@@ -426,6 +426,8 @@ sub get_GFD_publications {
         user => $comment->get_User()->username,
         date => $comment->created,
         comment_text => $comment->comment_text,
+        GFD_publication_comment_id => $comment->dbID,
+        GFD_id => $GFD->dbID,
       }; 
     }
     push @GFD_publications_tmpl, {
@@ -458,6 +460,23 @@ sub add_GFD_publication_comment {
   });
 
   $gfd_p_c_a->store($GFD_publication_comment, $user);
+
+  display_data($session, 'gfd', $GFD_id);
+}
+
+sub delete_GFD_publication_comment {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $GFD_publication_comment_id = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $gfd_p_c_a = $registry->get_adaptor('GFD_publication_comment');
+  my $GFD_publication_comment = $gfd_p_c_a->fetch_by_dbID($GFD_publication_comment_id);  
+
+  $gfd_p_c_a->delete($GFD_publication_comment, $user);
 
   display_data($session, 'gfd', $GFD_id);
 }
