@@ -22,6 +22,7 @@
               <th>User</th>
               <th>Date</th>
               <th>Comment</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -30,6 +31,12 @@
                 <td><TMPL_VAR NAME=user></td>
                 <td><TMPL_VAR NAME=date></td>
                 <td><TMPL_VAR NAME=comment_text></td>
+                <td>
+                  <form id="delete_GFD_publication_comment" action="./handler.cgi" method=post>
+                    <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+                    <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete" class="btn btn-primary btn-sm"/>
+                  </form>
+                </td>
               </tr>
             </TMPL_LOOP> <!-- end comments-->
           </tbody>
@@ -49,4 +56,10 @@
         </div>
     </div> <!-- end class publication -->
   </TMPL_LOOP>  
+  <div class="add_publication">
+    <div class="show_add_publication">
+      <input type="button" name="show_add_publication" value="Add Publication" class="btn btn-primary btn-sm show"/>
+    </div>
+
+  <div>
 </div>
