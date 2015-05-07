@@ -61,6 +61,29 @@
     <div class="show_add_publication">
       <input type="button" name="show_add_publication" value="Add Publication" class="btn btn-primary btn-sm show"/>
     </div>
-
+    <div>
+      <p>Add new publication</p>
+      <form id="add_new_publication" role="form" method="post" action="./handler.cgi">
+        <div class="form-group">
+          <label>PMID</label>
+          <fieldset>
+            <input type="text" class="form-control" name="pmid" placeholder="PMID" value="">
+          </fieldset>
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <fieldset>
+            <input type="text" class="form-control" name="title" placeholder="Title" value="">
+          </fieldset>
+        </div>
+        <div class="form-group">
+          <label>Source</label>
+          <fieldset>
+            <input type="text" class="form-control" name="source" placeholder="Source" value="">
+          </fieldset>
+        </div>
+        <input id="button" type="submit" class="btn btn-primary" name="" value="Add"/>
+      </form> 
+    </div>
   <div>
 </div>
