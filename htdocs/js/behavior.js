@@ -68,6 +68,25 @@ $(document).ready(function(){
     });
   });
 
+  $(".show_add_publication_button").click(function(){
+    $button = $(this);
+    $button_parent = $button.parent();
+    $this_content = $button.closest(".show_add_publication");
+    $show_content = $this_content.next();
+    $show_content.show(function(){
+      $button_parent.hide();
+    });
+  });
+
+  $(".discard_add_publication").click(function(){
+    $button = $(this);
+    $this_content = $button.closest(".add_publication");
+    $prev_content = $this_content.prev();
+    $this_content.hide(function(){
+      $prev_content.show();
+    });
+  });
+
   $(".find").click(function(){
     function localjsonpcallback(json) {
     };
@@ -95,6 +114,4 @@ $(document).ready(function(){
 
     });
   });
-
-
 });
