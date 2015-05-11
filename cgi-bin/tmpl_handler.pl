@@ -460,8 +460,6 @@ sub add_GFD_publication_comment {
   });
 
   $gfd_p_c_a->store($GFD_publication_comment, $user);
-
-  display_data($session, 'gfd', $GFD_id);
 }
 
 sub delete_GFD_publication_comment {
@@ -477,8 +475,6 @@ sub delete_GFD_publication_comment {
   my $GFD_publication_comment = $gfd_p_c_a->fetch_by_dbID($GFD_publication_comment_id);  
 
   $gfd_p_c_a->delete($GFD_publication_comment, $user);
-
-  display_data($session, 'gfd', $GFD_id);
 }
 
 
