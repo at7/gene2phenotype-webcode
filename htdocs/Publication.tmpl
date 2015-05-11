@@ -57,33 +57,35 @@
         </div>
     </div> <!-- end class publication -->
   </TMPL_LOOP>  
-  <div class="add_publication">
+  <div class="">
     <div class="show_add_publication">
-      <input type="button" name="show_add_publication" value="Add Publication" class="btn btn-primary btn-sm show"/>
+      <input type="button" name="show_add_publication" value="Add Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
     </div>
-    <div>
-      <p>Add new publication</p>
-      <form id="add_new_publication" role="form" method="post" action="./handler.cgi">
+    <div class="add_publication">
+      <h4>Add new publication</h4>
+      <form role="form" method="post" action="./handler.cgi">
         <div class="form-group">
           <label>PMID</label>
-          <fieldset>
-            <input type="text" class="form-control" name="pmid" placeholder="PMID" value="">
-          </fieldset>
+          <div id="find_article">
+            <input type="button" name="find_article" value="Find article" class="btn btn-primary btn-sm find"/>
+            <div id="pmid">
+              <input type="text" class="form-control pmid" name="pmid" placeholder="PMID e.g. 24509478" value="">
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label>Title</label>
-          <fieldset>
-            <input type="text" class="form-control" name="title" placeholder="Title" value="">
-          </fieldset>
+          <input type="text" class="form-control title" name="title" placeholder="Title" value="">
         </div>
         <div class="form-group">
           <label>Source</label>
-          <fieldset>
-            <input type="text" class="form-control" name="source" placeholder="Source" value="">
-          </fieldset>
+          <input type="text" class="form-control source" name="source" placeholder="Source" value="">
         </div>
-        <input id="button" type="submit" class="btn btn-primary" name="" value="Add"/>
-      </form> 
+        <div>
+          <input id="button" type="submit" class="btn btn-primary btn-sm" name="" value="Add"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
+        </div>
+      </form>
     </div>
   <div>
 </div>
