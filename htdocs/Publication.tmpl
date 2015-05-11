@@ -43,23 +43,26 @@
           </tbody>
         </table>
       </TMPL_IF> <!-- end comments-->
-        <div class="show_add_comment">
-          <input type="button" name="show_add_comment" value="Add Comment" class="btn btn-primary btn-sm show"/>
+        <div class="show_add_comment button_right">
+          <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
         </div>
         <div class="add_comment">
           <form id="add_GFD_publication_comment" action="./handler.cgi" method=post>
             <textarea class="form-control" name="GFD_publication_comment" rows="3"></textarea>
             <input type="hidden" name="GFD_publication_id" value="<TMPL_VAR NAME=GFD_publication_id>"/>
             <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-            <input id="button" type="submit" name="add_GFD_publication_comment" value="Add" class="btn btn-primary btn-sm"/>
-            <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment"/>
+            <div class="button_choice">
+              <input id="button" type="submit" name="add_GFD_publication_comment" value="Add" class="btn btn-primary btn-sm"/>
+              <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment"/>
+            </div>
           </form>
         </div>
     </div> <!-- end class publication -->
   </TMPL_LOOP>  
+
   <div class="">
-    <div class="show_add_publication">
-      <input type="button" name="show_add_publication" value="Add Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
+    <div class="show_add_publication button_right">
+      <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
     </div>
     <div class="add_publication">
       <h4>Add new publication</h4>
@@ -81,7 +84,7 @@
           <label>Source</label>
           <input type="text" class="form-control source" name="source" placeholder="Source" value="">
         </div>
-        <div>
+        <div class="button_choice">
           <input id="button" type="submit" class="btn btn-primary btn-sm" name="" value="Add"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
         </div>
