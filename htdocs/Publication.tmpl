@@ -36,9 +36,9 @@
   <TMPL_LOOP NAME=GFD_publications>
     <div class="publication">
       <TMPL_IF NAME=title>
-        <p><TMPL_VAR NAME=title></p>
+        <p><em><TMPL_VAR NAME=title></em></p>
       <TMPL_ELSE>
-        <p>PMID:<TMPL_VAR NAME=pmid></p>
+        <p><em>PMID:<TMPL_VAR NAME=pmid></em></p>
       </TMPL_IF>
       <ul>
         <TMPL_IF NAME=source>
