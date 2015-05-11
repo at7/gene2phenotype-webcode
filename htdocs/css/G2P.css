@@ -1,5 +1,5 @@
 .publication {
-  margin-bottom: 3em;
+  margin-bottom: 5em;
 }
 
 .new_gene_disease {
@@ -108,3 +108,18 @@ dd {
   overflow: hidden;
   padding-right: .5em;
 }
+
+.button_right input {
+  float: right;
+}
+
+.button_right .input_left {
+  overflow: hidden;
+  padding-right: .5em;
+}
+
+.button_choice {
+  float: right;
+}
+
+
