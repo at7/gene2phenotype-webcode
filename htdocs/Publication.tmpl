@@ -25,7 +25,8 @@
           <input type="text" class="form-control source" name="source" placeholder="Source" value="">
         </div>
         <div class="button_choice">
-          <input id="button" type="submit" class="btn btn-primary btn-sm" name="" value="Add"/>
+          <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+          <input id="button" type="submit" class="btn btn-primary btn-sm" name="add_publication" value="Add"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
         </div>
       </form>
