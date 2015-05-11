@@ -34,7 +34,7 @@ sub init_CGI {
 
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
-  if (!$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action') && !$cgi->param('add_GFD_action') && $$cgi->param('add_GFD_publication_comment')) {
+  if (!$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action') && !$cgi->param('add_GFD_action') && !$cgi->param('add_GFD_publication_comment') && !$cgi->param('delete_GFD_publication_comment')) {
     print $cgi->header( -cookie => $cookie );
   }
   $cgi->param('CGISESSID', $session_id);
@@ -161,6 +161,11 @@ elsif ($cgi->param('delete_GFD_publication_comment')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $GFD_publication_comment_id = $cgi->param('GFD_publication_comment_id');
   delete_GFD_publication_comment($session, $GFD_id, $GFD_publication_comment_id); 
+  my $cookie = $config->{cookie};
+  my $server_name = $ENV{SERVER_NAME};
+  my $script_name = $ENV{SCRIPT_NAME};
+  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$GFD_id";
+  print $cgi->redirect(-URL => $url, -cookie => $cookie);
 }
 else {
   show_default_page($session);
