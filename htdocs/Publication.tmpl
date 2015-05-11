@@ -1,5 +1,38 @@
 <div>
   <h3>Publications</h3>
+  <div id="new_publication">
+    <div class="show_add_publication button_right">
+      <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
+    </div>
+    <div class="add_publication">
+      <h4>Add new publication</h4>
+      <form role="form" method="post" action="./handler.cgi">
+        <div class="form-group">
+          <label>PMID</label>
+          <div id="find_article">
+            <input type="button" name="find_article" value="Find article" class="btn btn-primary btn-sm find"/>
+            <div id="pmid">
+              <input type="text" class="form-control pmid" name="pmid" placeholder="PMID e.g. 24509478" value="">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" class="form-control title" name="title" placeholder="Title" value="">
+        </div>
+        <div class="form-group">
+          <label>Source</label>
+          <input type="text" class="form-control source" name="source" placeholder="Source" value="">
+        </div>
+        <div class="button_choice">
+          <input id="button" type="submit" class="btn btn-primary btn-sm" name="" value="Add"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="clear"></div>
   <TMPL_LOOP NAME=GFD_publications>
     <div class="publication">
       <TMPL_IF NAME=title>
@@ -16,6 +49,7 @@
         </TMPL_IF>
       </ul>
       <TMPL_IF NAME=comments>
+        <h4>Comments:</h4>
         <table class="table">
           <thead>
             <tr>
@@ -59,36 +93,4 @@
         </div>
     </div> <!-- end class publication -->
   </TMPL_LOOP>  
-
-  <div class="">
-    <div class="show_add_publication button_right">
-      <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
-    </div>
-    <div class="add_publication">
-      <h4>Add new publication</h4>
-      <form role="form" method="post" action="./handler.cgi">
-        <div class="form-group">
-          <label>PMID</label>
-          <div id="find_article">
-            <input type="button" name="find_article" value="Find article" class="btn btn-primary btn-sm find"/>
-            <div id="pmid">
-              <input type="text" class="form-control pmid" name="pmid" placeholder="PMID e.g. 24509478" value="">
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" class="form-control title" name="title" placeholder="Title" value="">
-        </div>
-        <div class="form-group">
-          <label>Source</label>
-          <input type="text" class="form-control source" name="source" placeholder="Source" value="">
-        </div>
-        <div class="button_choice">
-          <input id="button" type="submit" class="btn btn-primary btn-sm" name="" value="Add"/>
-          <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
-        </div>
-      </form>
-    </div>
-  <div>
 </div>
