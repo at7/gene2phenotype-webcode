@@ -80,6 +80,14 @@ dd {
   display: block; 
 }
 
+.add_publication {
+  display: none;
+}
+
+.show_add_publication {
+  display: block; 
+}
+
 #register_form {
   display: none;
 }
@@ -92,3 +100,11 @@ dd {
   display: inline;
 }
 
+#find_article input {
+  float: right;
+}
+
+#find_article #pmid {
+  overflow: hidden;
+  padding-right: .5em;
+}
