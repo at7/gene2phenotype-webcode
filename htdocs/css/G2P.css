@@ -1,4 +1,12 @@
 .publication {
+  margin-bottom: 6em;
+}
+
+#DDD_category {
+  margin-bottom: 2em;
+}
+
+#new_publication {
   margin-bottom: 5em;
 }
 
@@ -14,7 +22,7 @@
 .edit_attributes {
   float: right;
   display: block;
-  margin-right: 23%
+ /* margin-right: 23%*/
 }
 
 .header_gene_disease {
