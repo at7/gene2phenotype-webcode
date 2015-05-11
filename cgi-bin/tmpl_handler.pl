@@ -257,6 +257,7 @@ sub display_data {
     }   
     my $GFD_publications = get_GFD_publications($genomic_feature_disease);
     $tmpl->param(GFD_publications => $GFD_publications);
+    $tmpl->param(GFD_id => $dbID);
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param($disease_attributes);
     $tmpl->param({
@@ -475,6 +476,38 @@ sub delete_GFD_publication_comment {
   my $GFD_publication_comment = $gfd_p_c_a->fetch_by_dbID($GFD_publication_comment_id);  
 
   $gfd_p_c_a->delete($GFD_publication_comment, $user);
+}
+
+sub add_publication {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $pmid = shift;
+  my $title = shift;
+  my $source = shift;
+
+#  if ($session->param('is_logged_in')) 
+
+  my $pa = $registry->get_adaptor('publication');
+  my $publication = $pa->fetch_by_PMID($pmid); 
+  if (!$publication) {
+    $publication = G2P::Publication->new({
+      pmid => $pmid || undef,
+      title => $title || undef,
+      source => $source || undef,
+    });
+    $publication = $pa->store($publication);
+  }
+
+  my $GFD_pa = $registry->get_adaptor('genomic_feature_disease_publication'); 
+
+  my $GFD_publication = G2P::GenomicFeatureDiseasePublication->new({
+    genomic_feature_disease_id => $GFD_id,
+    publication_id => $publication->dbID,
+    registry => $registry,
+  });
+
+  $GFD_pa->store($GFD_publication);
+
 }
 
 
