@@ -109,7 +109,6 @@ sub show_default_page {
 
 sub show_login_page {
   my $session = shift;
-  my $type = shift;
   my $tmpl = new HTML::Template(filename => '../htdocs/Login.tmpl');
   set_login_status($tmpl, $session);
   $tmpl->param(show_login => 1); 
@@ -226,6 +225,8 @@ sub display_data {
   my $dbID = shift;
 
   my $logged_in = set_login_status($tmpl, $session);
+  $tmpl->param(search_type => $search_type);
+  $tmpl->param(dbID => $dbID);
 
   if ($search_type eq 'gfd') {
     $tmpl->param(display_gfd => 1);
