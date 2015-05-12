@@ -114,4 +114,27 @@ $(document).ready(function(){
 
     });
   });
+
+  $('#add_publication').submit(function(event){
+    var pmid = $(':input.pmid[type="text"]').val();
+    var title = $(':input.title[type="text"]').val();
+    if ((pmid != '') && (!$.isNumeric(pmid))) {
+      event.preventDefault();
+      $(".add_publication_feedback").empty();
+      $(".add_publication_feedback").append("You need to provide a valid PMID (only numbers e.g. 10094187).");
+      $(".add_publication_feedback").removeClass("alert alert-danger").addClass("alert alert-danger");
+      return 0;
+    } 
+    if ((pmid == '') && (title == '') ) { 
+      event.preventDefault();
+      $(".add_publication_feedback").empty();
+      $(".add_publication_feedback").append("You need to provide a valid PMID (only numbers e.g 10094187) or a title.");
+      $(".add_publication_feedback").removeClass("alert alert-danger").addClass("alert alert-danger");
+      return 0;
+    } 
+    $(".add_publication_feedback").empty();
+    $(".add_publication_feedback").removeClass("alert alert-danger");
+    return 1;
+  });
+
 });
