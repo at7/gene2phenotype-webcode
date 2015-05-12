@@ -431,11 +431,17 @@ sub get_GFD_publications {
         GFD_id => $GFD->dbID,
       }; 
     }
+    my $pmid = $publication->pmid;
+    my $title = $publication->title;
+    my $source = $publication->source;
+   
+    $title ||= 'PMID:' . $pmid;
+    $title .= " ($source)" if ($source);
+
     push @GFD_publications_tmpl, {
       comments => \@comments_tmpl,
-      title => $publication->title, 
-      source =>  $publication->source,
-      pmid => $publication->pmid,
+      title => $title, 
+      pmid => $pmid,
       GFD_publication_id => $GFD_publication->dbID,
       GFD_id => $GFD->dbID,
     };
