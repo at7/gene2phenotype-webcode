@@ -221,7 +221,7 @@ sub login {
       display_search_results($session, $search_term);
     }
   } else {
-    show_login_page($session);
+    show_login_page($session, 'login_failed');
   }
 }
 
