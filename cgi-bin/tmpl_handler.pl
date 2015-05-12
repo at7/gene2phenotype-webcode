@@ -498,10 +498,9 @@ sub add_publication {
   my $title = shift;
   my $source = shift;
 
-#  if ($session->param('is_logged_in')) 
-
   my $pa = $registry->get_adaptor('publication');
   my $publication = $pa->fetch_by_PMID($pmid); 
+  
   if (!$publication) {
     $publication = G2P::Publication->new({
       pmid => $pmid || undef,
@@ -512,15 +511,12 @@ sub add_publication {
   }
 
   my $GFD_pa = $registry->get_adaptor('genomic_feature_disease_publication'); 
-
   my $GFD_publication = G2P::GenomicFeatureDiseasePublication->new({
     genomic_feature_disease_id => $GFD_id,
     publication_id => $publication->dbID,
     registry => $registry,
   });
-
   $GFD_pa->store($GFD_publication);
-
 }
 
 
