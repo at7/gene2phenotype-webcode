@@ -10,10 +10,12 @@
         </dl>
       </div> <!--End display attributes-->
       <div class="edit_attributes">
-        <TMPL_IF NAME=edit_gene_disease>
+        <TMPL_IF NAME=logged_in>
           <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
         <TMPL_ELSE>
           <form id="login_form" action="./handler.cgi" method=get>
+            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
             <input id="button" type="submit" name="login" value="Edit" class="btn btn-primary btn-sm edit"/>
           </form>
         </TMPL_IF>
@@ -34,10 +36,12 @@
         </dl>
       </div>
       <div class="edit_attributes">
-        <TMPL_IF NAME=edit_gene_disease>
+        <TMPL_IF NAME=logged_in>
           <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
         <TMPL_ELSE>
           <form id="login_form" action="./handler.cgi" method=get>
+            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
             <input id="button" type="submit" name="login" value="Edit" class="btn btn-primary btn-sm edit"/>
           </form>
         </TMPL_IF>
@@ -49,10 +53,12 @@
 
   <div class="gene_disease_attributes">
     <div class="edit_attributes">
-      <TMPL_IF NAME=edit_gene_disease>
+      <TMPL_IF NAME=logged_in>
         <input type="button" name="show_edit_content" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
       <TMPL_ELSE>
         <form id="login_form" action="./handler.cgi" method=get>
+          <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+          <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
           <input id="button" type="submit" name="login" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
         </form>
       </TMPL_IF>
