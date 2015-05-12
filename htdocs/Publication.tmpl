@@ -36,19 +36,13 @@
   <div class="clear"></div>
   <TMPL_LOOP NAME=GFD_publications>
     <div class="publication">
-      <TMPL_IF NAME=title>
-        <p><em><TMPL_VAR NAME=title></em></p>
+
+      <TMPL_IF NAME=pmid>
+        <p><em><a href="http://europepmc.org/search?query=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></em></p>
       <TMPL_ELSE>
-        <p><em>PMID:<TMPL_VAR NAME=pmid></em></p>
+        <p><em>PMID:<TMPL_VAR NAME=title></em></p>
       </TMPL_IF>
-      <ul>
-        <TMPL_IF NAME=source>
-          <li><TMPL_VAR NAME=source></li>
-        </TMPL_IF>
-        <TMPL_IF NAME=pmid>
-          <li>PMID:<TMPL_VAR NAME=pmid></li>
-        </TMPL_IF>
-      </ul>
+
       <TMPL_IF NAME=comments>
         <h4>Comments:</h4>
         <table class="table">
