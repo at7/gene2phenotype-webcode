@@ -54,6 +54,10 @@ my $constants = {
   'add_gene_disease_pair' => {
     msg => 'You must provide a gene name and a disease name.',
     type => 'danger',
+  },  
+  'login_failed' => {
+    msg => 'Login failed. You entered a wrong password. Try again or reset your password.',
+    type => 'danger',
   },
 };
 
@@ -109,7 +113,11 @@ sub show_default_page {
 
 sub show_login_page {
   my $session = shift;
+  my $message = shift;
   my $tmpl = new HTML::Template(filename => '../htdocs/Login.tmpl');
+  if ($message) {
+    set_message($tmpl, $message);
+  }
   set_login_status($tmpl, $session);
   $tmpl->param(show_login => 1); 
   print $tmpl->output();
