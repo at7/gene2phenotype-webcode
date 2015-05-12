@@ -172,6 +172,7 @@ elsif ($cgi->param('add_publication')) {
   my $pmid = $cgi->param('pmid');
   my $title = $cgi->param('title');
   my $source = $cgi->param('source');
+
   add_publication($session, $GFD_id, $pmid, $title, $source); 
   my $cookie = $config->{cookie};
   my $server_name = $ENV{SERVER_NAME};
