@@ -499,8 +499,15 @@ sub add_publication {
   my $source = shift;
 
   my $pa = $registry->get_adaptor('publication');
-  my $publication = $pa->fetch_by_PMID($pmid); 
-  
+  my $GFD_pa = $registry->get_adaptor('genomic_feature_disease_publication'); 
+  my ($publication, $GFD_publication);
+
+  if ($pmid) {
+    $publication = $pa->fetch_by_PMID($pmid); 
+  } else {
+    $publication = $pa->fetch_by_title($title); 
+  }
+
   if (!$publication) {
     $publication = G2P::Publication->new({
       pmid => $pmid || undef,
@@ -509,14 +516,15 @@ sub add_publication {
     });
     $publication = $pa->store($publication);
   }
-
-  my $GFD_pa = $registry->get_adaptor('genomic_feature_disease_publication'); 
-  my $GFD_publication = G2P::GenomicFeatureDiseasePublication->new({
-    genomic_feature_disease_id => $GFD_id,
-    publication_id => $publication->dbID,
-    registry => $registry,
-  });
-  $GFD_pa->store($GFD_publication);
+  $GFD_publication = $GFD_pa->fetch_by_GFD_id_publication_id($GFD_id, $publication->dbID);
+  if (!$GFD_publication) {
+    $GFD_publication = G2P::GenomicFeatureDiseasePublication->new({
+      genomic_feature_disease_id => $GFD_id,
+      publication_id => $publication->dbID,
+      registry => $registry,
+    });
+    $GFD_pa->store($GFD_publication);
+  }
 }
 
 
