@@ -59,15 +59,15 @@ sub init_CGI {
 #reset_username
 #cancel_reset_pwd_button
 
-if ($cgi->param('search_term')) {
+if ($cgi->param('login')) {
+  show_login();
+} elsif ($cgi->param('search_term')) {
   my $search_term = $cgi->param('search_term');
   display_search_results($session, $search_term);
 } elsif ($cgi->param('search_type')) {
   my $search_type = $cgi->param('search_type');
   my $dbID = $cgi->param('dbID');
   display_data($session, $search_type, $dbID);
-} elsif ($cgi->param('login')) {
-  show_login();
 } elsif ($cgi->param('logout')) {
   logout();
 } elsif ($cgi->param('account') || $cgi->param('cancel_edit_account_data_button')) {
