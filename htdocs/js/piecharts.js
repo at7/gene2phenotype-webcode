@@ -13,7 +13,6 @@ $( document ).ready(function() {
   //var data = [{"value":1,"label":"not assigned"},{"value":2,"label":"Nonsense"},{"value":1,"label":"Frameshift"},{"value":6,"label":"Missense/In-frame"}];
   //    var data = [{"label": "One","value" : 50,} ,{"label": "Two","value" : 50,} ,];
 
-      console.log(data);   
       div.select('svg').datum(data)
         .transition().duration(1200)
         .call(chart);
