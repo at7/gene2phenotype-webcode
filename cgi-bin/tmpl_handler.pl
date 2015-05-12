@@ -258,7 +258,6 @@ sub display_data {
       my $mutation_consequence_summary = $gfda->mutation_consequence || 'Not assigned';
       my $form = get_edit_gfd_action($gfda); 
       push @actions, {
-        edit_gene_disease => $logged_in,
         mutation_consequence_summary => $mutation_consequence_summary,
         allelic_requirement => $allelic_requirement,
         edit_gfd_action => $form,
@@ -276,7 +275,6 @@ sub display_data {
       gfd_actions => \@actions,
       variations => $variations,
       consequence_counts => $counts,
-      edit_gene_disease => $logged_in,
     });  
     my $gfd_logs = get_gfd_logs($genomic_feature_disease);
     my $gfda_logs = get_gfda_logs($genomic_feature_disease);
