@@ -185,7 +185,12 @@ else {
 
 sub show_login {
   my $type = $cgi->param('login');
-  show_login_page($session, $type);
+  my $search_type = $cgi->param('search_type');
+  my $dbID = $cgi->param('dbID');
+  $session->param('search_type', $search_type);
+  $session->param('dbID', $dbID);
+  $session->flush(); 
+  show_login_page($session);
 }
 
 sub logout {
