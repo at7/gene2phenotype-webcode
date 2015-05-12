@@ -196,7 +196,13 @@ sub show_login {
 sub logout {
   $session->param('is_logged_in', 0);
   $session->flush(); 
-  display_search_results($session, $search_term);
+  my $search_type = $session->param('search_type');
+  my $dbID = $session->param('dbID');
+  if ($search_type && $dbID) {
+    display_data($session, $search_type, $dbID);
+  } else {
+    display_search_results($session, $search_term);
+  }
 }
 
 sub login {
@@ -207,9 +213,15 @@ sub login {
     $session->param('is_logged_in', 1);
     $session->param('email', $email);
     $session->flush(); 
-    display_search_results($session, $search_term);
+    my $search_type = $session->param('search_type');
+    my $dbID = $session->param('dbID');
+    if ($search_type && $dbID) {
+      display_data($session, $search_type, $dbID);
+    } else {
+      display_search_results($session, $search_term);
+    }
   } else {
-    show_default_page($session);
+    show_login_page($session);
   }
 }
 
