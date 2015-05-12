@@ -2,7 +2,13 @@
   <h3>Publications</h3>
   <div id="new_publication">
     <div class="show_add_publication button_right">
-      <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
+      <TMPL_IF NAME=is_logged_in>
+        <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
+      <TMPL_ELSE>
+        <form id="login_form" action="./handler.cgi" method=get>
+          <input id="button" type="submit" name="login" value="Add New Publication" class="btn btn-primary btn-sm"/>
+        </form>
+      </TMPL_IF>
     </div>
     <div class="add_publication">
       <h4>Add new publication</h4>
@@ -73,7 +79,13 @@
         </table>
       </TMPL_IF> <!-- end comments-->
         <div class="show_add_comment button_right">
-          <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
+          <TMPL_IF NAME=is_logged_in>
+            <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
+          <TMPL_ELSE>
+            <form id="login_form" action="./handler.cgi" method=get>
+              <input id="button" type="submit" name="login" value="Add New Comment" class="btn btn-primary btn-sm"/>
+            </form>
+          </TMPL_IF>
         </div>
         <div class="add_comment">
           <form id="add_GFD_publication_comment" action="./handler.cgi" method="get">
