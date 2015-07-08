@@ -265,6 +265,8 @@ sub display_data {
     }   
     my $GFD_publications = get_GFD_publications($genomic_feature_disease);
     $tmpl->param(GFD_publications => $GFD_publications);
+    my $phenotypes = get_phenotypes($genomic_feature_disease);
+    $tmpl->param(phenotypes => $phenotypes);
     $tmpl->param(GFD_id => $dbID);
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param($disease_attributes);
@@ -454,6 +456,19 @@ sub get_GFD_publications {
     };
   }
   return \@GFD_publications_tmpl;
+}
+
+sub get_phenotypes {
+  my $GFD = shift;
+  my @phenotypes_tmpl = ();
+  my $phenotypes = $GFD->get_all_GFDPhenotypes;
+  foreach my $phenotype (@$phenotypes) {
+    my $stable_id = $phenotype->get_Phenotype()->stable_id;
+    push @phenotypes_tmpl, {
+      stable_id => $stable_id,
+    };
+  }
+  return \@phenotypes_tmpl;
 }
 
 sub add_GFD_publication_comment {
