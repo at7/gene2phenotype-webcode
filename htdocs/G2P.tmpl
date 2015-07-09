@@ -23,9 +23,11 @@
     <TMPL_IF NAME="display_search_results">
       <TMPL_INCLUDE NAME="SearchResults.tmpl">
     </TMPL_IF> 
+
     <TMPL_IF NAME="downloads">
       <TMPL_INCLUDE NAME="Downloads.tmpl">
     </TMPL_IF> 
+
     <TMPL_IF NAME=display_gfd>
       <div class="container">
         <h3 class="title" >Gene: <em><TMPL_VAR NAME=gene_symbol></em> Disease: <em><TMPL_VAR NAME=disease_name></em></h3>
