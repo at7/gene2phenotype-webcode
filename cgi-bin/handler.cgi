@@ -58,6 +58,7 @@ sub init_CGI {
 #reset_password
 #reset_username
 #cancel_reset_pwd_button
+#downloads
 
 if ($cgi->param('login')) {
   show_login();
@@ -94,6 +95,8 @@ if ($cgi->param('login')) {
   recover_pwd($session);
 } elsif ($cgi->param('recover_pwd')) {
   show_recover_pwd_page($session);
+} elsif ($cgi->param('downloads')) {
+  show_downloads_page($session);
 } 
 elsif ($cgi->param('edit_DDD_category')) {
   my $DDD_category_attrib = $cgi->param('DDD_category');
