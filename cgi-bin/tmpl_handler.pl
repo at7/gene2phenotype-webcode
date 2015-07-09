@@ -61,6 +61,14 @@ my $constants = {
   },
 };
 
+sub show_downloads_page {
+  my $session = shift;
+  set_login_status($tmpl, $session);
+  $tmpl->param(downloads => 1);
+  print $tmpl->output();
+  return;
+}
+
 sub identify_search_type {
   my $search_term = shift;
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
@@ -267,6 +275,9 @@ sub display_data {
     $tmpl->param(GFD_publications => $GFD_publications);
     my $phenotypes = get_phenotypes($genomic_feature_disease);
     $tmpl->param(phenotypes => $phenotypes);
+    my $organs = get_organs($genomic_feature_disease);
+    $tmpl->param(organs => $organs);
+
     $tmpl->param(GFD_id => $dbID);
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param($disease_attributes);
@@ -363,12 +374,10 @@ sub get_genomic_feature_attributes {
   my $gene_symbol = $genomic_feature->gene_symbol;
   my $gene_mim = $genomic_feature->mim;
   my $ensembl_stable_id = $genomic_feature->ensembl_stable_id;
-  my $organ_specificity_list = join(', ', @{$genomic_feature->get_organ_specificity_list});
   return {
     ensembl_stable_id => $ensembl_stable_id,
     gene_symbol => $gene_symbol,
     gene_mim => $gene_mim,
-    organ_specificity_list => $organ_specificity_list,
   };
 }
 
@@ -469,6 +478,19 @@ sub get_phenotypes {
     };
   }
   return \@phenotypes_tmpl;
+}
+
+sub get_organs {
+  my $GFD = shift;
+  my @organs_tmpl = ();
+  my $organs = $GFD->get_all_GFDOrgans;
+  foreach my $organ (@$organs) {
+    my $name = $organ->get_Organ()->name;
+    push @organs_tmpl, {
+      name => $name,
+    };
+  }
+  return \@organs_tmpl;
 }
 
 sub add_GFD_publication_comment {
