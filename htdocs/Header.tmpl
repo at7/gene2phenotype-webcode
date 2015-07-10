@@ -3,6 +3,14 @@
     <div class="container-fluid">
       <ul class="nav navbar-nav">
         <li><a class="navbar-brand" href="/gene2phenotype">Gene2Phenotype</a></li>
+          <li class="navbar-brand">
+            <form id="show_download_page" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="show_downloads" value="all"/>
+                <a href='#' onclick="document.getElementById('show_download_page').submit();">Downloads</a>
+              </fieldset>
+            </form>
+          </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <TMPL_IF NAME=logged_in>
