@@ -10,7 +10,7 @@ use CGI::Session qw(-ip-match);
 use CGI::Session::Auth;
 use DBI;
 use Mail::Sendmail;
-
+$CGI::DISABLE_UPLOADS = 1;
 require "./tmpl_handler.pl"; # cgi-bin
 
 my $password_file = "../../../../gene2phenotype_users"; 
@@ -19,6 +19,8 @@ my $config = init_CGI();
 my $cgi = $config->{cgi};
 my $session = $config->{session};
 my $search_term = $config->{search_term};
+
+my $path_to_files = '../../../../downloads';
 
 sub init_CGI { 
   my $config = {};
@@ -34,7 +36,7 @@ sub init_CGI {
 
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
-  if (!$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action') && !$cgi->param('add_GFD_action') && !$cgi->param('add_GFD_publication_comment') && !$cgi->param('delete_GFD_publication_comment') && !$cgi->param('add_publication')) {
+  if (!$cgi->param('download') && !$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action') && !$cgi->param('add_GFD_action') && !$cgi->param('add_GFD_publication_comment') && !$cgi->param('delete_GFD_publication_comment') && !$cgi->param('add_publication')) {
     print $cgi->header( -cookie => $cookie );
   }
   $cgi->param('CGISESSID', $session_id);
@@ -95,9 +97,30 @@ if ($cgi->param('login')) {
   recover_pwd($session);
 } elsif ($cgi->param('recover_pwd')) {
   show_recover_pwd_page($session);
-} elsif ($cgi->param('downloads')) {
+} elsif ($cgi->param('show_downloads')) {
   show_downloads_page($session);
-} 
+} elsif ($cgi->param('download')) { 
+  # my $file = download_data($cgi->param('download')); 
+  my $file = 'G2P.csv';
+
+  open(my $DLFILE, '<', "$path_to_files/$file") or return(0);
+ 
+  my $cookie = $config->{cookie};
+  my $server_name = $ENV{SERVER_NAME};
+  my $script_name = $ENV{SCRIPT_NAME};
+  my $url = "http://$server_name" . $script_name . "?show_downloads=all";
+
+  print $cgi->header(
+          -type => 'application/x-download',
+          -attachment => $file,
+          -Content_length  => -s "$path_to_files/$file",
+        );
+
+  print $cgi->redirect( -URL => $url, -cookie => $cookie,);
+  binmode $DLFILE;
+  print while <$DLFILE>;
+  undef ($DLFILE);
+}
 elsif ($cgi->param('edit_DDD_category')) {
   my $DDD_category_attrib = $cgi->param('DDD_category');
   my $genomic_feature_disease_id = $cgi->param('genomic_feature_disease_id');
