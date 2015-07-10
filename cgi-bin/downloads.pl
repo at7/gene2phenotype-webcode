@@ -39,6 +39,5 @@ sub download_data {
     }
   }
   close $fh or die "$csv: $!";
-  
-  `/usr/bin/gzip $csv_file`;
+  system("/usr/bin/gzip $csv_file");
 }
