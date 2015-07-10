@@ -12,7 +12,7 @@ use DBI;
 use Mail::Sendmail;
 $CGI::DISABLE_UPLOADS = 1;
 require "./tmpl_handler.pl"; # cgi-bin
-
+require "./downloads.pl";
 my $password_file = "../../../../gene2phenotype_users"; 
 my $db_config = "../../../../config/registry";
 my $config = init_CGI();
@@ -21,7 +21,7 @@ my $session = $config->{session};
 my $search_term = $config->{search_term};
 
 my $path_to_files = '../../../../downloads';
-
+$ENV{PATH} = '';
 sub init_CGI { 
   my $config = {};
   my $cgi = new CGI;
@@ -50,7 +50,9 @@ sub init_CGI {
   $config->{cookie} = $cookie;
   return $config;
 }
-
+#foreach my $key (sort(keys(%ENV))) {
+#    print "$key = $ENV{$key}<br>\n";
+#}
 #login
 #loggout
 #account
@@ -100,10 +102,9 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('show_downloads')) {
   show_downloads_page($session);
 } elsif ($cgi->param('download')) { 
-  # my $file = download_data($cgi->param('download')); 
-  my $file = 'G2P.csv';
-
-  open(my $DLFILE, '<', "$path_to_files/$file") or return(0);
+  download_data("../../../../downloads/G2P.csv");
+  my $file = 'G2P.csv.gz';
+  open(my $DLFILE, '<', "$path_to_files/$file");
  
   my $cookie = $config->{cookie};
   my $server_name = $ENV{SERVER_NAME};
@@ -116,10 +117,11 @@ if ($cgi->param('login')) {
           -Content_length  => -s "$path_to_files/$file",
         );
 
-  print $cgi->redirect( -URL => $url, -cookie => $cookie,);
   binmode $DLFILE;
   print while <$DLFILE>;
   undef ($DLFILE);
+  unlink "$path_to_files/$file";
+  print $cgi->redirect( -URL => $url, -cookie => $cookie,);
 }
 elsif ($cgi->param('edit_DDD_category')) {
   my $DDD_category_attrib = $cgi->param('DDD_category');
