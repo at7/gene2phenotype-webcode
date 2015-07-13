@@ -528,6 +528,21 @@ sub delete_GFD_publication_comment {
   $gfd_p_c_a->delete($GFD_publication_comment, $user);
 }
 
+sub delete_GFD_action {
+  my $session = shift;
+  my $GFD_action_id = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $gfda_a = $registry->get_adaptor('genomic_feature_disease_action');
+  my $GFDA = $gfda_a->fetch_by_dbID($GFD_action_id);  
+
+  $gfda_a->delete($GFDA, $user);
+}
+
+
 sub add_publication {
   my $session = shift;
   my $GFD_id = shift;
@@ -681,6 +696,7 @@ sub get_add_gfd_action {
 
 sub get_edit_gfd_action {
   my $gf_disease_action = shift;
+  my $GFD_id = $gf_disease_action->genomic_feature_disease_id;
   my $allelic_requirement = $gf_disease_action->allelic_requirement;
   my $mutation_consequence = $gf_disease_action->mutation_consequence;
   my $GFD_action_id = $gf_disease_action->dbID;
@@ -694,7 +710,9 @@ sub get_edit_gfd_action {
     $mutation_consequence_form,
     '<div class="edit_attributes">',
     "<input name=\"GFD_action_id\" value=\"$GFD_action_id\" type=\"hidden\">",
+    "<input name=\"GFD_id\" value=\"$GFD_id\" type=\"hidden\">",
     '<input id="button" type="submit" name="edit_GFD_action" value="Save" class="btn btn-primary btn-sm"/>',
+    '<input id="button" type="submit" name="delete_GFD_action" value="Delete" class="btn btn-primary btn-sm"/>',
     '<input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>',
     '</div>',
     '</form>',
