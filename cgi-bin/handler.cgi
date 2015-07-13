@@ -40,7 +40,7 @@ sub init_CGI {
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
 
-  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment add_publication send_recover_pwd_mail_button/;
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button/;
   if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
