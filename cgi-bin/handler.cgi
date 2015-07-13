@@ -18,7 +18,6 @@ require "./downloads.pl";
 my $password_file = "../../../../gene2phenotype_users"; 
 my $db_config = "../../../../config/registry";
 my $downloads_dir = "../../../../downloads";
-my $path_to_files = '../../../../downloads';
 my $tmp_dir = '../../../../tmp';
 
 my $config = init_CGI();
@@ -107,26 +106,21 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('show_downloads')) {
   show_downloads_page($session);
 } elsif ($cgi->param('download')) { 
-  download_data("../../../../downloads/G2P.csv");
-  my $file = 'G2P.csv.gz';
-  open(my $DLFILE, '<', "$path_to_files/$file");
- 
-  my $cookie = $config->{cookie};
-  my $server_name = $ENV{SERVER_NAME};
-  my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?show_downloads=all";
+  my $file = download_data($downloads_dir);
+  open(my $DLFILE, '<', "$downloads_dir/$file");
 
   print $cgi->header(
           -type => 'application/x-download',
           -attachment => $file,
-          -Content_length  => -s "$path_to_files/$file",
+          -Content_length  => -s "$downloads_dir/$file",
         );
 
   binmode $DLFILE;
   print while <$DLFILE>;
   undef ($DLFILE);
-  unlink "$path_to_files/$file";
-  print $cgi->redirect( -URL => $url, -cookie => $cookie,);
+  unlink "$downloads_dir/$file";
+
+  redirect("show_downloads=all");
 }
 elsif ($cgi->param('edit_DDD_category')) {
   my $DDD_category_attrib = $cgi->param('DDD_category');
@@ -440,4 +434,15 @@ sub get_dbh {
   my $dbh = DBI->connect("DBI:mysql:database=$database;host=$host;port=$port;", $user, $password) or die $DBI::errstr;
   return $dbh;
 }
+
+sub redirect {
+  my $action = shift; 
+  my $cookie = $config->{cookie};
+  my $server_name = $ENV{SERVER_NAME};
+  my $script_name = $ENV{SCRIPT_NAME};
+  my $url = "http://$server_name" . $script_name . "?$action";
+  print $cgi->redirect( -URL => $url, -cookie => $cookie,);
+}
+
+
 
