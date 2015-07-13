@@ -40,7 +40,7 @@ sub init_CGI {
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
 
-  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment add_publication/;
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment add_publication send_recover_pwd_mail_button/;
   if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
@@ -108,18 +108,15 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('download')) { 
   my $file = download_data($downloads_dir);
   open(my $DLFILE, '<', "$downloads_dir/$file");
-
   print $cgi->header(
           -type => 'application/x-download',
           -attachment => $file,
           -Content_length  => -s "$downloads_dir/$file",
         );
-
   binmode $DLFILE;
   print while <$DLFILE>;
   undef ($DLFILE);
   unlink "$downloads_dir/$file";
-
   redirect("show_downloads=all");
 }
 elsif ($cgi->param('edit_DDD_category')) {
@@ -129,11 +126,7 @@ elsif ($cgi->param('edit_DDD_category')) {
   $session->param('genomic_feature_disease_id', $genomic_feature_disease_id);
   $session->flush(); 
   my $gfd_id = update_DDD_category($session);
-  my $cookie = $config->{cookie};
-  my $server_name = $ENV{SERVER_NAME};
-  my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$gfd_id";
-  print $cgi->redirect(-URL => $url, -cookie => $cookie);
+  redirect("search_type=gfd&dbID=$gfd_id");
 }
 elsif ($cgi->param('edit_GFD_action')) {
   my $allelic_requirement_attribs = join(',', $cgi->param('allelic_requirement'));
@@ -144,11 +137,7 @@ elsif ($cgi->param('edit_GFD_action')) {
   $session->param('GFD_action_id', $GFD_action_id);
   $session->flush();
   my $gfd_id = update_GFD_action($session);
-  my $cookie = $config->{cookie};
-  my $server_name = $ENV{SERVER_NAME};
-  my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$gfd_id";
-  print $cgi->redirect(-URL => $url, -cookie => $cookie);
+  redirect("search_type=gfd&dbID=$gfd_id");
 }
 elsif ($cgi->param('add_GFD_action')) {
   my $allelic_requirement_attribs = join(',', $cgi->param('allelic_requirement'));
@@ -159,11 +148,7 @@ elsif ($cgi->param('add_GFD_action')) {
   $session->param('GFD_id', $GFD_id);
   $session->flush();
   store_GFD_action($session);
-  my $cookie = $config->{cookie};
-  my $server_name = $ENV{SERVER_NAME};
-  my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$GFD_id";
-  print $cgi->redirect(-URL => $url, -cookie => $cookie);
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('new_gene_disease')) {
   new_gene_disease($session);
@@ -178,21 +163,13 @@ elsif ($cgi->param('add_GFD_publication_comment')) {
   my $GFD_publication_id = $cgi->param('GFD_publication_id');
   my $comment = $cgi->param('GFD_publication_comment');
   add_GFD_publication_comment($session, $GFD_id, $GFD_publication_id, $comment); 
-  my $cookie = $config->{cookie};
-  my $server_name = $ENV{SERVER_NAME};
-  my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$GFD_id";
-  print $cgi->redirect(-URL => $url, -cookie => $cookie);
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('delete_GFD_publication_comment')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $GFD_publication_comment_id = $cgi->param('GFD_publication_comment_id');
   delete_GFD_publication_comment($session, $GFD_id, $GFD_publication_comment_id); 
-  my $cookie = $config->{cookie};
-  my $server_name = $ENV{SERVER_NAME};
-  my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$GFD_id";
-  print $cgi->redirect(-URL => $url, -cookie => $cookie);
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('add_publication')) {
   my $GFD_id = $cgi->param('GFD_id');
@@ -282,13 +259,14 @@ sub send_recover_pwd_mail {
 
   $mail{smtp} = 'smtp.ebi.ac.uk';
   my $success = sendmail(%mail);
-  if ($success) {
-    show_default_page($session); # message email was send
-    return;
-  } else {
-    show_default_page($session); # error sending email, print $Mail::Sendmail::error, $Mail::Sendmail::log
-    return;
-  }
+#  if ($success) {
+#    show_default_page($session); # message email was send
+#    return;
+#  } else {
+#    show_default_page($session); # error sending email, print $Mail::Sendmail::error, $Mail::Sendmail::log
+#    return;
+#  }
+  redirect();
 }
 
 sub show_recover_pwd_page {
@@ -440,9 +418,10 @@ sub redirect {
   my $cookie = $config->{cookie};
   my $server_name = $ENV{SERVER_NAME};
   my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?$action";
+  my $url = "http://$server_name" . $script_name;
+  if ($action) {
+    $url .= "?$action";
+  }
   print $cgi->redirect( -URL => $url, -cookie => $cookie,);
 }
-
-
 
