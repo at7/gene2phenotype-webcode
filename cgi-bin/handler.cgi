@@ -174,7 +174,7 @@ elsif ($cgi->param('delete_GFD_publication_comment')) {
 elsif ($cgi->param('delete_GFD_action')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $GFD_action_id = $cgi->param('GFD_action_id');
-  delete_GFD_action($session, $GFD_id, $GFD_action_id); 
+  delete_GFD_action($session, $GFD_action_id); 
   redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('add_publication')) {
