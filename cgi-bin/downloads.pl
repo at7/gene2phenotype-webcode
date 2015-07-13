@@ -10,7 +10,9 @@ my $configuration_file = '../../../../config/registry';
 my $registry = G2P::Registry->new($configuration_file);
 
 sub download_data {
-  my $csv_file = shift;
+  my $downloads_dir = shift;
+  my $csv_file_name = "G2P.csv";
+  my $csv_file = "$downloads_dir/$csv_file_name";
   
   my $GFD_adaptor = $registry->get_adaptor('genomic_feature_disease');
 
@@ -40,4 +42,5 @@ sub download_data {
   }
   close $fh or die "$csv: $!";
   system("/usr/bin/gzip $csv_file");
+  return "$csv_file_name.gz"
 }
