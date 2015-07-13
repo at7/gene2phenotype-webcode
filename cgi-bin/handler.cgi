@@ -10,35 +10,42 @@ use CGI::Session qw(-ip-match);
 use CGI::Session::Auth;
 use DBI;
 use Mail::Sendmail;
+
 $CGI::DISABLE_UPLOADS = 1;
 require "./tmpl_handler.pl"; # cgi-bin
 require "./downloads.pl";
+
 my $password_file = "../../../../gene2phenotype_users"; 
 my $db_config = "../../../../config/registry";
+my $downloads_dir = "../../../../downloads";
+my $path_to_files = '../../../../downloads';
+my $tmp_dir = '../../../../tmp';
+
 my $config = init_CGI();
 my $cgi = $config->{cgi};
 my $session = $config->{session};
 my $search_term = $config->{search_term};
-
-my $path_to_files = '../../../../downloads';
 $ENV{PATH} = '';
+
 sub init_CGI { 
   my $config = {};
   my $cgi = new CGI;
   # |$sid = $cgi->cookie("CGISESSID") || $cgi->param('CGISESSID') || undef;
   # |$session = new CGI::Session(undef, $sid, {Directory=>'/tmp'});
   # --> $session = new CGI::Session(undef, $cgi, {Directory=>"/tmp"});
-  my $session = CGI::Session->load("driver:file", $cgi, {Directory=>'../../../../tmp'});
+  my $session = CGI::Session->load("driver:file", $cgi, {Directory => $tmp_dir});
   if ($session->is_empty) {
-    $session = CGI::Session->new("driver:file", $cgi, {Directory=>'../../../../tmp'});
+    $session = CGI::Session->new("driver:file", $cgi, {Directory => $tmp_dir});
   }
   my $session_id = $session->id();
-
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
-  if (!$cgi->param('download') && !$cgi->param('edit_DDD_category') && !$cgi->param('edit_GFD_action') && !$cgi->param('add_GFD_action') && !$cgi->param('add_GFD_publication_comment') && !$cgi->param('delete_GFD_publication_comment') && !$cgi->param('add_publication')) {
+
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment add_publication/;
+  if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
+
   $cgi->param('CGISESSID', $session_id);
 
   my $search_term = $session->param('search_term');
@@ -50,9 +57,7 @@ sub init_CGI {
   $config->{cookie} = $cookie;
   return $config;
 }
-#foreach my $key (sort(keys(%ENV))) {
-#    print "$key = $ENV{$key}<br>\n";
-#}
+
 #login
 #loggout
 #account
