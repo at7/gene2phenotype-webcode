@@ -249,7 +249,11 @@ sub display_data {
     my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
     my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_dbID($dbID);
 
-    $tmpl->param(authorised => 1);
+    if ($genomic_feature_disease->is_visible) {
+      $tmpl->param(authorised => 1);
+    } else {
+      $tmpl->param(authorised => 0);
+    }
 
     my $genomic_feature = $genomic_feature_disease->get_GenomicFeature;
     my $genomic_feature_attributes = get_genomic_feature_attributes($genomic_feature);
@@ -852,7 +856,11 @@ sub update_visibility {
 
   my $GFD_adaptor = $registry->get_adaptor('genomic_feature_disease');
   my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
-  $GFD->set_visibility($visibility);
+  if ($visibility eq 'authorised') {
+    $GFD->is_visible(1);
+  } else {
+    $GFD->is_visible(0);
+  }
   $GFD_adaptor->update($GFD, $user);
 } 
 
