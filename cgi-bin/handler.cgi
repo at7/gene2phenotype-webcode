@@ -40,7 +40,7 @@ sub init_CGI {
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
 
-  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button/;
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility/;
   if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
@@ -189,6 +189,12 @@ elsif ($cgi->param('add_publication')) {
   my $script_name = $ENV{SCRIPT_NAME};
   my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$GFD_id";
   print $cgi->redirect(-URL => $url, -cookie => $cookie);
+}
+elsif ($cgi->param('set_visibility')) {
+  my $GFD_id = $cgi->param('GFD_id');
+  my $visibility = $cgi->param('visibility');
+  my $return = update_visibility($session, $GFD_id, $visibility); 
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 else {
   show_default_page($session);
