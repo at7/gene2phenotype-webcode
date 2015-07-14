@@ -31,6 +31,27 @@
     <TMPL_IF NAME=display_gfd>
       <div class="container">
         <h3 class="title" >Gene: <em><TMPL_VAR NAME=gene_symbol></em> Disease: <em><TMPL_VAR NAME=disease_name></em></h3>
+        <div class="clear"></div>
+
+        <TMPL_IF NAME="logged_in">        
+          <div class="form-group visibility">
+            <form role="form" method="get" action="./handler.cgi">
+              <select name="visibility">
+                <TMPL_IF NAME="authorised">
+                  <option value="authorised" selected>Authorised. Visible to all users.</option>
+                  <option value="restricted">Restricted. Visible to editors only.</option>
+                <TMPL_ELSE>
+                  <option value="authorised">Authorised. Visible to all users.</option>
+                  <option value="restricted" selected>Restricted. Visible to editors only.</option>
+                </TMPL_IF>
+              </select> 
+              <div class="edit_attributes">
+                <input id="button" type="submit" name="set_visibility" value="Update" class="btn btn-primary btn-sm"/>
+              </div>
+            </form>
+          </div>
+        </TMPL_IF>
+
         <TMPL_INCLUDE NAME="GeneDiseaseAttributes.tmpl">
         <TMPL_INCLUDE NAME="Publication.tmpl">
         <TMPL_INCLUDE NAME="Phenotype.tmpl">
