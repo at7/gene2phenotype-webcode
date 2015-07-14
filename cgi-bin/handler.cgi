@@ -40,7 +40,7 @@ sub init_CGI {
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
 
-  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility/;
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility edit_organ_list/;
   if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
@@ -138,6 +138,12 @@ elsif ($cgi->param('edit_GFD_action')) {
   $session->flush();
   my $gfd_id = update_GFD_action($session);
   redirect("search_type=gfd&dbID=$gfd_id");
+}
+elsif ($cgi->param('edit_organ_list')) {
+  my @organ_ids = $cgi->param('organ');
+  my $GFD_id = $cgi->param('genomic_feature_disease_id');
+  update_organ_list($session, \@organ_ids, $GFD_id);
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('add_GFD_action')) {
   my $allelic_requirement_attribs = join(',', $cgi->param('allelic_requirement'));
