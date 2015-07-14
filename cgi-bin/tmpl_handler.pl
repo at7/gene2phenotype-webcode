@@ -283,6 +283,9 @@ sub display_data {
     my $phenotypes = get_phenotypes($genomic_feature_disease);
     $tmpl->param(phenotypes => $phenotypes);
     my $organs = get_organs($genomic_feature_disease);
+
+    my $organ_list = get_organ_list($genomic_feature_disease); 
+    my $edit_organs_form = get_edit_organs_form($organ_list);
     $tmpl->param(organs => $organs);
 
     $tmpl->param(GFD_id => $dbID);
@@ -293,6 +296,7 @@ sub display_data {
       edit_DDD_category => $edit_DDD_category_form,
       add_gfd_action_form => $add_GFD_action_form,
       gfd_actions => \@actions,
+      edit_organs => $edit_organs_form, 
       variations => $variations,
       consequence_counts => $counts,
     });  
@@ -498,6 +502,17 @@ sub get_organs {
     };
   }
   return \@organs_tmpl;
+}
+
+sub get_organ_list {
+  my $GFD = shift;
+  my @organ_list = ();
+  my $organs = $GFD->get_all_GFDOrgans;
+  foreach my $organ (@$organs) {
+    my $name = $organ->get_Organ()->name;
+    push @organ_list, $name;
+  }
+  return \@organ_list;
 }
 
 sub add_GFD_publication_comment {
@@ -768,6 +783,40 @@ sub get_mutation_consequence_form {
     }
   }
   $form .= "</select>\n</div>\n";
+  return $form;
+}
+
+sub get_edit_organs_form {
+  my $organ_list = shift; 
+  my $GFD_id = shift; 
+
+  my $organ_adaptor = $registry->get_adaptor('organ');
+  my %all_organs = map {$_->name => $_->dbID} @{$organ_adaptor->fetch_all};
+  my $form = join("\n",
+    '<div class="edit_gene_disease">',
+    '<h4>Edit organ specificity list:</h4>',
+    '<form role="form" method="get" action="./handler.cgi">',
+    '<div class="form-group">',
+    '<label>Organ specificity:</label><br>', "\n");
+  
+  foreach my $value (sort keys %all_organs) {
+    my $id = $all_organs{$value};
+    if (grep $_ eq $value, @$organ_list) {
+      $form .= "<input type=\"checkbox\" name=\"organ\" value=\"$id\" checked>$value<br>\n";
+    } else {
+      $form .= "<input type=\"checkbox\" name=\"organ\" value=\"$id\">$value<br>\n";
+    }
+  }
+  $form .= join("\n",
+    "</select>\n</div>",
+    '<div class="edit_attributes">',
+    "<input name=\"genomic_feature_disease_id\" value=\"$GFD_id\" type=\"hidden\">",
+    '<input id="button" type="submit" name="edit_organ_list" value="Save" class="btn btn-primary btn-sm"/>',
+    '<input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>',
+    '</div>',
+    '</form>',
+    '</div> <!--End edit gene-disease-->',
+    "\n");
   return $form;
 }
 
