@@ -248,6 +248,9 @@ sub display_data {
     $tmpl->param(display_gfd => 1);
     my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
     my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_dbID($dbID);
+
+    $tmpl->param(authorised => 1);
+
     my $genomic_feature = $genomic_feature_disease->get_GenomicFeature;
     my $genomic_feature_attributes = get_genomic_feature_attributes($genomic_feature);
     my $disease = $genomic_feature_disease->get_Disease;
