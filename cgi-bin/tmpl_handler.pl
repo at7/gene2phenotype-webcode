@@ -841,3 +841,18 @@ sub store_GFD_action {
   my $gene_symbol = $GFD->get_GenomicFeature->gene_symbol;
 }
 
+sub update_visibility {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $visibility = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $GFD_adaptor = $registry->get_adaptor('genomic_feature_disease');
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->set_visibility($visibility);
+  $GFD_adaptor->update($GFD, $user);
+} 
+
