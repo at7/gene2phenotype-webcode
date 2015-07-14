@@ -285,7 +285,7 @@ sub display_data {
     my $organs = get_organs($genomic_feature_disease);
 
     my $organ_list = get_organ_list($genomic_feature_disease); 
-    my $edit_organs_form = get_edit_organs_form($organ_list);
+    my $edit_organs_form = get_edit_organs_form($organ_list, $dbID);
     $tmpl->param(organs => $organs);
 
     $tmpl->param(GFD_id => $dbID);
@@ -866,6 +866,27 @@ sub update_GFD_action {
   $GFD_action->mutation_consequence_attrib($mutation_consquence_attrib);
   $GFD_action = $GFD_action_adaptor->update($GFD_action, $user);
   return $GFD_action->genomic_feature_disease_id;
+}
+
+sub update_organ_list {
+  my $session = shift;
+  my $updated_organ_ids = shift;
+  my $GFD_id = shift;
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $GFDO_adaptor = $registry->get_adaptor('genomic_feature_disease_organ');
+  $GFDO_adaptor->delete_all_by_GFD_id($GFD_id);
+
+  foreach my $new_id (@$updated_organ_ids) {
+    my $GFDO =  G2P::GenomicFeatureDiseaseOrgan->new({
+      organ_id => $new_id,
+      genomic_feature_disease_id => $GFD_id,
+      registry => $registry, 
+    });
+    $GFDO_adaptor->store($GFDO);
+  }  
 }
 
 sub store_GFD_action {
