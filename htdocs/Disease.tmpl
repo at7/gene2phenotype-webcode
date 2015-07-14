@@ -35,6 +35,7 @@
           <input type="text" class="form-control name" name="name" placeholder="<TMPL_VAR NAME=disease_name>" value="<TMPL_VAR NAME=disease_name>">
         </div>
         <div class="button_choice">
+          <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
           <input type="hidden" name="disease_id" value="<TMPL_VAR NAME=disease_id>"/>
           <input id="button" type="submit" class="btn btn-primary btn-sm" name="update_disease" value="Update"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
