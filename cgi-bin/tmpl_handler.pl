@@ -396,9 +396,11 @@ sub get_disease_attributes {
   my $disease = shift;
   my $disease_name = $disease->name;
   my $disease_mim = $disease->mim;
+  my $disease_id = $disease->dbID;
   return { 
     disease_name => $disease_name,
     disease_mim => $disease_mim,
+    disease_id => $disease_id,
   };
 }
 
