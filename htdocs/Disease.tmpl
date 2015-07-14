@@ -28,14 +28,14 @@
       <form id="update_disease" role="form" method="post" action="./handler.cgi">
         <div class="form-group">
           <label>OMIM MIM:</label>
-          <input type="text" class="form-control mim" name="mim" placeholder="<TMPL_VAR NAME=disease_mim>" value="">
+          <input type="text" class="form-control mim" name="mim" placeholder="<TMPL_VAR NAME=disease_mim>" value="<TMPL_VAR NAME=disease_mim>">
         </div>
         <div class="form-group">
           <label>Name:</label>
-          <input type="text" class="form-control name" name="name" placeholder="<TMPL_VAR NAME=disease_name>" value="">
+          <input type="text" class="form-control name" name="name" placeholder="<TMPL_VAR NAME=disease_name>" value="<TMPL_VAR NAME=disease_name>">
         </div>
         <div class="button_choice">
-          <input type="hidden" name="disease_id" value=""/>
+          <input type="hidden" name="disease_id" value="<TMPL_VAR NAME=disease_id>"/>
           <input id="button" type="submit" class="btn btn-primary btn-sm" name="update_disease" value="Update"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
         </div>
