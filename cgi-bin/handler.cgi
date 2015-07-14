@@ -182,13 +182,8 @@ elsif ($cgi->param('add_publication')) {
   my $pmid = $cgi->param('pmid');
   my $title = $cgi->param('title');
   my $source = $cgi->param('source');
-
   add_publication($session, $GFD_id, $pmid, $title, $source); 
-  my $cookie = $config->{cookie};
-  my $server_name = $ENV{SERVER_NAME};
-  my $script_name = $ENV{SCRIPT_NAME};
-  my $url = "http://$server_name" . $script_name . "?search_type=gfd&dbID=$GFD_id";
-  print $cgi->redirect(-URL => $url, -cookie => $cookie);
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('set_visibility')) {
   my $GFD_id = $cgi->param('GFD_id');
