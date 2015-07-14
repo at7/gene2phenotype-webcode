@@ -7,4 +7,39 @@
     </TMPL_IF>
   </dl>
   <div class="clear"></div>
+  
+  <div id="disease_attribs">
+    <div class="gene_disease_attributes">
+      <div class="edit_attributes">
+        <TMPL_IF NAME=logged_in>
+          <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
+        <TMPL_ELSE>
+          <form id="login_form" action="./handler.cgi" method=get>
+            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
+            <input id="button" type="submit" name="login" value="Edit" class="btn btn-primary btn-sm edit"/>
+          </form>
+        </TMPL_IF>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="edit_gene_disease">
+      <h4>Update disease information</h4>
+      <form id="update_disease" role="form" method="post" action="./handler.cgi">
+        <div class="form-group">
+          <label>OMIM MIM:</label>
+          <input type="text" class="form-control mim" name="mim" placeholder="<TMPL_VAR NAME=disease_mim>" value="">
+        </div>
+        <div class="form-group">
+          <label>Name:</label>
+          <input type="text" class="form-control name" name="name" placeholder="Name" value="">
+        </div>
+        <div class="button_choice">
+          <input type="hidden" name="disease_id" value=""/>
+          <input id="button" type="submit" class="btn btn-primary btn-sm" name="update_disease" value="Update"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
