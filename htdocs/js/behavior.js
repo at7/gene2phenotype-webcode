@@ -14,6 +14,11 @@ $(document).ready(function(){
     minLength: 2,
     select: function(event, ui) {}
   });
+  $("#query_phenotype_name").autocomplete({
+    source: "autocomplete_phenotype.cgi",
+    minLength: 1,
+    select: function(event, ui) {}
+  });
 
   $(".header_gene_disease").click(function(){
     $header = $(this);
