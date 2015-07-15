@@ -140,3 +140,17 @@ dd {
   padding-top: 1em;
   padding-bottom: 2em;
 }
+
+.phenotype_list {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+
+.phenotype_left {
+  float: left;
+}
+
+.phenotype_right {
+  float: right;
+}
+
