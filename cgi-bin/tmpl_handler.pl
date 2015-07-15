@@ -592,6 +592,30 @@ sub delete_GFDPhenotype {
   $GFDPA->delete($GFDphenotype, $user);
 } 
 
+sub add_GFDPhenotype {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $phenotype_name = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $GFDPA = $registry->get_adaptor('genomic_feature_disease_phenotype');
+  my $PA = $registry->get_adaptor('phenotype');
+  my $phenotype = $PA->fetch_by_name($phenotype_name);
+
+  my $GFDP = $GFDPA->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype->dbID);
+  if (!$GFDP) {
+    $GFDP = G2P::GenomicFeatureDiseasePhenotype->new({
+      genomic_feature_disease_id => $GFD_id,
+      phenotype_id => $phenotype->dbID,
+      registry => $registry,
+    });
+    $GFDPA->store($GFDP);
+  }
+} 
+
 sub get_organs {
   my $GFD = shift;
   my @organs_tmpl = ();
