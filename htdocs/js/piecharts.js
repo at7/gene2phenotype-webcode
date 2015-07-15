@@ -2,11 +2,13 @@ $( document ).ready(function() {
   nv.addGraph(function() {
     d3.selectAll('.chart').call(function(div){
       var chart = nv.models.pieChart()
-        .x(function(d) { return d.label })
-        .y(function(d) { return d.value })
-        .showLabels(true)
+        .x(function(d)     { return d.label })
+        .y(function(d)     { return d.value })
+        .showLabels(false)
         .width(600)
         .height(400);
+
+      chart.color(function(d){ return d.data.color });
 
       var data = JSON.parse(div.attr('data'));
 
