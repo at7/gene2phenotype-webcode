@@ -564,14 +564,18 @@ sub get_GFD_publications {
 sub get_phenotypes {
   my $GFD = shift;
   my @phenotypes_tmpl = ();
-  my $phenotypes = $GFD->get_all_GFDPhenotypes;
-  foreach my $phenotype (@$phenotypes) {
-    my $stable_id = $phenotype->get_Phenotype()->stable_id;
+  my $GFDPhenotypes = $GFD->get_all_GFDPhenotypes;
+  foreach my $GFDPhenotype (@$GFDPhenotypes) {
+    my $phenotype = $GFDPhenotype->get_Phenotype;
+    my $stable_id = $phenotype->stable_id;
+    my $name = $phenotype->name;
     push @phenotypes_tmpl, {
       stable_id => $stable_id,
+      name => $name,
     };
   }
-  return \@phenotypes_tmpl;
+  my @sorted_phenotypes_tmpl = sort {$a->{name} cmp $b->{name}} @phenotypes_tmpl;
+  return \@sorted_phenotypes_tmpl;
 }
 
 sub get_organs {
