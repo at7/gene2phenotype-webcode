@@ -5,8 +5,18 @@ use HTML::Template;
 use DBI;
 use JSON;
 use lib "../../lib/gene2phenotype/modules";
+use lib "../../lib/ensembl/modules";
+use lib "../../lib/ensembl-variation/modules";
 
 use G2P::Registry;
+use Bio::EnsEMBL::Registry;
+my $ensembl_registry = 'Bio::EnsEMBL::Registry';
+$ensembl_registry->load_registry_from_db(
+  -host => 'ensembldb.ensembl.org',
+  -user => 'anonymous',
+  -port => 3337,
+);
+
 use constant TMPL_FILE => "../htdocs/G2P.tmpl";
 my $tmpl = new HTML::Template( filename => TMPL_FILE, global_vars => 1 );
 
@@ -59,6 +69,31 @@ my $constants = {
     msg => 'Login failed. You entered a wrong password. Try again or reset your password.',
     type => 'danger',
   },
+  1 => {
+    msg => 'Disease name is already in database.',
+    type => 'danger',
+  },
+  2 => {
+    msg => 'Successfully updated disease attributes.',
+    type => 'success',
+  },
+  3 => {
+    msg => 'Successfully updated visibility status.',
+    type => 'success',
+  },
+  4 => {
+    msg => 'Disease mim is already in database.',
+    type => 'danger',
+  },
+  5 => {
+    msg => 'Invalid format for disease mim. It needs to be a number.',
+    type => 'danger',
+  },
+  6 => {
+    msg => 'Successfully updated organ list.',
+    type => 'success',
+  }
+
 };
 
 sub show_downloads_page {
@@ -239,6 +274,11 @@ sub display_data {
   my $session = shift;
   my $search_type = shift;
   my $dbID = shift;
+  my $msg = shift;
+
+  if ($msg) {
+    set_message($tmpl, $msg);
+  }
 
   my $logged_in = set_login_status($tmpl, $session);
   $tmpl->param(search_type => $search_type);
@@ -260,8 +300,9 @@ sub display_data {
     my $disease = $genomic_feature_disease->get_Disease;
     my $disease_attributes = get_disease_attributes($disease);
 
-    my $variations = get_variations($genomic_feature_disease);
-    my $counts = get_consequence_counts($genomic_feature_disease);
+    my $get_var = get_variations($genomic_feature->gene_symbol);
+    my $variations = $get_var->{'tmpl'}; 
+    my $counts = $get_var->{'counts'};
 
     my $DDD_category = $genomic_feature_disease->DDD_category || 'Not assigned';
     my $edit_DDD_category_form = get_edit_DDD_category_form($genomic_feature_disease); 
@@ -318,9 +359,9 @@ sub display_data {
     my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
     my $genomic_feature = $genomic_feature_adaptor->fetch_by_dbID($dbID);
     my $genomic_feature_attributes = get_genomic_feature_attributes($genomic_feature);
-    my $variations = get_variations($genomic_feature);
-    my $counts = get_consequence_counts($genomic_feature);
-
+    my $get_var = get_variations($genomic_feature->gene_symbol);
+    my $variations = $get_var->{'tmpl'}; 
+    my $counts = $get_var->{'counts'};
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param({
       variations => $variations,
@@ -404,45 +445,44 @@ sub get_disease_attributes {
   };
 }
 
-sub get_consequence_counts {
-  my $genomic_feature_disease = shift;
-  my $variations = $genomic_feature_disease->get_all_Variations; 
-  my $counts = encode_json(variation_consequence_counts($variations));
-  return $counts;
-}
-
 sub get_variations {
-  my $genomic_feature_disease = shift;
+  my $gene_symbol = shift;
+
+  my $gene_adaptor = $ensembl_registry->get_adaptor('human', 'core', 'gene');
+  my $vfa = $ensembl_registry->get_adaptor('human', 'variation', 'variationfeature');
+  my @genes = @{ $gene_adaptor->fetch_all_by_external_name($gene_symbol) };
+
   my @variations_tmpl = ();
-  my $variations = $genomic_feature_disease->get_all_Variations; 
-  foreach my $variation (@$variations) {
-    my $mutation    = $variation->mutation;
-    my $consequence = $variation->consequence;
-    my $publication = $variation->get_Publication;
-    my ($title, $pmid);
-    if ($publication) {       
-      $title = $publication->title;
-      $pmid = $publication->pmid; 
+  my $counts = {};
+  foreach my $gene (@genes) {
+    my $vfs = $vfa->fetch_all_by_Slice_constraint($gene->feature_Slice, "vf.clinical_significance IS NOT NULL");
+    my $consequence_count = {};
+    foreach my $vf (@$vfs) {
+      my $variant_name = $vf->variation_name;
+      my $clin_sgn = join(', ', @{$vf->get_all_clinical_significance_states});
+      my $tvs = $vf->get_all_TranscriptVariations();
+      foreach my $tv (@$tvs) {
+        foreach my $consequence (@{$tv->consequence_type}) {
+          $counts->{$consequence}++;
+        }
+        my $consequence_types = join(', ', @{$tv->consequence_type});
+        my $hgvs_transcript = join(',', values %{$tv->hgvs_transcript()});
+        push @variations_tmpl, {
+          variant_name => $variant_name,
+          consequence => $consequence_types, 
+          hgvs_transcript => $hgvs_transcript,
+          clin_sgn => $clin_sgn,
+        };
+      }
     }
-    my $variation_synonyms = $variation->get_all_synonyms_order_by_source;
-    my @dbsnp_ids = ();
-    foreach (@{$variation_synonyms->{dbsnp}}) {
-      push @dbsnp_ids, {name => $_};
-    }
-    my @clinvar_ids = ();
-    foreach (@{$variation_synonyms->{clinvar}}) {
-      push @clinvar_ids, {name => $_};
-    }
-    push @variations_tmpl, {
-      mutation => $mutation, 
-      consequence => $consequence, 
-      dbsnp_ids => \@dbsnp_ids,
-      clinvar_ids => \@clinvar_ids,
-      pmid => $pmid,
-      title => $title,
-    };
   }
-  return \@variations_tmpl;
+  my @array = ();
+  while (my ($consequence, $count) = each %$counts) {
+    push @array, {'label' => $consequence, 'value' => $count};
+  }
+  my $encoded_counts = encode_json(\@array);
+
+  return { 'tmpl' => \@variations_tmpl, 'counts' => $encoded_counts };
 }
 
 sub get_GFD_publications {
@@ -822,20 +862,6 @@ sub get_edit_organs_form {
   return $form;
 }
 
-sub variation_consequence_counts {
-  my $variations = shift;
-  my $counts = {};
-  foreach my $variation (@$variations) {
-    $counts->{$variation->consequence}++;
-  }
-  my @array = ();
-  while (my ($consequence, $count) = each %$counts) {
-    push @array, {'label' => $consequence, 'value' => $count};
-  }
-
-  return \@array;
-}
-
 sub update_DDD_category {
   my $session = shift;
 
@@ -889,6 +915,7 @@ sub update_organ_list {
     });
     $GFDO_adaptor->store($GFDO);
   }  
+  return 6;
 }
 
 sub store_GFD_action {
@@ -934,5 +961,45 @@ sub update_visibility {
     $GFD->is_visible(0);
   }
   $GFD_adaptor->update($GFD, $user);
+  return 3;
 } 
+
+sub update_disease {
+  my $session = shift;
+  my $disease_id = shift;
+  my $disease_mim = shift;
+  my $disease_name = shift;
+
+  my $disease_adaptor = $registry->get_adaptor('disease');
+  my $disease = $disease_adaptor->fetch_by_dbID($disease_id);
+
+  if ($disease_mim) {
+    $disease_mim =~ s/^\s+|\s+$//g;
+    if ($disease_mim =~ m/^\d+$/) {
+      my $tmp_disease = $disease_adaptor->fetch_by_mim($disease_mim);
+      if ($tmp_disease) {
+        if ($tmp_disease->dbID != $disease_id) {
+          return 4; 
+        } 
+      }
+      $disease->mim($disease_mim);
+    } else {
+      return 5; 
+    }  
+  } 
+  if ($disease_name) {
+    $disease_name =~ s/^\s+|\s+$//g;
+    my $tmp_disease = $disease_adaptor->fetch_by_name($disease_name);
+    if ($tmp_disease) {
+      if ($tmp_disease->dbID != $disease_id) {
+        return 1; 
+      } 
+    }
+    $disease->name($disease_name);
+  }
+
+  $disease_adaptor->update($disease);
+
+  return 2;
+}
 
