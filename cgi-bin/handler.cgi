@@ -40,7 +40,7 @@ sub init_CGI {
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
 
-  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility edit_organ_list/;
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility edit_organ_list update_disease/;
   if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
@@ -76,7 +76,8 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('search_type')) {
   my $search_type = $cgi->param('search_type');
   my $dbID = $cgi->param('dbID');
-  display_data($session, $search_type, $dbID);
+  my $msg = $cgi->param('msg');
+  display_data($session, $search_type, $dbID, $msg);
 } elsif ($cgi->param('logout')) {
   logout();
 } elsif ($cgi->param('account') || $cgi->param('cancel_edit_account_data_button')) {
@@ -142,8 +143,8 @@ elsif ($cgi->param('edit_GFD_action')) {
 elsif ($cgi->param('edit_organ_list')) {
   my @organ_ids = $cgi->param('organ');
   my $GFD_id = $cgi->param('genomic_feature_disease_id');
-  update_organ_list($session, \@organ_ids, $GFD_id);
-  redirect("search_type=gfd&dbID=$GFD_id");
+  my $return_value = update_organ_list($session, \@organ_ids, $GFD_id);
+  redirect("search_type=gfd&dbID=$GFD_id&msg=$return_value");
 }
 elsif ($cgi->param('add_GFD_action')) {
   my $allelic_requirement_attribs = join(',', $cgi->param('allelic_requirement'));
@@ -194,8 +195,16 @@ elsif ($cgi->param('add_publication')) {
 elsif ($cgi->param('set_visibility')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $visibility = $cgi->param('visibility');
-  my $return = update_visibility($session, $GFD_id, $visibility); 
-  redirect("search_type=gfd&dbID=$GFD_id");
+  my $return_value = update_visibility($session, $GFD_id, $visibility); 
+  redirect("search_type=gfd&dbID=$GFD_id&msg=$return_value");
+}
+elsif ($cgi->param('update_disease')) {
+  my $GFD_id = $cgi->param('GFD_id');
+  my $disease_id = $cgi->param('disease_id');
+  my $disease_mim = $cgi->param('mim');
+  my $disease_name = $cgi->param('name');
+  my $return_value = update_disease($session, $disease_id, $disease_mim, $disease_name);
+  redirect("search_type=gfd&dbID=$GFD_id&msg=$return_value");
 }
 else {
   show_default_page($session);
