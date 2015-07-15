@@ -572,11 +572,25 @@ sub get_phenotypes {
     push @phenotypes_tmpl, {
       stable_id => $stable_id,
       name => $name,
+      GFD_phenotype_id => $GFDPhenotype->dbID,
     };
   }
   my @sorted_phenotypes_tmpl = sort {$a->{name} cmp $b->{name}} @phenotypes_tmpl;
   return \@sorted_phenotypes_tmpl;
 }
+
+sub delete_GFDPhenotype {
+  my $session = shift;
+  my $GFD_phenotype_id = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $GFDPA = $registry->get_adaptor('genomic_feature_disease_phenotype');
+  my $GFDphenotype = $GFDPA->fetch_by_dbID($GFD_phenotype_id);  
+  $GFDPA->delete($GFDphenotype, $user);
+} 
 
 sub get_organs {
   my $GFD = shift;
