@@ -26,66 +26,33 @@ my $configuration_file = '../../../../config/registry';
 my $registry = G2P::Registry->new($configuration_file);
 
 my @constants = (
-  { text => 'RESET_PWD_SUC',
-    msg  => 'Password was successfully updated.',
-    type => 'success'}, 
-  { text => 'PWD_ERROR',
-    msg  => 'Error. Password verification failed.',
-    type => 'danger',},
-  { text => 'PWDS_DONT_MATCH',
-    msg => 'Error. Retyped and new password don\'t match.',
-    type => 'danger',},
-  { text => 'MISSING_PWDS',
-    msg => 'Error. You must provide a new password and retype the new password.',
-    type => 'danger',},
-  { text => 'RESET_PWD_ERROR',
-    msg => 'There was an error resetting you password. Please contact g2p-help@ebi.ac.uk.',
-    type => 'danger'},
-  { text => 'RESET_USERNAME_SUC',
-    msg => 'Username was successfully updated.',
-    type => 'success',},
-  { text => 'USERNAME_IN_USE',
-    msg => 'The new username is already taken.',
-    type => 'danger'},
-  { text => 'NEW_USERNAME_MISSING',
-    msg => 'You need to provide a new username.',
-    type => 'danger',},
-  { text => 'EMAIL_IN_USE',
-    msg => 'The new email is already taken.',
-    type => 'danger',},
-  { text => 'RESET_EMAIL_SUC',
-    msg => 'Email was successfully updated.',
-    type => 'success',},
-  { text => 'EMAIL_UNKNOWN',
-    msg => 'The email address is not known. Please contact g2p-help@ebi.ac.uk.',
-    type => 'danger',},
-  { text => 'SESSION_IDS_DONT_MATCH',
-    msg => 'Session ids don\'t match. Please contact g2p-help@ebi.ac.uk.',
-    type => 'danger',},
-  { text => 'ERROR_ADD_GENE_DISEASE_PAIR',
-    msg => 'You must provide a gene name and a disease name.',
-    type => 'danger',},  
-  { text => 'LOGIN_FAILED',
-    msg => 'Login failed. You entered a wrong password. Try again or reset your password.',
-    type => 'danger',},
-  { text => 'DISEASE_NAME_IN_DB',
-    msg => 'Disease name is already in database.',
-    type => 'danger',},
-  { text => 'UPDATED_DISEASE_ATTRIBS_SUC',
-    msg => 'Successfully updated disease attributes.',
-    type => 'success',},
-  { text => 'UPDATED_VISIBILITY_STATUS_SUC',
-    msg => 'Successfully updated visibility status.',
-    type => 'success',},
-  { text => 'DISEASE_MIM_IN_DB',
-    msg => 'Disease mim is already in database.',
-    type => 'danger',},
-  { text => 'WRONG_FORMAT_DISEASE_MIM',
-    msg => 'Invalid format for disease mim. It needs to be a number.',
-    type => 'danger',},
-  { text => 'UPDATED_ORGAN_LIST',
-    msg => 'Successfully updated organ specificity list.',
-    type => 'success',}
+  { text => 'RESET_PWD_SUC', msg => 'Password was successfully updated.', type => 'success'}, 
+  { text => 'PWD_ERROR', msg  => 'Error. Password verification failed.', type => 'danger',},
+  { text => 'PWDS_DONT_MATCH', msg => 'Error. Retyped and new password don\'t match.', type => 'danger',},
+  { text => 'MISSING_PWDS', msg => 'Error. You must provide a new password and retype the new password.', type => 'danger',},
+  { text => 'RESET_PWD_ERROR', msg => 'There was an error resetting you password. Please contact g2p-help@ebi.ac.uk.', type => 'danger'},
+  { text => 'RESET_USERNAME_SUC', msg => 'Username was successfully updated.', type => 'success',},
+  { text => 'USERNAME_IN_USE', msg => 'The new username is already taken.', type => 'danger'},
+  { text => 'NEW_USERNAME_MISSING', msg => 'You need to provide a new username.', type => 'danger',},
+  { text => 'EMAIL_IN_USE', msg => 'The new email is already taken.', type => 'danger',},
+  { text => 'RESET_EMAIL_SUC', msg => 'Email was successfully updated.', type => 'success',},
+  { text => 'EMAIL_UNKNOWN', msg => 'The email address is not known. Please contact g2p-help@ebi.ac.uk.', type => 'danger',},
+  { text => 'SESSION_IDS_DONT_MATCH', msg => 'Session ids don\'t match. Please contact g2p-help@ebi.ac.uk.', type => 'danger',},
+  { text => 'ERROR_ADD_GENE_DISEASE_PAIR', msg => 'You must provide a gene name and a disease name.', type => 'danger',},  
+  { text => 'LOGIN_FAILED', msg => 'Login failed. You entered a wrong password. Try again or reset your password.', type => 'danger',},
+  { text => 'DISEASE_NAME_IN_DB', msg => 'Disease name is already in database.', type => 'danger',},
+  { text => 'UPDATED_DISEASE_ATTRIBS_SUC', msg => 'Successfully updated disease attributes.', type => 'success',},
+  { text => 'UPDATED_VISIBILITY_STATUS_SUC', msg => 'Successfully updated visibility status.', type => 'success',},
+  { text => 'DISEASE_MIM_IN_DB', msg => 'Disease mim is already in database.', type => 'danger',},
+  { text => 'WRONG_FORMAT_DISEASE_MIM', msg => 'Invalid format for disease mim. It needs to be a number.', type => 'danger',},
+  { text => 'UPDATED_ORGAN_LIST', msg => 'Successfully updated organ specificity list.', type => 'success',}
+  { text => 'UPDATED_DDD_CATEGORY_SUC', msg => 'Successfully updated DDD category', type => 'success',},
+  { text => 'UPDATED_GFD_ACTION_SUC', msg => '', type => '',},
+  { text => 'ADDED_GFD_ACTION_SUC', msg => '', type => ''},
+  { text => 'ADDED_GFDPHENOTYPE_SUC', msg => '', type => ''},
+  { text => 'ADDED_PUBLICATION_SUC', msg => '', type => ''},
+  { text => 'DELETED_GFDPHENOTYPE_SUC', msg => '', type => ''},
+  { text => 'ADDED_GFDPC_SUC', msg => '', type => ''},
 );
 
 my $consequence_colors = {
@@ -500,7 +467,7 @@ sub get_variations {
   my @variations_tmpl = ();
   my $counts = {};
   foreach my $gene (@genes) {
-    my $vfs = $vfa->fetch_all_by_Slice_constraint($gene->feature_Slice, "vf.clinical_significance IS NOT NULL");
+    my $vfs = $vfa->fetch_all_by_Slice_constraint($gene->feature_Slice, "vf.clinical_significance='pathogenic'");
     my $consequence_count = {};
     foreach my $vf (@$vfs) {
       my $variant_name = $vf->variation_name;
@@ -594,6 +561,7 @@ sub delete_GFDPhenotype {
   my $GFDPA = $registry->get_adaptor('genomic_feature_disease_phenotype');
   my $GFDphenotype = $GFDPA->fetch_by_dbID($GFD_phenotype_id);  
   $GFDPA->delete($GFDphenotype, $user);
+  return 'DELETED_GFDPHENOTYPE_SUC';
 } 
 
 sub add_GFDPhenotype {
@@ -618,6 +586,7 @@ sub add_GFDPhenotype {
     });
     $GFDPA->store($GFDP);
   }
+  return 'ADDED_GFDPHENOTYPE_SUC';
 } 
 
 sub get_organs {
@@ -662,6 +631,7 @@ sub add_GFD_publication_comment {
   });
 
   $gfd_p_c_a->store($GFD_publication_comment, $user);
+  return 'ADDED_GFDPC_SUC';
 }
 
 sub delete_GFD_publication_comment {
@@ -677,6 +647,7 @@ sub delete_GFD_publication_comment {
   my $GFD_publication_comment = $gfd_p_c_a->fetch_by_dbID($GFD_publication_comment_id);  
 
   $gfd_p_c_a->delete($GFD_publication_comment, $user);
+  return 'DELETED_GFDPC_SUC';
 }
 
 sub delete_GFD_action {
@@ -727,6 +698,7 @@ sub add_publication {
     });
     $GFD_pa->store($GFD_publication);
   }
+  return 'ADDED_PUBLICATION_SUC';
 }
 
 sub get_gfd_logs {
@@ -960,7 +932,8 @@ sub update_DDD_category {
   my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_dbID($genomic_feature_disease_id);
   $genomic_feature_disease->DDD_category_attrib($DDD_category_attrib);
   $genomic_feature_disease = $genomic_feature_disease_adaptor->update($genomic_feature_disease, $user); 
-  return $genomic_feature_disease->dbID;
+
+  return 'UPDATED_DDD_CATEGORY_SUC';
 }
 
 sub update_GFD_action {
@@ -978,7 +951,7 @@ sub update_GFD_action {
   $GFD_action->allelic_requirement_attrib($allelic_requirement_attribs);  
   $GFD_action->mutation_consequence_attrib($mutation_consquence_attrib);
   $GFD_action = $GFD_action_adaptor->update($GFD_action, $user);
-  return $GFD_action->genomic_feature_disease_id;
+  return 'UPDATED_GFD_ACTION_SUC';
 }
 
 sub update_organ_list {
@@ -1000,7 +973,7 @@ sub update_organ_list {
     });
     $GFDO_adaptor->store($GFDO);
   }  
-  return 6;
+  return 'UPDATED_ORGAN_LIST';
 }
 
 sub store_GFD_action {
@@ -1027,6 +1000,7 @@ sub store_GFD_action {
   my $GFD_adaptor = $registry->get_adaptor('genomic_feature_disease');
   my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
   my $gene_symbol = $GFD->get_GenomicFeature->gene_symbol;
+  return 'ADDED_GFD_ACTION_SUC';
 }
 
 sub update_visibility {
