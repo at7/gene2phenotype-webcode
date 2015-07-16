@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use HTML::Template;
+use List::MoreUtils qw(first_index);
 use DBI;
 use JSON;
 use lib "../../lib/gene2phenotype/modules";
@@ -24,76 +25,68 @@ my $configuration_file = '../../../../config/registry';
 
 my $registry = G2P::Registry->new($configuration_file);
 
-my $constants = {
- 'reset_pwd_successful' => {
+my @constants = (
+  { text => 'RESET_PWD_SUC',
     msg  => 'Password was successfully updated.',
     type => 'success'}, 
-  'current_pwd_wrong' => {
+  { text => 'PWD_ERROR',
     msg  => 'Error. Password verification failed.',
     type => 'danger',},
-  'new_and_retyped_dont_match' => {
+  { text => 'PWDS_DONT_MATCH',
     msg => 'Error. Retyped and new password don\'t match.',
     type => 'danger',},
-  'missing_pwds' => {
+  { text => 'MISSING_PWDS',
     msg => 'Error. You must provide a new password and retype the new password.',
     type => 'danger',},
-  'reset_pwd_failed' => {
+  { text => 'RESET_PWD_ERROR',
     msg => 'There was an error resetting you password. Please contact g2p-help@ebi.ac.uk.',
     type => 'danger'},
-  'reset_username_successful' => {
+  { text => 'RESET_USERNAME_SUC',
     msg => 'Username was successfully updated.',
     type => 'success',},
-  'new_username_already_taken' => {
+  { text => 'USERNAME_IN_USE',
     msg => 'The new username is already taken.',
     type => 'danger'},
-  'new_username_missing' => {
+  { text => 'NEW_USERNAME_MISSING',
     msg => 'You need to provide a new username.',
     type => 'danger',},
-  'email_is_taken' => {
+  { text => 'EMAIL_IN_USE',
     msg => 'The new email is already taken.',
     type => 'danger',},
-  'reset_email_successful' => {
+  { text => 'RESET_EMAIL_SUC',
     msg => 'Email was successfully updated.',
     type => 'success',},
-  'email_unknown' => {
+  { text => 'EMAIL_UNKNOWN',
     msg => 'The email address is not known. Please contact g2p-help@ebi.ac.uk.',
     type => 'danger',},
-  'session_ids_dont_match' => {
+  { text => 'SESSION_IDS_DONT_MATCH',
     msg => 'Session ids don\'t match. Please contact g2p-help@ebi.ac.uk.',
     type => 'danger',},
-  'add_gene_disease_pair' => {
+  { text => 'ERROR_ADD_GENE_DISEASE_PAIR',
     msg => 'You must provide a gene name and a disease name.',
-    type => 'danger',
-  },  
-  'login_failed' => {
+    type => 'danger',},  
+  { text => 'LOGIN_FAILED',
     msg => 'Login failed. You entered a wrong password. Try again or reset your password.',
-    type => 'danger',
-  },
-  1 => {
+    type => 'danger',},
+  { text => 'DISEASE_NAME_IN_DB',
     msg => 'Disease name is already in database.',
-    type => 'danger',
-  },
-  2 => {
+    type => 'danger',},
+  { text => 'UPDATED_DISEASE_ATTRIBS_SUC',
     msg => 'Successfully updated disease attributes.',
-    type => 'success',
-  },
-  3 => {
+    type => 'success',},
+  { text => 'UPDATED_VISIBILITY_STATUS_SUC',
     msg => 'Successfully updated visibility status.',
-    type => 'success',
-  },
-  4 => {
+    type => 'success',},
+  { text => 'DISEASE_MIM_IN_DB',
     msg => 'Disease mim is already in database.',
-    type => 'danger',
-  },
-  5 => {
+    type => 'danger',},
+  { text => 'WRONG_FORMAT_DISEASE_MIM',
     msg => 'Invalid format for disease mim. It needs to be a number.',
-    type => 'danger',
-  },
-  6 => {
-    msg => 'Successfully updated organ list.',
-    type => 'success',
-  }
-};
+    type => 'danger',},
+  { text => 'UPDATED_ORGAN_LIST',
+    msg => 'Successfully updated organ specificity list.',
+    type => 'success',}
+);
 
 my $consequence_colors = {
   'intergenic_variant'                 => '#636363',
@@ -135,6 +128,18 @@ my $consequence_colors = {
   'NMD_transcript_variant'             => '#007fff',
 };
 
+
+sub get_message_id {
+  my $text = shift;
+  return first_index { $_->{text} eq $text } @constants; 
+}
+
+sub get_message_hash {
+  my $text = shift;
+  my $index =  first_index { $_->{text} eq $text } @constants; 
+  return $constants[$index];
+}
+
 sub show_downloads_page {
   my $session = shift;
   set_login_status($tmpl, $session);
@@ -169,8 +174,9 @@ sub set_login_status {
 sub set_message {
   my $tmpl = shift;
   my $message = shift;
-  my $full_message = $constants->{$message}->{msg};
-  my $msg_type =  $constants->{$message}->{type};
+  my $msg_hash = get_message_hash($message);
+  my $full_message = $msg_hash->{msg};
+  my $msg_type =  $msg_hash->{type};
   $tmpl->param(message => $full_message);
   $tmpl->param(message_type => $msg_type);
 }
@@ -325,6 +331,7 @@ sub display_data {
 
   if ($search_type eq 'gfd') {
     $tmpl->param(display_gfd => 1);
+    $tmpl->param(GFD_id => $dbID);
     my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
     my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_dbID($dbID);
 
@@ -363,12 +370,11 @@ sub display_data {
     my $phenotypes = get_phenotypes($genomic_feature_disease);
     $tmpl->param(phenotypes => $phenotypes);
     my $organs = get_organs($genomic_feature_disease);
+    $tmpl->param(organs => $organs);
 
     my $organ_list = get_organ_list($genomic_feature_disease); 
     my $edit_organs_form = get_edit_organs_form($organ_list, $dbID);
-    $tmpl->param(organs => $organs);
 
-    $tmpl->param(GFD_id => $dbID);
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param($disease_attributes);
     $tmpl->param({
@@ -427,7 +433,7 @@ sub add_new_gene_disease {
   my $gene_name = shift;
   my $disease_name = shift;
   if (!$gene_name || !$disease_name) {
-    new_gene_disease($session, 'add_gene_disease_pair');
+    new_gene_disease($session, 'ERROR_ADD_GENE_DISEASE_PAIR');
     return; 
   }
 
@@ -518,8 +524,6 @@ sub get_variations {
   my @array = ();
   while (my ($consequence, $count) = each %$counts) {
     push @array, {'label' => $consequence, 'value' => $count, 'color' => $consequence_colors->{$consequence} || '#d0d6fe'};
-#    push @array, {'label' => $consequence, 'value' => $count};
-
   }
   my $encoded_counts = encode_json(\@array);
 
@@ -689,7 +693,6 @@ sub delete_GFD_action {
   $gfda_a->delete($GFDA, $user);
 }
 
-
 sub add_publication {
   my $session = shift;
   my $GFD_id = shift;
@@ -725,7 +728,6 @@ sub add_publication {
     $GFD_pa->store($GFD_publication);
   }
 }
-
 
 sub get_gfd_logs {
   my $genomic_feature_disease = shift;
@@ -1044,7 +1046,7 @@ sub update_visibility {
     $GFD->is_visible(0);
   }
   $GFD_adaptor->update($GFD, $user);
-  return 3;
+  return 'UPDATED_VISIBILITY_STATUS_SUC';
 } 
 
 sub update_disease {
@@ -1062,12 +1064,12 @@ sub update_disease {
       my $tmp_disease = $disease_adaptor->fetch_by_mim($disease_mim);
       if ($tmp_disease) {
         if ($tmp_disease->dbID != $disease_id) {
-          return 4; 
+          return 'DISEASE_MIM_IN_DB'; 
         } 
       }
       $disease->mim($disease_mim);
     } else {
-      return 5; 
+      return 'WRONG_FORMAT_DISEASE_MIM'; 
     }  
   } 
   if ($disease_name) {
@@ -1075,14 +1077,12 @@ sub update_disease {
     my $tmp_disease = $disease_adaptor->fetch_by_name($disease_name);
     if ($tmp_disease) {
       if ($tmp_disease->dbID != $disease_id) {
-        return 1; 
+        return 'DISEASE_NAME_IN_DB'; 
       } 
     }
     $disease->name($disease_name);
   }
-
   $disease_adaptor->update($disease);
-
-  return 2;
+  return 'UPDATED_DISEASE_ATTRIBS_SUC';
 }
 
