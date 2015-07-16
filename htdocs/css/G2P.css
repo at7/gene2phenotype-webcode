@@ -142,12 +142,12 @@ dd {
 }
 
 .phenotype_list {
-  padding-top: 1.5em;
-  padding-bottom: 1.5em;
+  margin-top: 1em;
 }
 
 .phenotype_left {
   float: left;
+  background-color: white;
 }
 
 .phenotype_right {
