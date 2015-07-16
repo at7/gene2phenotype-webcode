@@ -24,6 +24,8 @@ my $config = init_CGI();
 my $cgi = $config->{cgi};
 my $session = $config->{session};
 my $search_term = $config->{search_term};
+my $message = $session->param('message');
+clear_message();
 $ENV{PATH} = '';
 
 sub init_CGI { 
@@ -76,8 +78,7 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('search_type')) {
   my $search_type = $cgi->param('search_type');
   my $dbID = $cgi->param('dbID');
-  my $msg = $cgi->param('msg');
-  display_data($session, $search_type, $dbID, $msg);
+  display_data($session, $search_type, $dbID, $message);
 } elsif ($cgi->param('logout')) {
   logout();
 } elsif ($cgi->param('account') || $cgi->param('cancel_edit_account_data_button')) {
@@ -196,7 +197,8 @@ elsif ($cgi->param('set_visibility')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $visibility = $cgi->param('visibility');
   my $return_value = update_visibility($session, $GFD_id, $visibility); 
-  redirect("search_type=gfd&dbID=$GFD_id&msg=$return_value");
+  store_message($return_value);
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('update_disease')) {
   my $GFD_id = $cgi->param('GFD_id');
@@ -204,7 +206,8 @@ elsif ($cgi->param('update_disease')) {
   my $disease_mim = $cgi->param('mim');
   my $disease_name = $cgi->param('name');
   my $return_value = update_disease($session, $disease_id, $disease_mim, $disease_name);
-  redirect("search_type=gfd&dbID=$GFD_id&msg=$return_value");
+  store_message($return_value);
+  redirect("search_type=gfd&dbID=$GFD_id");
 }
 elsif ($cgi->param('delete_GFD_phenotype')) {
   my $GFD_id = $cgi->param('GFD_id');
@@ -260,7 +263,7 @@ sub login {
       display_search_results($session, $search_term);
     }
   } else {
-    show_login_page($session, 'login_failed');
+    show_login_page($session, 'LOGIN_FAILED');
   }
 }
 
@@ -272,7 +275,7 @@ sub send_recover_pwd_mail {
   my $auth = get_auth();
   my $is_known = $auth->fetchPass($email); 
   if (!$is_known) {
-    show_account_data($session, 'recover_pwd', 'email_unknown');
+    show_account_data($session, 'recover_pwd', 'EMAIL_UNKNOWN');
     return;
   }
 
@@ -309,7 +312,7 @@ sub show_recover_pwd_page {
   if ($param_cgisessid == $session_cgisessid) {
     show_account_data($session, 'recover_pwd_enter_new_pwd');
   } else {
-    show_default_page($session, 'session_ids_dont_match');
+    show_default_page($session, 'SESSION_IDS_DONT_MATCH');
   }
 }
 
@@ -321,7 +324,7 @@ sub reset_password {
   my $retyped_pwd = $cgi->param('retyped_pwd');
   my $success = $auth->htCheckPassword($email, $current_pwd);
   if (!$success) {
-    show_error_reset_user_data('edit_pwd', 'current_pwd_wrong');
+    show_error_reset_user_data('edit_pwd', 'PWD_ERROR');
     return;
   }
   if (!($new_pwd && $retyped_pwd)) {
@@ -329,14 +332,14 @@ sub reset_password {
     return;
   }
   if ($retyped_pwd && ($new_pwd ne $retyped_pwd)) {
-    show_error_reset_user_data('edit_pwd', 'new_and_retyped_dont_match');
+    show_error_reset_user_data('edit_pwd', 'PWDS_DONT_MATCH');
     return;
   }
   $success = $auth->htpasswd($email, $new_pwd, $current_pwd);
   if ($success) {
-    show_account_data($session, 'account', 'reset_pwd_successful');
+    show_account_data($session, 'account', 'RESET_PWD_SUC');
   } else {
-    show_account_data($session, 'account', 'reset_pwd_failed');
+    show_account_data($session, 'account', 'RESET_PWD_ERROR');
   }
 }
 
@@ -347,7 +350,7 @@ sub recover_pwd {
   my $retyped_pwd = $cgi->param('retyped_password');
 
   if ($new_pwd ne $retyped_pwd) {
-    show_error_reset_user_data('recover_pwd_enter_new_pwd', 'new_and_retyped_dont_match');
+    show_error_reset_user_data('recover_pwd_enter_new_pwd', 'PWDS_DONT_MATCH');
     return;
   } 
   my $success = $auth->htpasswd($email, $new_pwd, {'overwrite' => 1});
@@ -369,11 +372,11 @@ sub reset_username {
   my $email = $session->param('email');
   my $success = $auth->htCheckPassword($email, $password);
   unless ($success) {
-    show_error_reset_user_data('edit_username', 'current_pwd_wrong');
+    show_error_reset_user_data('edit_username', 'PWD_ERROR');
     return;
   }
   if ( length($new_username) == 0) {
-    show_error_reset_user_data('edit_username', 'new_username_missing');
+    show_error_reset_user_data('edit_username', 'NEW_USERNAME_MISSING');
     return;
   }
 
@@ -383,12 +386,12 @@ sub reset_username {
   $sth->execute($new_username) or die $sth->errstr;
   my $ary_ref = $sth->fetchall_arrayref();
   if (scalar @$ary_ref == 1) {
-    show_error_reset_user_data('edit_username', 'new_username_already_taken');
+    show_error_reset_user_data('edit_username', 'USERNAME_IN_USE');
   } 
 
   $stmt = qq{UPDATE user SET username=? WHERE username=?};
   $dbh->do($stmt, undef, ($new_username, $current_username));
-  show_account_data($session, 'account', 'reset_username_successful');
+  show_account_data($session, 'account', 'RESET_USERNAME_SUC');
 }
 
 sub reset_email {
@@ -398,12 +401,12 @@ sub reset_email {
   my $password = $cgi->param('pwd');
   my $success = $auth->htCheckPassword($email, $password);
   if (!$success) {
-    show_error_reset_user_data('edit_email', 'current_pwd_wrong');
+    show_error_reset_user_data('edit_email', 'PWD_ERROR');
     return;
   }
   my $email_is_used = $auth->fetchPass($new_email);
   if ($email_is_used) {
-    show_error_reset_user_data('edit_email', 'email_is_taken');
+    show_error_reset_user_data('edit_email', 'EMAIL_IN_USE');
     return;
   }
   
@@ -415,7 +418,7 @@ sub reset_email {
   $auth->htpasswd($new_email, $password);
   $session->param('email', $new_email);
   $session->flush(); 
-  show_account_data($session, 'account', 'reset_email_successful');  
+  show_account_data($session, 'account', 'RESET_EMAIL_SUC');  
 }
 
 sub show_error_reset_user_data {
@@ -457,5 +460,15 @@ sub redirect {
     $url .= "?$action";
   }
   print $cgi->redirect( -URL => $url, -cookie => $cookie,);
+}
+
+sub store_message {
+  my $message = shift;
+  $session->param('message', $message);
+  $session->flush(); 
+}
+
+sub clear_message {
+  $session->clear(['message']);
 }
 
