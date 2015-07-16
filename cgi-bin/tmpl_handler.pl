@@ -488,7 +488,6 @@ sub get_variations {
     push @array, {'label' => $consequence, 'value' => $count, 'color' => $consequence_colors->{$consequence} || '#d0d6fe'};
   }
   my $encoded_counts = encode_json(\@array);
-
   return { 'tmpl' => \@variations_tmpl, 'counts' => $encoded_counts };
 }
 
