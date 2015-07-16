@@ -11,6 +11,7 @@ $( document ).ready(function() {
       chart.color(function(d){ return d.data.color });
 
       var data = JSON.parse(div.attr('data'));
+      var data = data.sort(function(a, b) { return a.label.localeCompare(b.label) });
 
   //var data = [{"value":1,"label":"not assigned"},{"value":2,"label":"Nonsense"},{"value":1,"label":"Frameshift"},{"value":6,"label":"Missense/In-frame"}];
   //    var data = [{"label": "One","value" : 50,} ,{"label": "Two","value" : 50,} ,];
