@@ -45,14 +45,16 @@ my @constants = (
   { text => 'UPDATED_VISIBILITY_STATUS_SUC', msg => 'Successfully updated visibility status.', type => 'success',},
   { text => 'DISEASE_MIM_IN_DB', msg => 'Disease mim is already in database.', type => 'danger',},
   { text => 'WRONG_FORMAT_DISEASE_MIM', msg => 'Invalid format for disease mim. It needs to be a number.', type => 'danger',},
-  { text => 'UPDATED_ORGAN_LIST', msg => 'Successfully updated organ specificity list.', type => 'success',}
+  { text => 'UPDATED_ORGAN_LIST', msg => 'Successfully updated organ specificity list.', type => 'success',},
   { text => 'UPDATED_DDD_CATEGORY_SUC', msg => 'Successfully updated DDD category', type => 'success',},
-  { text => 'UPDATED_GFD_ACTION_SUC', msg => '', type => '',},
-  { text => 'ADDED_GFD_ACTION_SUC', msg => '', type => ''},
-  { text => 'ADDED_GFDPHENOTYPE_SUC', msg => '', type => ''},
-  { text => 'ADDED_PUBLICATION_SUC', msg => '', type => ''},
-  { text => 'DELETED_GFDPHENOTYPE_SUC', msg => '', type => ''},
-  { text => 'ADDED_GFDPC_SUC', msg => '', type => ''},
+  { text => 'UPDATED_GFD_ACTION_SUC', msg => 'Successfully updated genomic feature disease action.', type => 'success',},
+  { text => 'ADDED_GFD_ACTION_SUC', msg => 'Successfully added a new genomic feature disease action.', type => 'success'},
+  { text => 'ADDED_GFDPHENOTYPE_SUC', msg => 'Successfully added a new phenotype for the genomic feature disease pair.', type => 'success'},
+  { text => 'ADDED_PUBLICATION_SUC', msg => 'Successfully added a new publication', type => 'success'},
+  { text => 'DELETED_GFDPHENOTYPE_SUC', msg => 'Successfully delete a phenotype entry.', type => 'success'},
+  { text => 'ADDED_GFDPC_SUC', msg => 'Successfully added a new comment.', type => 'success'},
+  { text => 'DELETED_GFD_ACTION_SUC', msg => 'Successfully deleted a genomic feature disease action.', type => 'success'},
+  { text => 'DELETED_GFDPC_SUC', msg => 'Successfully deleted the comment.', type => 'success'},
 );
 
 my $consequence_colors = {
@@ -95,11 +97,6 @@ my $consequence_colors = {
   'NMD_transcript_variant'             => '#007fff',
 };
 
-
-sub get_message_id {
-  my $text = shift;
-  return first_index { $_->{text} eq $text } @constants; 
-}
 
 sub get_message_hash {
   my $text = shift;
@@ -662,6 +659,7 @@ sub delete_GFD_action {
   my $GFDA = $gfda_a->fetch_by_dbID($GFD_action_id);  
 
   $gfda_a->delete($GFDA, $user);
+  return 'DELETED_GFD_ACTION_SUC';
 }
 
 sub add_publication {
