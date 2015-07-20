@@ -3,7 +3,7 @@
   <h3>Gene-Disease Attributes</h3>
   <div id="DDD_category">
     <div class="gene_disease_attributes">
-      <div class="display_attributes">    
+      <div class="display_attributes">
         <dl>
           <dt>DDD category</dt>
           <dd><TMPL_VAR NAME=DDD_category></dd>
@@ -22,10 +22,26 @@
       </div>
       <div class="clear"></div>
     </div>
-    <TMPL_VAR NAME=edit_DDD_category>
+    <div class="edit_gene_disease">
+      <h4>Edit DDD category:</h4>
+      <form role="form" method="get" action="./handler.cgi">
+        <div class="form-group">
+          <label>DDD category:</label>
+          <select name="DDD_category">
+            <TMPL_LOOP NAME=gene_disease_category_attribs>
+              <option value="<TMPL_VAR NAME=attrib_id>" <TMPL_VAR NAME=selected>><TMPL_VAR NAME=attrib_value></option>
+            </TMPL_LOOP>
+          </select>
+        </div>
+        <div class="edit_attributes">
+          <input name="genomic_feature_disease_id" value="<TMPL_VAR NAME=GFD_id>" type="hidden">
+          <input id="button" type="submit" name="edit_DDD_category" value="Save" class="btn btn-primary btn-sm"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      </form>
+    </div> <!--End edit gene-disease-->
   </div> <!--End DDD category-->
-
-  <TMPL_LOOP NAME=gfd_actions>
+  <TMPL_LOOP NAME=GFD_actions>
     <div class="gene_disease_attributes">
       <div class="display_attributes">
         <dl>
@@ -48,22 +64,60 @@
       </div>
       <div class="clear"></div>
     </div>
-    <TMPL_VAR NAME=edit_gfd_action>
-  </TMPL_LOOP>  
-
+    <div class="edit_gene_disease">
+      <h4>Edit allelic requirements and mutation consequence:</h4>
+      <form role="form" method="get" action="./handler.cgi">
+        <div class="form-group">
+          <label>Allelic requirement:</label><br>
+          <TMPL_LOOP NAME=AR_loop>
+            <input type="checkbox" name="allelic_requirement" value="<TMPL_VAR NAME=AR_attrib_id>" <TMPL_VAR NAME=checked>> <TMPL_VAR NAME=AR_attrib_value><br>
+          </TMPL_LOOP>
+        </div>
+        <div class="form-group">
+          <label>Mutation consequence summary:</label>
+            <select name="mutation_consequence">
+              <TMPL_LOOP NAME=MC_loop>
+                <option value="<TMPL_VAR NAME=MC_attrib_id>" <TMPL_VAR NAME=selected>><TMPL_VAR NAME=MC_attrib_value></option>
+              </TMPL_LOOP>
+            </select>
+        </div>
+        <div class="edit_attributes">
+          <input name="GFD_action_id" value="<TMPL_VAR NAME=GFD_action_id>" type="hidden">
+          <input name="GFD_id" value="<TMPL_VAR NAME=GFD_id>" type="hidden">
+          <input id="button" type="submit" name="edit_GFD_action" value="Save" class="btn btn-primary btn-sm"/>
+          <input id="button" type="submit" name="delete_GFD_action" value="Delete" class="btn btn-primary btn-sm"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      </form>
+    </div> <!--End edit gene-disease-->
+  </TMPL_LOOP>
   <div class="gene_disease_attributes">
     <div class="edit_attributes">
-      <TMPL_IF NAME=logged_in>
-        <input type="button" name="show_edit_content" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
-      <TMPL_ELSE>
-        <form id="login_form" action="./handler.cgi" method=get>
-          <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-          <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-          <input id="button" type="submit" name="login" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
-        </form>
-      </TMPL_IF>
+      <input type="button" name="show_edit_content" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
     </div>
     <div class="clear"></div>
   </div>
-  <TMPL_VAR NAME=add_gfd_action_form>
+  <div class="edit_gene_disease">
+    <h4>Add allelic requirements and mutation consequence:</h4>
+    <form role="form" method="get" action="./handler.cgi">
+      <div class="form-group">
+        <TMPL_LOOP NAME=add_AR_loop>
+          <input type="checkbox" name="allelic_requirement" value="<TMPL_VAR NAME=AR_attrib_id>"><TMPL_VAR NAME=AR_attrib_value><br>
+        </TMPL_LOOP>
+      </div>
+      <div class="form-group">
+        <label>Mutation consequence summary:</label>
+        <select name="mutation_consequence">
+          <TMPL_LOOP NAME=add_MC_loop>
+            <option value="<TMPL_VAR NAME=MC_attrib_id>"><TMPL_VAR NAME=MC_attrib_value></option>
+          </TMPL_LOOP>
+        </select>
+      </div>
+      <div class="edit_attributes">
+        <input name="GFD_id" value=<TMPL_VAR NAME=GFD_id> type="hidden">
+        <input id="button" type="submit" name="add_GFD_action" value="Add" class="btn btn-primary btn-sm"/>
+        <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+      </div>
+    </form>
+  </div> <!--End edit gene-disease-->
 </div> <!--End gene-disease-->
