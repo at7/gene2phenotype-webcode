@@ -2,14 +2,14 @@
   <div class="clear"></div>
   <h3>Gene-Disease Attributes</h3>
   <div id="DDD_category">
-    <div class="gene_disease_attributes">
+    <div class="show_db_content">
       <div class="display_attributes">
         <dl>
           <dt>DDD category</dt>
           <dd><TMPL_VAR NAME=DDD_category></dd>
         </dl>
       </div> <!--End display attributes-->
-      <div class="edit_attributes">
+      <div class="show_toggle_view_button">
         <TMPL_IF NAME=logged_in>
           <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
         <TMPL_ELSE>
@@ -22,7 +22,7 @@
       </div>
       <div class="clear"></div>
     </div>
-    <div class="edit_gene_disease">
+    <div class="show_edit_content">
       <h4>Edit DDD category:</h4>
       <form role="form" method="get" action="./handler.cgi">
         <div class="form-group">
@@ -33,16 +33,17 @@
             </TMPL_LOOP>
           </select>
         </div>
-        <div class="edit_attributes">
+        <div class="align_buttons_right">
           <input name="genomic_feature_disease_id" value="<TMPL_VAR NAME=GFD_id>" type="hidden">
           <input id="button" type="submit" name="edit_DDD_category" value="Save" class="btn btn-primary btn-sm"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
         </div>
       </form>
-    </div> <!--End edit gene-disease-->
+    </div> <!--End show edit content-->
   </div> <!--End DDD category-->
+
   <TMPL_LOOP NAME=GFD_actions>
-    <div class="gene_disease_attributes">
+    <div class="show_db_content">
       <div class="display_attributes">
         <dl>
           <dt>Allelic requirement</dt>
@@ -51,7 +52,7 @@
           <dd><TMPL_VAR NAME=mutation_consequence_summary></dd>
         </dl>
       </div>
-      <div class="edit_attributes">
+      <div class="show_toggle_view_button">
         <TMPL_IF NAME=logged_in>
           <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
         <TMPL_ELSE>
@@ -64,7 +65,7 @@
       </div>
       <div class="clear"></div>
     </div>
-    <div class="edit_gene_disease">
+    <div class="show_edit_content">
       <h4>Edit allelic requirements and mutation consequence:</h4>
       <form role="form" method="get" action="./handler.cgi">
         <div class="form-group">
@@ -81,7 +82,7 @@
               </TMPL_LOOP>
             </select>
         </div>
-        <div class="edit_attributes">
+        <div class="align_buttons_right">
           <input name="GFD_action_id" value="<TMPL_VAR NAME=GFD_action_id>" type="hidden">
           <input name="GFD_id" value="<TMPL_VAR NAME=GFD_id>" type="hidden">
           <input id="button" type="submit" name="edit_GFD_action" value="Save" class="btn btn-primary btn-sm"/>
@@ -89,15 +90,16 @@
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
         </div>
       </form>
-    </div> <!--End edit gene-disease-->
+    </div> <!--End show edit content-->
   </TMPL_LOOP>
-  <div class="gene_disease_attributes">
-    <div class="edit_attributes">
+
+  <div class="show_db_content">
+    <div class="show_toggle_view_button">
       <input type="button" name="show_edit_content" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
     </div>
     <div class="clear"></div>
   </div>
-  <div class="edit_gene_disease">
+  <div class="show_edit_content">
     <h4>Add allelic requirements and mutation consequence:</h4>
     <form role="form" method="get" action="./handler.cgi">
       <div class="form-group">
@@ -113,11 +115,11 @@
           </TMPL_LOOP>
         </select>
       </div>
-      <div class="edit_attributes">
+      <div class="align_buttons_right">
         <input name="GFD_id" value=<TMPL_VAR NAME=GFD_id> type="hidden">
         <input id="button" type="submit" name="add_GFD_action" value="Add" class="btn btn-primary btn-sm"/>
         <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
       </div>
     </form>
-  </div> <!--End edit gene-disease-->
-</div> <!--End gene-disease-->
+  </div> <!--End show edit content-->
+</div> <!--End-->
