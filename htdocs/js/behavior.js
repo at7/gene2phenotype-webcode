@@ -49,7 +49,7 @@ $(document).ready(function(){
   $(".edit").click(function(){
     $button = $(this);
     $button_parent = $button.parent();
-    $this_content = $button.closest(".gene_disease_attributes");
+    $this_content = $button.closest(".show_db_content");
     $edit_content = $this_content.next();
     $edit_content.show(function(){
       $button_parent.hide();
@@ -58,10 +58,10 @@ $(document).ready(function(){
 
   $(".discard").click(function(){
     $button = $(this);
-    $this_content = $button.closest(".edit_gene_disease");
+    $this_content = $button.closest(".show_edit_content");
     $prev_content = $this_content.prev();
     $this_content.hide(function(){
-      $prev_content.find('.edit_attributes').show();
+      $prev_content.find('.show_toggle_view_button').show();
     });
   });
 
