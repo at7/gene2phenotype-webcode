@@ -25,7 +25,7 @@
   width: 60%;
 }
 
-.edit_attributes {
+.align_buttons_right, .show_toggle_view_button {
   float: right;
   display: block;
  /* margin-right: 23%*/
@@ -79,7 +79,7 @@ dd {
   clear: both;
 }
 
-.edit_gene_disease {
+.show_edit_content {
   background: #D4D8D1;
   border-top-style: solid;
   display: none;
@@ -132,10 +132,6 @@ dd {
   padding-right: .5em;
 }
 
-.button_choice {
-  float: right;
-}
-
 .visibility {
   padding-top: 1em;
   padding-bottom: 2em;
@@ -153,4 +149,3 @@ dd {
 .phenotype_right {
   float: right;
 }
-
