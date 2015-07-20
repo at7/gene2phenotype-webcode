@@ -314,37 +314,43 @@ sub display_data {
 
     my $DDD_category = $genomic_feature_disease->DDD_category || 'Not assigned';
     my $gene_disease_category_attribs = get_gene_disease_category_attribs($genomic_feature_disease);
-    my $add_GFD_action_form = get_add_gfd_action($genomic_feature_disease);
     my $genomic_feature_disease_actions = $genomic_feature_disease->get_all_GenomicFeatureDiseaseActions();
     my @actions = ();
     foreach my $gfda (@$genomic_feature_disease_actions) {
       my $allelic_requirement = $gfda->allelic_requirement || 'Not assigned';
       my $mutation_consequence_summary = $gfda->mutation_consequence || 'Not assigned';
-      my $form = get_edit_gfd_action($gfda); 
+      my $edit_gfd_action = get_GFD_action_attribs('edit', $gfda); 
       push @actions, {
+        allelic_requirement => $allelic_requirement,
         mutation_consequence_summary => $mutation_consequence_summary,
         allelic_requirement => $allelic_requirement,
-        edit_gfd_action => $form,
+        AR_loop => $edit_gfd_action->{AR},
+        MC_loop => $edit_gfd_action->{MC}, 
+        GFD_action_id => $gfda->dbID,
       };
     }   
+    my $add_GFD_action = get_GFD_action_attribs('add', $genomic_feature_disease);
+    my $add_AR_loop = $add_GFD_action->{AR};
+    my $add_MC_loop = $add_GFD_action->{MC};
+
     my $GFD_publications = get_GFD_publications($genomic_feature_disease);
     $tmpl->param(GFD_publications => $GFD_publications);
     my $phenotypes = get_phenotypes($genomic_feature_disease);
     $tmpl->param(phenotypes => $phenotypes);
     my $organs = get_organs($genomic_feature_disease);
     $tmpl->param(organs => $organs);
-
     my $organ_list = get_organ_list($genomic_feature_disease); 
-    my $edit_organs_form = get_edit_organs_form($organ_list, $dbID);
+    my $edit_organs_loop = get_edit_organs($organ_list, $dbID);
 
     $tmpl->param($genomic_feature_attributes);
     $tmpl->param($disease_attributes);
     $tmpl->param({
       DDD_category => $DDD_category,
       gene_disease_category_attribs => $gene_disease_category_attribs,
-      add_gfd_action_form => $add_GFD_action_form,
-      gfd_actions => \@actions,
-      edit_organs => $edit_organs_form, 
+      GFD_actions => \@actions,
+      add_AR_loop => $add_AR_loop, 
+      add_MC_loop => $add_MC_loop,
+      edit_organs_loop => $edit_organs_loop, 
       variations => $variations,
       consequence_counts => $counts,
     });  
@@ -751,152 +757,75 @@ sub get_gene_disease_category_attribs {
   return \@tmpl;
 }
 
-sub get_add_gfd_action {
-  my $genomic_feature_disease = shift;
-  my $genomic_feature_disease_id = $genomic_feature_disease->dbID;
-  my $attribute_adaptor = $registry->get_adaptor('attribute');
- 
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('allelic_requirement');
+sub get_GFD_action_attribs {
+  my $type = shift;
+  my $GFDAction = shift;
 
-  my $allelic_requirement_form = "<div class=\"form-group\">\n<label>Allelic requirement:</label><br>\n";
-  
+  my @ARs = (); 
+  my $mutation_consequence = '';
+  if ($type eq 'edit') {
+    @ARs = split(',', $GFDAction->allelic_requirement);
+    $mutation_consequence = $GFDAction->mutation_consequence;
+  }
+
+  my $attribute_adaptor = $registry->get_adaptor('attribute');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('allelic_requirement');
+  my @AR_tmpl = ();
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
-    $allelic_requirement_form .= "<input type=\"checkbox\" name=\"allelic_requirement\" value=\"$id\">$value<br>\n";
+    if ($type eq 'edit') {
+      my $checked = (grep $_ eq $value, @ARs) ? 'checked' : '';
+      push @AR_tmpl, {
+        AR_attrib_id => $id,
+        AR_attrib_value => $value,
+        checked => $checked,
+      };
+    } else {
+      push @AR_tmpl, {
+        AR_attrib_id => $id,
+        AR_attrib_value => $value,
+      };
+    } 
   }
-  $allelic_requirement_form .= "</div>\n";
 
   $attribs = $attribute_adaptor->get_attribs_by_type_value('mutation_consequence');
-
-  my $mutation_consequence_form = join("\n",
-    '<div class="form-group">',
-    '<label>Mutation consequence summary:</label>',
-    '<select name="mutation_consequence">', "\n");
+  my @MC_tmpl = ();
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
-    $mutation_consequence_form .= "<option value=\"$id\">$value</option>\n"
-  }
-  $mutation_consequence_form .= "</select>\n</div>\n";
-
-  my $form = join("\n",
-    '<div class="edit_gene_disease">',
-    '<h4>Add allelic requirements and mutation consequence:</h4>',
-    '<form role="form" method="get" action="./handler.cgi">',
-    $allelic_requirement_form,
-    $mutation_consequence_form,
-    '<div class="edit_attributes">',
-    "<input name=\"GFD_id\" value=\"$genomic_feature_disease_id\" type=\"hidden\">",
-    '<input id="button" type="submit" name="add_GFD_action" value="Add" class="btn btn-primary btn-sm"/>',
-    '<input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>',
-    '</div>',
-    '</form>',
-    '</div> <!--End edit gene-disease-->',
-    "\n");
-  return $form;
-}
-
-sub get_edit_gfd_action {
-  my $gf_disease_action = shift;
-  my $GFD_id = $gf_disease_action->genomic_feature_disease_id;
-  my $allelic_requirement = $gf_disease_action->allelic_requirement;
-  my $mutation_consequence = $gf_disease_action->mutation_consequence;
-  my $GFD_action_id = $gf_disease_action->dbID;
-  my $allelic_requirement_form = get_allelic_requirement_form($allelic_requirement);
-  my $mutation_consequence_form = get_mutation_consequence_form($mutation_consequence);
-  my $form = join("\n",
-    '<div class="edit_gene_disease">',
-    '<h4>Edit allelic requirements and mutation consequence:</h4>',
-    '<form role="form" method="get" action="./handler.cgi">',
-    $allelic_requirement_form,
-    $mutation_consequence_form,
-    '<div class="edit_attributes">',
-    "<input name=\"GFD_action_id\" value=\"$GFD_action_id\" type=\"hidden\">",
-    "<input name=\"GFD_id\" value=\"$GFD_id\" type=\"hidden\">",
-    '<input id="button" type="submit" name="edit_GFD_action" value="Save" class="btn btn-primary btn-sm"/>',
-    '<input id="button" type="submit" name="delete_GFD_action" value="Delete" class="btn btn-primary btn-sm"/>',
-    '<input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>',
-    '</div>',
-    '</form>',
-    '</div> <!--End edit gene-disease-->',
-    "\n");
-  return $form;
-}
-
-sub get_allelic_requirement_form {
-  my $allelic_requirement = shift;
-  my @requirements = split(',', $allelic_requirement); 
-
-  my $attribute_adaptor = $registry->get_adaptor('attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('allelic_requirement');
-
-  my $form = "<div class=\"form-group\">\n<label>Allelic requirement:</label><br>\n";
-  
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
-    if (grep $_ eq $value, @requirements) {
-      $form .= "<input type=\"checkbox\" name=\"allelic_requirement\" value=\"$id\" checked>$value<br>\n";
+    if ($type eq 'edit') {
+      my $selected = ($value eq $mutation_consequence) ? 'selected' : '';
+      push @MC_tmpl, {
+        MC_attrib_id => $id,
+        MC_attrib_value => $value,
+        selected => $selected, 
+      };
     } else {
-      $form .= "<input type=\"checkbox\" name=\"allelic_requirement\" value=\"$id\">$value<br>\n";
+      push @MC_tmpl, {
+        MC_attrib_id => $id,
+        MC_attrib_value => $value,
+      };
     }
   }
-  $form .= "</div>\n";
-
-  return $form;
+  return {AR => \@AR_tmpl, MC => \@MC_tmpl};
 }
 
-sub get_mutation_consequence_form {
-  my $mutation_consequence = shift;
-  my $attribute_adaptor = $registry->get_adaptor('attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('mutation_consequence');
-
-  my $form = join("\n",
-    '<div class="form-group">',
-    '<label>Mutation consequence summary:</label>',
-    '<select name="mutation_consequence">', "\n");
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
-    if ($value eq $mutation_consequence) {
-      $form .= "<option value=\"$id\" selected>$value</option>\n"
-    } else {
-      $form .= "<option value=\"$id\">$value</option>\n"
-    }
-  }
-  $form .= "</select>\n</div>\n";
-  return $form;
-}
-
-sub get_edit_organs_form {
+sub get_edit_organs {
   my $organ_list = shift; 
   my $GFD_id = shift; 
 
   my $organ_adaptor = $registry->get_adaptor('organ');
   my %all_organs = map {$_->name => $_->dbID} @{$organ_adaptor->fetch_all};
-  my $form = join("\n",
-    '<div class="edit_gene_disease">',
-    '<h4>Edit organ specificity list:</h4>',
-    '<form role="form" method="get" action="./handler.cgi">',
-    '<div class="form-group">',
-    '<label>Organ specificity:</label><br>', "\n");
-  
+  my @tmpl = (); 
   foreach my $value (sort keys %all_organs) {
     my $id = $all_organs{$value};
-    if (grep $_ eq $value, @$organ_list) {
-      $form .= "<input type=\"checkbox\" name=\"organ\" value=\"$id\" checked>$value<br>\n";
-    } else {
-      $form .= "<input type=\"checkbox\" name=\"organ\" value=\"$id\">$value<br>\n";
-    }
+    my $checked = (grep $_ eq $value, @$organ_list) ? 'checked' : '';
+    push @tmpl, {
+      organ_id => $id,
+      organ_name => $value,
+      checked => $checked,
+    };
   }
-  $form .= join("\n",
-    "</select>\n</div>",
-    '<div class="edit_attributes">',
-    "<input name=\"genomic_feature_disease_id\" value=\"$GFD_id\" type=\"hidden\">",
-    '<input id="button" type="submit" name="edit_organ_list" value="Save" class="btn btn-primary btn-sm"/>',
-    '<input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>',
-    '</div>',
-    '</form>',
-    '</div> <!--End edit gene-disease-->',
-    "\n");
-  return $form;
+  return \@tmpl;
 }
 
 sub update_DDD_category {
