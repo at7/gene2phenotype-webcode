@@ -32,17 +32,31 @@ my $user = $params->{user};
 my $password = $params->{password};
 my $tablename = "genomic_feature";
 
-my $cgi = CGI->new();
-my $term = $cgi->param('term');
- 
 # DATA SOURCE NAME
 my $dsn = "dbi:mysql:$database:$host:$port";
 # PERL DBI CONNECT
 my $connect = DBI->connect($dsn, $user, $password);
+
+my $cgi = CGI->new();
+my $term = $cgi->param('term');
+my $type = $cgi->param('query_type');
+my $query = '';
+
+if ($type eq 'query_phenotype_name') {
+  $query = 'select name AS value FROM phenotype where name like ?';
+} 
+elsif ($type eq 'query_gene_name') {
+  $query = 'select gene_symbol AS value FROM genomic_feature where gene_symbol like ?';
+}
+elsif ($type eq 'query_disease_name') {
+  $query = 'select name AS value FROM disease where name like ?';
+}
+else { # query
+  $query = 'select search_term AS value FROM search where search_term like ?';
+} 
  
 # PREPARE THE QUERY
-#my $query_handle = $connect->prepare(qq{select genomic_feature_id AS id, gene_symbol AS value FROM genomic_feature where gene_symbol like ?;});
-my $query_handle = $connect->prepare(qq{select search_term AS value FROM search where search_term like ?;});
+my $query_handle = $connect->prepare($query);
 
 # EXECUTE THE QUERY
 #$query_handle->execute('%'.$term.'%');
