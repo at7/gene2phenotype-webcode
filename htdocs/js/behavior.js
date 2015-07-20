@@ -20,7 +20,6 @@ $(document).ready(function(){
     select: function(event, ui) {}
   });
 
- 
   $(".phenotype_right").mouseenter(function(){
     $(this).prev().css('background-color', '#D4D8D1');
   }); 
@@ -28,8 +27,6 @@ $(document).ready(function(){
   $(".phenotype_right").mouseleave(function(){
     $(this).prev().css('background-color', 'white');
   }); 
-
-
 
   $(".header_gene_disease").click(function(){
     $header = $(this);
