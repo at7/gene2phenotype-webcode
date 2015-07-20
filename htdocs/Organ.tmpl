@@ -6,8 +6,8 @@
     </TMPL_LOOP>
   </ul> 
   <div id="organs">
-    <div class="gene_disease_attributes">
-      <div class="edit_attributes">
+    <div class="outer_show_edit_button">
+      <div class="inner_show_edit_button">
         <TMPL_IF NAME=logged_in>
           <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
         <TMPL_ELSE>
@@ -20,6 +20,22 @@
       </div>
       <div class="clear"></div>
     </div>
-    <TMPL_VAR NAME=edit_organs>
-  </div> <!--End DDD category-->
+
+    <div class="show_edit_content">
+      <h4>Edit organ specificity list:</h4>
+      <form role="form" method="get" action="./handler.cgi">
+        <div class="form-group">
+          <label>Organ specificity:</label><br>
+          <TMPL_LOOP NAME=edit_organs_loop>
+            <input type="checkbox" name="organ" value="<TMPL_VAR NAME=organ_id>" <TMPL_VAR NAME=checked>> <TMPL_VAR NAME=organ_name><br>
+          </TMPL_LOOP>
+        </div>
+        <div class="align_buttons_right">
+          <input name="genomic_feature_disease_id" value="<TMPL_VAR NAME=GFD_id>" type="hidden">
+          <input id="button" type="submit" name="edit_organ_list" value="Save" class="btn btn-primary btn-sm"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      </form>
+    </div> <!--End show edit content -->
+  </div> <!--End organs-->
 </div>
