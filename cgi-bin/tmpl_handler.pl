@@ -313,7 +313,7 @@ sub display_data {
     my $counts = $get_var->{'counts'};
 
     my $DDD_category = $genomic_feature_disease->DDD_category || 'Not assigned';
-    my $edit_DDD_category_form = get_edit_DDD_category_form($genomic_feature_disease); 
+    my $gene_disease_category_attribs = get_gene_disease_category_attribs($genomic_feature_disease);
     my $add_GFD_action_form = get_add_gfd_action($genomic_feature_disease);
     my $genomic_feature_disease_actions = $genomic_feature_disease->get_all_GenomicFeatureDiseaseActions();
     my @actions = ();
@@ -341,7 +341,7 @@ sub display_data {
     $tmpl->param($disease_attributes);
     $tmpl->param({
       DDD_category => $DDD_category,
-      edit_DDD_category => $edit_DDD_category_form,
+      gene_disease_category_attribs => $gene_disease_category_attribs,
       add_gfd_action_form => $add_GFD_action_form,
       gfd_actions => \@actions,
       edit_organs => $edit_organs_form, 
@@ -732,38 +732,23 @@ sub get_gfda_logs {
   return \@log_entries;
 }
 
-sub get_edit_DDD_category_form {
+sub get_gene_disease_category_attribs {
   my $genomic_feature_disease = shift;
   my $DDD_category = $genomic_feature_disease->DDD_category;
   my $genomic_feature_disease_id = $genomic_feature_disease->dbID; 
   my $attribute_adaptor = $registry->get_adaptor('attribute');
   my $attribs = $attribute_adaptor->get_attribs_by_type_value('DDD_Category');
-  my $form = join("\n",
-    '<div class="edit_gene_disease">',
-    '<h4>Edit DDD category:</h4>',
-    '<form role="form" method="get" action="./handler.cgi">',
-    '<div class="form-group">',
-    '<label>DDD category:</label>',
-    '<select name="DDD_category">', "\n");
+  my @tmpl = ();
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
-    if ($value eq $DDD_category) {
-      $form .= "<option value=\"$id\" selected>$value</option>\n"
-    } else {
-      $form .= "<option value=\"$id\">$value</option>\n"
-    }
+    my $is_selected =  ($value eq $DDD_category) ? 'selected' : '';
+    push @tmpl, {
+      'selected' => $is_selected,
+      'attrib_id' => $id,
+      'attrib_value' => $value,
+    };   
   }
-  $form .= join("\n",
-    "</select>\n</div>",
-    '<div class="edit_attributes">',
-    "<input name=\"genomic_feature_disease_id\" value=\"$genomic_feature_disease_id\" type=\"hidden\">",
-    '<input id="button" type="submit" name="edit_DDD_category" value="Save" class="btn btn-primary btn-sm"/>',
-    '<input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>',
-    '</div>',
-    '</form>',
-    '</div> <!--End edit gene-disease-->',
-    "\n");
-  return $form;
+  return \@tmpl;
 }
 
 sub get_add_gfd_action {
