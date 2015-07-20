@@ -1,24 +1,31 @@
 $(document).ready(function(){
-  $("#query").autocomplete({
-    source: "autocomplete.cgi",
-    minLength: 2,
-    select: function(event, ui) {}
-  });
-  $("#query_gene_name").autocomplete({
-    source: "autocomplete_gene_name.cgi",
-    minLength: 2,
-    select: function(event, ui) {}
-  });
-  $("#query_disease_name").autocomplete({
-    source: "autocomplete_disease_name.cgi",
-    minLength: 2,
-    select: function(event, ui) {}
-  });
-  $("#query_phenotype_name").autocomplete({
-    source: "autocomplete_phenotype.cgi",
-    minLength: 1,
-    select: function(event, ui) {}
-  });
+
+  $("#query_phenotype_name, #query, #query_gene_name, #query_disease_name").click(function(){
+    var id = $(this).attr('id');
+    console.log(id);
+    $(this).autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "autocomplete.cgi",
+          dataType: "json",
+          data: {
+            term : request.term,
+            query_type : id,
+          },
+          success: function(data, type) {
+            items = data;
+            response(items);
+          },
+          error: function(data, type){
+            console.log( type);
+          }
+        });
+      },
+      minLength: 2,
+      select: function(event, ui) {}
+    });
+  }); 
+
 
   $(".phenotype_right").mouseenter(function(){
     $(this).prev().css('background-color', '#D4D8D1');
