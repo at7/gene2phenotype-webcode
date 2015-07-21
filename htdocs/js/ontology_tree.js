@@ -10,7 +10,11 @@ $( document ).ready(function() {
           return { "id" : node.id };
         }
       }
-    }
+    },
+    "checkbox" : {
+      "keep_selected_style" : false
+    },
+    "plugins" : [ "checkbox", "sort" ]
   });
 });
 
