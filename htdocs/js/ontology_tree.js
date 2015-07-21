@@ -1,5 +1,8 @@
 $( document ).ready(function() {
   $.jstree.defaults.core.data = true;
+  $.jstree.defaults.core.themes.dots = false;
+  $.jstree.defaults.core.themes.icons = false;
+  $.jstree.defaults.checkbox.three_state = false;
   $('#jstree_demo_div').jstree({
     
     'core' : {
