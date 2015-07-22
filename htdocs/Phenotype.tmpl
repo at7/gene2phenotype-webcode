@@ -1,5 +1,22 @@
 <div>
   <h3>Phenotypes</h3>
+
+  <div id="ontology">  
+    <div id="phenotype_tree">
+      <span id="<TMPL_VAR NAME=GFD_id>"></span> 
+    </div>
+    <div>
+      <form id="update_phenotype_tree" role="form" method="get" action="./handler.cgi">
+        <div class="align_buttons_right">
+          <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+          <input type="hidden" name="phenotype_ids" value="<TMPL_VAR NAME=phenotype_ids_list>"/>
+          <input type="button" value="Update phenotype tree" class="btn btn-primary btn-sm"/>
+        </div>
+      </form>
+    </div>
+    <div class="clear"></div>
+  </div>
+
   <div id="new_phenotype">
     <div class="show_add_publication button_right">
       <TMPL_IF NAME=logged_in>
