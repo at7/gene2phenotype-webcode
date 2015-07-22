@@ -336,7 +336,9 @@ sub display_data {
     my $GFD_publications = get_GFD_publications($genomic_feature_disease);
     $tmpl->param(GFD_publications => $GFD_publications);
     my $phenotypes = get_phenotypes($genomic_feature_disease);
+    my $phenotype_ids_list = get_phenotype_ids_list($genomic_feature_disease);
     $tmpl->param(phenotypes => $phenotypes);
+    $tmpl->param(phenotype_ids_list => $phenotype_ids_list);
     my $organs = get_organs($genomic_feature_disease);
     $tmpl->param(organs => $organs);
     my $organ_list = get_organ_list($genomic_feature_disease); 
@@ -530,6 +532,16 @@ sub get_GFD_publications {
     };
   }
   return \@GFD_publications_tmpl;
+}
+
+sub get_phenotype_ids_list {
+  my $GFD = shift;
+  my @phenotype_ids = ();
+  my $GFDPhenotypes = $GFD->get_all_GFDPhenotypes;
+  foreach my $GFDPhenotype (@$GFDPhenotypes) {
+    push @phenotype_ids, $GFDPhenotype->{phenotype_id};
+  }
+  return join(',', @phenotype_ids);
 }
 
 sub get_phenotypes {
