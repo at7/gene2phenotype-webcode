@@ -51,10 +51,11 @@ my $constants = {
   ADDED_GFD_ACTION_SUC => { msg => 'Successfully added a new genomic feature disease action.', type => 'success'},
   ADDED_GFDPHENOTYPE_SUC => { msg => 'Successfully added a new phenotype for the genomic feature disease pair.', type => 'success'},
   ADDED_PUBLICATION_SUC => { msg => 'Successfully added a new publication', type => 'success'},
-  DELETED_GFDPHENOTYPE_SUC => { msg => 'Successfully delete a phenotype entry.', type => 'success'},
+  DELETED_GFDPHENOTYPE_SUC => { msg => 'Successfully deleted a phenotype entry.', type => 'success'},
   ADDED_GFDPC_SUC => { msg => 'Successfully added a new comment.', type => 'success'},
   DELETED_GFD_ACTION_SUC => { msg => 'Successfully deleted a genomic feature disease action.', type => 'success'},
   DELETED_GFDPC_SUC => { msg => 'Successfully deleted the comment.', type => 'success'},
+  UPDATED_PHENOTYPES_SUC => {msg => 'Successfully updated the list of phenotypes.', type => 'success'},
 };
 
 my $consequence_colors = {
@@ -599,6 +600,55 @@ sub add_GFDPhenotype {
     $GFDPA->store($GFDP);
   }
   return 'ADDED_GFDPHENOTYPE_SUC';
+} 
+
+sub update_GFDPhenotypes {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $update_phenotype_ids_string = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $GFDPA = $registry->get_adaptor('genomic_feature_disease_phenotype');
+  my $GFDA = $registry->get_adaptor('genomic_feature_disease');
+  my $GFD = $GFDA->fetch_by_dbID($GFD_id);
+
+  my @phenotype_ids = split(',', get_phenotype_ids_list($GFD)); 
+  my @updated_phenotype_ids = split(',', $update_phenotype_ids_string);  
+  my @to_delete_ids = ();
+  my @to_add_ids = (); 
+
+  foreach my $id (@phenotype_ids) {
+    if (!grep {$id == $_} @updated_phenotype_ids) {
+      push @to_delete_ids, $id;
+    }
+  }
+  foreach my $id (@updated_phenotype_ids) {
+    if (!grep {$id == $_} @phenotype_ids) {
+      push @to_add_ids, $id;
+    }
+  }
+
+  if (@to_add_ids) {
+    foreach my $phenotype_id (@to_add_ids) {
+      my $GFDP = G2P::GenomicFeatureDiseasePhenotype->new({
+        genomic_feature_disease_id => $GFD_id,
+        phenotype_id => $phenotype_id,
+        registry => $registry,
+      });
+      $GFDPA->store($GFDP);
+    }
+  }
+  if (@to_delete_ids) {
+    foreach my $phenotype_id (@to_delete_ids) {
+      my $GFDP = $GFDPA->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype_id);
+      $GFDPA->delete($GFDP, $user);
+    }
+  }
+
+  return 'UPDATED_PHENOTYPES_SUC';
 } 
 
 sub get_organs {
