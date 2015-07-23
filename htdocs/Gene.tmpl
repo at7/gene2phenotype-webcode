@@ -19,7 +19,8 @@
     <div class="chart" data="<TMPL_VAR NAME=consequence_counts ESCAPE=HTML>" >
       <svg></svg>
     </div>
-    <table class="table">
+    <div style="height:500px;overflow:auto" >
+    <table class="table table-condensed table-bordered">
       <thead>
         <tr>
           <th>Variant name</th>
@@ -39,6 +40,7 @@
         </TMPL_LOOP> <!-- end variation loop-->
       </tbody>
     </table>
+    </div>
     </TMPL_IF>
   </div> <!--end variations-->
 </div>
