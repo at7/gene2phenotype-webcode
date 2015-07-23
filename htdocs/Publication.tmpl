@@ -48,9 +48,9 @@
     <div class="publication">
 
       <TMPL_IF NAME=pmid>
-        <p><em><a href="http://europepmc.org/search?query=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></em></p>
+        <p><a href="http://europepmc.org/search?query=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></p>
       <TMPL_ELSE>
-        <p><em>PMID:<TMPL_VAR NAME=title></em></p>
+        <p>PMID:<TMPL_VAR NAME=title></p>
       </TMPL_IF>
 
       <TMPL_IF NAME=comments>
