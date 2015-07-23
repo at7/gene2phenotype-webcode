@@ -149,3 +149,10 @@ dd {
 .phenotype_right {
   float: right;
 }
+
+#ontology {
+  margin-bottom: 3em;
+  padding-bottom: 1em;
+  border-bottom-style: solid;
+  border-bottom-color: #D4D8D1;
+}
