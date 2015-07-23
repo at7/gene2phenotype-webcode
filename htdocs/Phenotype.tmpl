@@ -6,11 +6,11 @@
       <span id="<TMPL_VAR NAME=GFD_id>"></span> 
     </div>
     <div>
-      <form id="update_phenotype_tree" role="form" method="post" action="./handler.cgi">
+      <form id="update_phenotype_tree" role="form" method="get" action="./handler.cgi">
         <div class="align_buttons_right">
           <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
           <input type="hidden" name="phenotype_ids" value="<TMPL_VAR NAME=phenotype_ids_list>"/>
-          <input type="button" value="Update phenotype tree" class="btn btn-primary btn-sm"/>
+          <input id="button" type="submit" value="Update phenotype tree" class="btn btn-primary btn-sm" name="update_phenotype_tree"/>
         </div>
       </form>
     </div>
