@@ -42,7 +42,7 @@ sub init_CGI {
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
 
-  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility edit_organ_list update_disease delete_GFD_phenotype add_phenotype/;
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment delete_GFD_publication_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility edit_organ_list update_disease delete_GFD_phenotype add_phenotype update_phenotype_tree/;
   if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
@@ -218,6 +218,12 @@ elsif ($cgi->param('add_phenotype')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $phenotype_name = $cgi->param('phenotype_name');
   my $msg = add_GFDPhenotype($session, $GFD_id, $phenotype_name);
+  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+}
+elsif ($cgi->param('update_phenotype_tree')) {
+  my $GFD_id = $cgi->param('GFD_id');
+  my $phenotype_ids = $cgi->param('phenotype_ids');
+  my $msg = update_GFDPhenotypes($session, $GFD_id, $phenotype_ids);
   redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 else {
