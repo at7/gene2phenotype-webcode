@@ -2,6 +2,7 @@
  
 use strict;
 use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/share/perl5';
+use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/lib64/perl5';
 use CGI;
 use JSON;
 use lib "../../lib/ensembl/modules";
