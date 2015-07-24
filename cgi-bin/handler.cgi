@@ -121,7 +121,7 @@ if ($cgi->param('login')) {
   print while <$DLFILE>;
   undef ($DLFILE);
   unlink "$downloads_dir/$file";
-  redirect("show_downloads=all");
+  _redirect("show_downloads=all");
 }
 elsif ($cgi->param('edit_DDD_category')) {
   my $DDD_category_attrib = $cgi->param('DDD_category');
@@ -130,7 +130,7 @@ elsif ($cgi->param('edit_DDD_category')) {
   $session->param('genomic_feature_disease_id', $GFD_id);
   $session->flush(); 
   my $msg = update_DDD_category($session);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('edit_GFD_action')) {
   my $GFD_id = $cgi->param('GFD_id');
@@ -142,13 +142,13 @@ elsif ($cgi->param('edit_GFD_action')) {
   $session->param('GFD_action_id', $GFD_action_id);
   $session->flush();
   my $msg = update_GFD_action($session);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('edit_organ_list')) {
   my @organ_ids = $cgi->param('organ');
   my $GFD_id = $cgi->param('genomic_feature_disease_id');
   my $msg = update_organ_list($session, \@organ_ids, $GFD_id);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('add_GFD_action')) {
   my $allelic_requirement_attribs = join(',', $cgi->param('allelic_requirement'));
@@ -159,7 +159,7 @@ elsif ($cgi->param('add_GFD_action')) {
   $session->param('GFD_id', $GFD_id);
   $session->flush();
   my $msg = store_GFD_action($session);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('new_gene_disease')) {
   new_gene_disease($session);
@@ -174,19 +174,19 @@ elsif ($cgi->param('add_GFD_publication_comment')) {
   my $GFD_publication_id = $cgi->param('GFD_publication_id');
   my $comment = $cgi->param('GFD_publication_comment');
   my $msg = add_GFD_publication_comment($session, $GFD_id, $GFD_publication_id, $comment); 
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('delete_GFD_publication_comment')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $GFD_publication_comment_id = $cgi->param('GFD_publication_comment_id');
   my $msg = delete_GFD_publication_comment($session, $GFD_id, $GFD_publication_comment_id); 
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('delete_GFD_action')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $GFD_action_id = $cgi->param('GFD_action_id');
   my $msg = delete_GFD_action($session, $GFD_action_id); 
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('add_publication')) {
   my $GFD_id = $cgi->param('GFD_id');
@@ -194,13 +194,13 @@ elsif ($cgi->param('add_publication')) {
   my $title = $cgi->param('title');
   my $source = $cgi->param('source');
   my $msg = add_publication($session, $GFD_id, $pmid, $title, $source); 
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('set_visibility')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $visibility = $cgi->param('visibility');
   my $msg = update_visibility($session, $GFD_id, $visibility); 
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('update_disease')) {
   my $GFD_id = $cgi->param('GFD_id');
@@ -208,25 +208,25 @@ elsif ($cgi->param('update_disease')) {
   my $disease_mim = $cgi->param('mim');
   my $disease_name = $cgi->param('name');
   my $msg = update_disease($session, $disease_id, $disease_mim, $disease_name);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('delete_GFD_phenotype')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $GFD_phenotype_id = $cgi->param('GFD_phenotype_id');
   my $msg = delete_GFDPhenotype($session, $GFD_phenotype_id);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('add_phenotype')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $phenotype_name = $cgi->param('phenotype_name');
   my $msg = add_GFDPhenotype($session, $GFD_id, $phenotype_name);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('update_phenotype_tree')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $phenotype_ids = $cgi->param('phenotype_ids');
   my $msg = update_GFDPhenotypes($session, $GFD_id, $phenotype_ids);
-  redirect("search_type=gfd&dbID=$GFD_id", $msg);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 else {
   show_default_page($session);
@@ -457,7 +457,7 @@ sub get_dbh {
   return $dbh;
 }
 
-sub redirect {
+sub _redirect {
   my $action = shift; 
   my $message = shift;
   if ($message) {
