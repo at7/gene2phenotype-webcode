@@ -107,6 +107,8 @@ if ($cgi->param('login')) {
   show_recover_pwd_page($session);
 } elsif ($cgi->param('show_downloads')) {
   show_downloads_page($session);
+} elsif ($cgi->param('show_disclaimer')) {
+  show_disclaimer_page($session);
 } elsif ($cgi->param('download')) { 
   my $file = download_data($downloads_dir);
   open(my $DLFILE, '<', "$downloads_dir/$file");
