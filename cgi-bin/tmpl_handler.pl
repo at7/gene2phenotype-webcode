@@ -492,7 +492,13 @@ sub get_variations {
           $counts->{$consequence}++;
         }
         my $consequence_types = join(', ', @{$tv->consequence_type});
-        my $hgvs_transcript = join(',', values %{$tv->hgvs_transcript()});
+        my @hgvs_transcripts = ();
+        for my $hgvs_notation (values %{$tv->hgvs_transcript}) {
+          if (defined $hgvs_notation) {
+            push @hgvs_transcripts, $hgvs_notation;
+          }
+        }
+        my $hgvs_transcript = (scalar @hgvs_transcripts > 0) ? join(', ', @hgvs_transcripts) : '';
         push @variations_tmpl, {
           variant_name => $variant_name,
           consequence => $consequence_types, 
