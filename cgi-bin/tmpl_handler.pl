@@ -2,20 +2,22 @@ use strict;
 use warnings;
 
 use HTML::Template;
-use List::MoreUtils qw(first_index);
 use DBI;
 use JSON;
+use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/share/perl5';
+use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/lib64/perl5';
 use lib "../../lib/gene2phenotype/modules";
 use lib "../../lib/ensembl/modules";
+use lib "../../lib/ensembl-compara/modules";
 use lib "../../lib/ensembl-variation/modules";
-
+use lib "../../lib/bioperl-live/";
 use G2P::Registry;
 use Bio::EnsEMBL::Registry;
 my $ensembl_registry = 'Bio::EnsEMBL::Registry';
 $ensembl_registry->load_registry_from_db(
   -host => 'ensembldb.ensembl.org',
   -user => 'anonymous',
-  -port => 3337,
+  -port => 3306,
 );
 
 use constant TMPL_FILE => "../htdocs/G2P.tmpl";
