@@ -1,23 +1,28 @@
 <div>
   <footer  class="bs-docs-footer" role="contentinfo">
     <div class="container">
-      <ul class="bs-docs-footer-links text-muted">
-        <li><img src="../images/sanger.png" alt="sanger" width="20%" height="auto"></li>
-        <li>&middot;</li>
-        <li>Currently v0.1</li>
-        <li>&middot;</li>
-        <li><img src="../images/EBI.png" alt="EBI" width="20%" height="auto"></li>
-<!--
-        <li>&middot;</li>
-        <li><a href="/">About</a></li>
-        <li>&middot;</li>
-        <li><a href="/">Terms of Use</a></li>
-        <li>&middot;</li>
-        <li><a href="/">Contact Us</a></li>
-        <li>&middot;</li>
-        <li><a href="/">Help</a></li>
--->
-      </ul>
+      <div class="container">
+        <ul class="bs-docs-footer-links text-muted">
+          <li>Currently v0.1</li>
+          <li>&middot;</li>
+          <li>
+            <form id="disclaimer_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="show_disclaimer" value="view"/>
+                <a href='#' onclick="document.getElementById('disclaimer_form').submit();">Disclaimer</a>
+              </fieldset>
+            </form>
+          </li>
+          <li>&middot;</li>
+          <li>Help</li>
+        </ul>
+      </div>
+      <div class="container">
+        <ul class="bs-docs-footer-links text-muted">
+          <li><img src="../images/EBI.png" alt="EBI" width="20%" height="auto"></li>
+          <li><img src="../images/sanger.png" alt="sanger" width="20%" height="auto"></li>
+        </ul>
+      </div>
     </div>
   </footer>
 </div>
