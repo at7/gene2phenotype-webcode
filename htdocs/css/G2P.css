@@ -156,3 +156,7 @@ dd {
   border-bottom-style: solid;
   border-bottom-color: #D4D8D1;
 }
+
+#disclaimer_form {
+  display: inline-block;
+}
