@@ -113,6 +113,14 @@ sub show_downloads_page {
   return;
 }
 
+sub show_disclaimer_page {
+  my $session = shift;
+  set_login_status($tmpl, $session);
+  $tmpl->param(disclaimer => 1);
+  print $tmpl->output();
+  return;
+}
+
 sub identify_search_type {
   my $search_term = shift;
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
