@@ -7,13 +7,23 @@
       <span id="<TMPL_VAR NAME=GFD_id>"></span> 
     </div>
     <div>
-      <form id="update_phenotype_tree" role="form" method="get" action="./handler.cgi">
-        <div class="align_buttons_right">
-          <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-          <input type="hidden" name="phenotype_ids" value="<TMPL_VAR NAME=phenotype_ids_list>"/>
-          <input id="button" type="submit" value="Update Phenotype Tree" class="btn btn-primary btn-sm" name="update_phenotype_tree"/>
-        </div>
-      </form>
+      <TMPL_IF NAME=logged_in>
+        <form id="update_phenotype_tree" role="form" method="get" action="./handler.cgi">
+          <div class="align_buttons_right">
+            <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+            <input type="hidden" name="phenotype_ids" value="<TMPL_VAR NAME=phenotype_ids_list>"/>
+            <input id="button" type="submit" value="Update Phenotype Tree" class="btn btn-primary btn-sm" name="update_phenotype_tree"/>
+          </div>
+        </form>
+      <TMPL_ELSE>
+        <form id="login_form" action="./handler.cgi" method=get>
+          <div class="align_buttons_right">
+            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
+            <input id="button" type="submit" name="login" value="Update Phenotype Tree" class="btn btn-primary btn-sm"/>
+          </div>
+        </form>
+      </TMPL_IF>
     </div>
     <div class="clear"></div>
   </div>
