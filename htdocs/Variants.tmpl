@@ -1,0 +1,48 @@
+<div>
+  <TMPL_IF name=GFD_variants>
+  <h3>Variants (Imported from OMIM)</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Mutation</th>
+        <th>Consequence</th>
+        <th>Variant names</th>
+        <th>Publication</th>
+      </tr>
+    </thead>
+    <tbody>
+      <TMPL_LOOP NAME=GFD_variants>
+        <tr>
+          <td><TMPL_VAR NAME=mutation></td>
+          <td><TMPL_VAR NAME=consequence></td>
+          <td>
+            <TMPL_IF NAME=dbsnp_ids>
+              <ul>
+                <TMPL_LOOP NAME=dbsnp_ids>
+                  <li><a href="http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=<TMPL_VAR NAME=name>"><TMPL_VAR NAME=name></a></li>
+                </TMPL_LOOP>
+              </ul>
+            </TMPL_IF>
+            <TMPL_IF NAME=clinvar_ids>
+              <ul>
+                <TMPL_LOOP NAME=clinvar_ids>
+                  <li><a href="http://www.ncbi.nlm.nih.gov/clinvar?term=<TMPL_VAR NAME=name>"><TMPL_VAR NAME=name></a></li>
+                </TMPL_LOOP>
+              </ul>
+            </TMPL_IF>
+          </td>
+          <TMPL_IF NAME=title>
+            <TMPL_IF NAME=pmid>
+              <td><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></td>
+            <TMPL_ELSE>
+              <td><TMPL_VAR NAME=title></td>
+          </TMPL_IF>
+          <TMPL_ELSE>
+            <td>No reference information associated</td>
+          </TMPL_IF>
+        </tr>
+      </TMPL_LOOP> <!-- end variation loop-->
+    </tbody>
+  </table>
+  </TMPL_IF>
+</div>
