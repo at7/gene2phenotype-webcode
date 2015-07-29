@@ -319,6 +319,8 @@ sub display_data {
     my $disease = $genomic_feature_disease->get_Disease;
     my $disease_attributes = get_disease_attributes($disease);
 
+    my $GFD_variants = get_GFD_variants($genomic_feature_disease); 
+
     my $get_var = get_variations($genomic_feature->gene_symbol);
     my $variations = $get_var->{'tmpl'}; 
     my $counts = $get_var->{'counts'};
@@ -364,6 +366,7 @@ sub display_data {
       add_AR_loop => $add_AR_loop, 
       add_MC_loop => $add_MC_loop,
       edit_organs_loop => $edit_organs_loop, 
+      GFD_variants => $GFD_variants,
       variations => $variations,
       consequence_counts => $counts,
     });  
@@ -469,6 +472,43 @@ sub get_disease_attributes {
     disease_mim => $disease_mim,
     disease_id => $disease_id,
   };
+}
+
+
+sub get_GFD_variants {
+  my $GFD = shift;  
+
+  my $variation_adaptor = $registry->get_adaptor('variation'); 
+  my @variations_tmpl = ();
+  my $variations = $variation_adaptor->fetch_all_by_genomic_feature_id_disease_id($GFD->genomic_feature_id, $GFD->disease_id); 
+  foreach my $variation (@$variations) {
+    my $mutation    = $variation->mutation;
+    my $consequence = $variation->consequence;
+    my $publication = $variation->get_Publication;
+    my ($title, $pmid);
+    if ($publication) {       
+      $title = $publication->title;
+      $pmid = $publication->pmid; 
+    }
+    my $variation_synonyms = $variation->get_all_synonyms_order_by_source;
+    my @dbsnp_ids = ();
+    foreach (@{$variation_synonyms->{dbsnp}}) {
+      push @dbsnp_ids, {name => $_};
+    }
+    my @clinvar_ids = ();
+    foreach (@{$variation_synonyms->{clinvar}}) {
+      push @clinvar_ids, {name => $_};
+    }
+    push @variations_tmpl, {
+      mutation => $mutation, 
+      consequence => $consequence, 
+      dbsnp_ids => \@dbsnp_ids,
+      clinvar_ids => \@clinvar_ids,
+      pmid => $pmid,
+      title => $title,
+    };
+  }
+  return \@variations_tmpl;
 }
 
 sub get_variations {
