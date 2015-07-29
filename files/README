@@ -1,0 +1,21 @@
+Downloads:
+
+CVS export:
+One gene-disease pair can have multiple annotations of allelic requirement and mutation
+consequence pairs. We import one row for each pair of allelic requirement and mutation
+consequence. The header fields are:  
+  - gene symbol:            HGNC gene symbol 
+  - gene mim:               OMIM number for a gene entry
+  - disease name:           Name provided by the curator
+  - disease mim:            OMIM number for a disease entry
+  - DDD category:           One value from the list of possible categories: both DD and IF, confirmed DD gene, possible DD gene, probable DD gene
+  - allelic requirement:    comma-separated list of allelic requirement attributes. Possible values are: biallelic, digenic,
+digenic (biallelic), digenic (tetra-allelic), digenic (triallelic), hemizygous, imprinted, mitochondrial, monoallelic,
+monoallelic (autosome), monoallelic (autosome; obligate mosaic), monoallelic (X; hemizygous), monoallelic (X; heterozygous),
+monoallelic (Y), mosaic, mtDNA (heteroplasmic), mtDNA (homoplasmic), uncertain, x-linked dominant, x-linked over-dominance
+  - mutation consequence:   One value from the list of possible consequences: 5_prime or 3_prime UTR mutation, activating,
+all missense/in frame, cis-regulatory or promotor mutation, dominant negative, increased gene dosage, loss of function,
+part of contiguous gene duplication, part of contiguous genomic interval deletion, uncertain
+  - phenotypes:             semicolon-separated list of HPO (http://www.human-phenotype-ontology.org/) IDs
+  - organ specificity list: semicolon-separated list of organs
+  - pmids:                  semicolon-separated list of PMIDs 
