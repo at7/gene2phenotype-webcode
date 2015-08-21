@@ -7,17 +7,11 @@
         <dd><a href="http://omim.org/entry/<TMPL_VAR NAME=disease_mim>"><TMPL_VAR NAME=disease_mim></a></dd>
       </TMPL_IF>
     </dl>
-    <div class="show_toggle_view_button">
-      <TMPL_IF NAME=logged_in>
+    <TMPL_IF NAME=logged_in>
+      <div class="show_toggle_view_button">
         <input type="button" name="show_edit_content" value="Edit Disease Attributes" class="btn btn-primary btn-sm edit"/>
-      <TMPL_ELSE>
-        <form id="login_form" action="./handler.cgi" method=get>
-          <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-          <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-          <input id="button" type="submit" name="login" value="Edit Disease Attributes" class="btn btn-primary btn-sm edit"/>
-        </form>
-      </TMPL_IF>
-    </div>
+      </div>
+    </TMPL_IF>
     <div class="clear"></div>
   </div>
   <div class="show_edit_content">
