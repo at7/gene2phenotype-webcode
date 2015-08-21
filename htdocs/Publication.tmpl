@@ -46,7 +46,7 @@
       <TMPL_ELSE>
         <p>PMID:<TMPL_VAR NAME=title></p>
       </TMPL_IF>
-
+      <TMPL_IF NAME=logged_in>
       <TMPL_IF NAME=comments>
         <h4>Comments:</h4>
         <table class="table">
@@ -55,9 +55,7 @@
               <th>User</th>
               <th>Date</th>
               <th>Comment</th>
-              <TMPL_IF NAME=logged_in>
-                <th>Delete</th>
-              </TMPL_IF>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -66,20 +64,20 @@
                 <td><TMPL_VAR NAME=user></td>
                 <td><TMPL_VAR NAME=date></td>
                 <td><TMPL_VAR NAME=comment_text></td>
-                <TMPL_IF NAME=logged_in>
-                  <td>
-                    <form id="delete_GFD_publication_comment" action="./handler.cgi" method="get">
-                      <input type="hidden" name="GFD_publication_comment_id" value="<TMPL_VAR NAME=GFD_publication_comment_id>"/>
-                      <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-                      <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete" class="btn btn-primary btn-sm"/>
-                    </form>
-                  </td>
-                </TMPL_IF>
+                <td>
+                  <form id="delete_GFD_publication_comment" action="./handler.cgi" method="get">
+                    <input type="hidden" name="GFD_publication_comment_id" value="<TMPL_VAR NAME=GFD_publication_comment_id>"/>
+                    <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+                    <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete" class="btn btn-primary btn-sm"/>
+                  </form>
+                </td>
               </tr>
             </TMPL_LOOP> <!-- end comments-->
           </tbody>
         </table>
+      </TMPL_IF>
       </TMPL_IF> <!-- end comments-->
+
       <TMPL_IF NAME=logged_in>
         <div class="show_add_comment button_right">
           <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
