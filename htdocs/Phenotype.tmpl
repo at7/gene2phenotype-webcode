@@ -1,12 +1,12 @@
 <div>
   <h3><a class="anchor" name="phenotypes">Phenotypes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
-  <div id="ontology">  
-    <label>Select Phenotypes from the Human Phenotype Ontology:</label>
-    <div id="phenotype_tree">
-      <span id="<TMPL_VAR NAME=GFD_id>"></span> 
-    </div>
-    <div>
-      <TMPL_IF NAME=logged_in>
+  <TMPL_IF NAME=logged_in>
+    <div id="ontology">  
+      <label>Select Phenotypes from the Human Phenotype Ontology:</label>
+      <div id="phenotype_tree">
+        <span id="<TMPL_VAR NAME=GFD_id>"></span> 
+      </div>
+      <div>
         <form id="update_phenotype_tree" role="form" method="get" action="./handler.cgi">
           <div class="align_buttons_right">
             <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
@@ -14,46 +14,30 @@
             <input id="button" type="submit" value="Update Phenotype Tree" class="btn btn-primary btn-sm" name="update_phenotype_tree"/>
           </div>
         </form>
-      <TMPL_ELSE>
-        <form id="login_form" action="./handler.cgi" method=get>
+      </div>
+      <div class="clear"></div>
+    </div>
+
+    <div id="new_phenotype">
+      <div class="show_add_publication button_right">
+        <input type="button" name="show_add_publication" value="Add New Phenotype" class="btn btn-primary btn-sm show_add_publication_button"/>
+      </div>
+      <div class="add_publication">
+        <label>Select Phenotype from the Human Phenotype Ontology List:</label>
+        <form id="add_publication" role="form" method="post" action="./handler.cgi">
+          <div class="form-group">
+            <input id="query_phenotype_name" type="text" name="phenotype_name" placeholder="Select phenotype name" class="form-control">
+          </div>
           <div class="align_buttons_right">
-            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-            <input id="button" type="submit" name="login" value="Update Phenotype Tree" class="btn btn-primary btn-sm"/>
+            <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+            <input id="button" type="submit" class="btn btn-primary btn-sm" name="add_phenotype" value="Add"/>
+            <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
           </div>
         </form>
-      </TMPL_IF>
+      </div>
     </div>
     <div class="clear"></div>
-  </div>
-
-  <div id="new_phenotype">
-    <div class="show_add_publication button_right">
-      <TMPL_IF NAME=logged_in>
-        <input type="button" name="show_add_publication" value="Add New Phenotype" class="btn btn-primary btn-sm show_add_publication_button"/>
-      <TMPL_ELSE>
-        <form id="login_form" action="./handler.cgi" method=get>
-          <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-          <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-          <input id="button" type="submit" name="login" value="Add New Phenotype" class="btn btn-primary btn-sm"/>
-        </form>
-      </TMPL_IF>
-    </div>
-    <div class="add_publication">
-      <label>Select Phenotype from the Human Phenotype Ontology List:</label>
-      <form id="add_publication" role="form" method="post" action="./handler.cgi">
-        <div class="form-group">
-          <input id="query_phenotype_name" type="text" name="phenotype_name" placeholder="Select phenotype name" class="form-control">
-        </div>
-        <div class="align_buttons_right">
-          <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-          <input id="button" type="submit" class="btn btn-primary btn-sm" name="add_phenotype" value="Add"/>
-          <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div class="clear"></div>
+  </TMPL_IF>
 
   <TMPL_LOOP NAME=phenotypes>
     <div class="phenotype_list">
