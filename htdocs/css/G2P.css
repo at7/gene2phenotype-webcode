@@ -160,3 +160,21 @@ dd {
 #disclaimer_form {
   display: inline-block;
 }
+
+.anchor {
+  text-decoration: none;
+  color: #333333;
+}
+
+.anchor:hover {
+  color: #333333;
+  text-decoration: none;
+}
+
+#legend {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+
