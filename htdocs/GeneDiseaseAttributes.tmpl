@@ -9,19 +9,14 @@
           <dd><TMPL_VAR NAME=DDD_category></dd>
         </dl>
       </div> <!--End display attributes-->
-      <div class="show_toggle_view_button">
-        <TMPL_IF NAME=logged_in>
+      <TMPL_IF NAME=logged_in>
+        <div class="show_toggle_view_button">
           <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
-        <TMPL_ELSE>
-          <form id="login_form" action="./handler.cgi" method=get>
-            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-            <input id="button" type="submit" name="login" value="Edit" class="btn btn-primary btn-sm edit"/>
-          </form>
-        </TMPL_IF>
-      </div>
+        </div>
+      </TMPL_IF>
       <div class="clear"></div>
     </div>
+
     <div class="show_edit_content">
       <h4>Edit DDD category:</h4>
       <form role="form" method="get" action="./handler.cgi">
@@ -40,6 +35,7 @@
         </div>
       </form>
     </div> <!--End show edit content-->
+    
   </div> <!--End DDD category-->
 
   <TMPL_LOOP NAME=GFD_actions>
@@ -52,17 +48,11 @@
           <dd><TMPL_VAR NAME=mutation_consequence_summary></dd>
         </dl>
       </div>
-      <div class="show_toggle_view_button">
-        <TMPL_IF NAME=logged_in>
+      <TMPL_IF NAME=logged_in>
+        <div class="show_toggle_view_button">
           <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
-        <TMPL_ELSE>
-          <form id="login_form" action="./handler.cgi" method=get>
-            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-            <input id="button" type="submit" name="login" value="Edit" class="btn btn-primary btn-sm edit"/>
-          </form>
-        </TMPL_IF>
-      </div>
+        </div>
+      </TMPL_IF>
       <div class="clear"></div>
     </div>
     <div class="show_edit_content">
@@ -93,33 +83,35 @@
     </div> <!--End show edit content-->
   </TMPL_LOOP>
 
-  <div class="show_db_content">
-    <div class="show_toggle_view_button">
-      <input type="button" name="show_edit_content" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
+  <TMPL_IF NAME="logged_in">
+    <div class="show_db_content">
+      <div class="show_toggle_view_button">
+        <input type="button" name="show_edit_content" value="Add Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
+      </div>
+      <div class="clear"></div>
     </div>
-    <div class="clear"></div>
-  </div>
-  <div class="show_edit_content">
-    <h4>Add allelic requirements and mutation consequence:</h4>
-    <form role="form" method="get" action="./handler.cgi">
-      <div class="form-group">
-        <TMPL_LOOP NAME=add_AR_loop>
-          <input type="checkbox" name="allelic_requirement" value="<TMPL_VAR NAME=AR_attrib_id>"><TMPL_VAR NAME=AR_attrib_value><br>
-        </TMPL_LOOP>
-      </div>
-      <div class="form-group">
-        <label>Mutation consequence summary:</label>
-        <select name="mutation_consequence">
-          <TMPL_LOOP NAME=add_MC_loop>
-            <option value="<TMPL_VAR NAME=MC_attrib_id>"><TMPL_VAR NAME=MC_attrib_value></option>
+    <div class="show_edit_content">
+      <h4>Add allelic requirements and mutation consequence:</h4>
+      <form role="form" method="get" action="./handler.cgi">
+        <div class="form-group">
+          <TMPL_LOOP NAME=add_AR_loop>
+            <input type="checkbox" name="allelic_requirement" value="<TMPL_VAR NAME=AR_attrib_id>"><TMPL_VAR NAME=AR_attrib_value><br>
           </TMPL_LOOP>
-        </select>
-      </div>
-      <div class="align_buttons_right">
-        <input name="GFD_id" value=<TMPL_VAR NAME=GFD_id> type="hidden">
-        <input id="button" type="submit" name="add_GFD_action" value="Add" class="btn btn-primary btn-sm"/>
-        <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
-      </div>
-    </form>
-  </div> <!--End show edit content-->
+        </div>
+        <div class="form-group">
+          <label>Mutation consequence summary:</label>
+          <select name="mutation_consequence">
+            <TMPL_LOOP NAME=add_MC_loop>
+              <option value="<TMPL_VAR NAME=MC_attrib_id>"><TMPL_VAR NAME=MC_attrib_value></option>
+            </TMPL_LOOP>
+          </select>
+        </div>
+        <div class="align_buttons_right">
+          <input name="GFD_id" value=<TMPL_VAR NAME=GFD_id> type="hidden">
+          <input id="button" type="submit" name="add_GFD_action" value="Add" class="btn btn-primary btn-sm"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      </form>
+    </div> <!--End show edit content-->
+  </TMPL_IF>
 </div> <!--End-->
