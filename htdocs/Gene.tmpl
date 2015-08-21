@@ -15,7 +15,7 @@
   <div class="clear"></div>
   <div class="variations">
     <TMPL_IF NAME=variations>
-    <h4>Variants (Source: Ensembl; All variants overlapping transcripts of the gene. Display only pathogenic variants (imported from ClinVar))</h4>
+    <h4>All pathogenic variants from Ensembl that overlap any transcripts of the given gene:</h4>
     <div class="chart" data="<TMPL_VAR NAME=consequence_counts ESCAPE=HTML>" >
       <svg></svg>
     </div>
