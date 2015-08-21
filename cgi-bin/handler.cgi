@@ -310,7 +310,7 @@ sub send_recover_pwd_mail {
 #    show_default_page($session); # error sending email, print $Mail::Sendmail::error, $Mail::Sendmail::log
 #    return;
 #  }
-  redirect();
+  _redirect();
 }
 
 sub show_recover_pwd_page {
