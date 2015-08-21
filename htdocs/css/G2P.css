@@ -171,7 +171,7 @@ dd {
   text-decoration: none;
 }
 
-#legend {
+#legend, #organ_list {
   list-style-type: none;
   padding: 0px;
   margin: 0px;
