@@ -73,7 +73,9 @@
         <TMPL_INCLUDE NAME="Variants.tmpl">
         <TMPL_INCLUDE NAME="Disease.tmpl">
         <TMPL_INCLUDE NAME="Gene.tmpl">
-        <TMPL_INCLUDE NAME="Logs.tmpl">
+        <TMPL_IF NAME="logged_in">        
+          <TMPL_INCLUDE NAME="Logs.tmpl">
+        </TMPL_IF>
       </div> <!-- END Results-->
     </TMPL_IF>
     <TMPL_IF NAME=display_disease>
