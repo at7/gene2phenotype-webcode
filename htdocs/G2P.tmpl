@@ -33,8 +33,19 @@
 
     <TMPL_IF NAME=display_gfd>
       <div class="container">
-        <h3 class="title" >Gene: <em><TMPL_VAR NAME=gene_symbol></em> Disease: <em><TMPL_VAR NAME=disease_name></em></h3>
+        <h3 class="title"><a class="anchor" name="top">Gene: <em><TMPL_VAR NAME=gene_symbol></em> Disease: <em><TMPL_VAR NAME=disease_name></em></a></h3>
         <div class="clear"></div>
+        <ul id="legend">
+          <li><a href="#GD_attribs">Gene-Disease Attributes</a></li>
+          <li><a href="#publications">Publications</a></li>
+          <li><a href="#phenotypes">Phenotypes</a></li>
+          <li><a href="#organ_specificity">Organ specificity</a></li>
+          <li><a href="#disease">Disease</a> </li>
+          <li><a href="#gene">Gene</a></li>
+          <TMPL_IF NAME="logged_in">        
+            <li><a href="#user_activity">User activity</a></li>
+          </TMPL_IF>
+        </ul> 
 
         <TMPL_IF NAME="logged_in">        
           <div class="form-group visibility">
