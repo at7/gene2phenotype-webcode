@@ -1,52 +1,46 @@
 <div>
   <h3><a class="anchor" name="publications">Publications</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
-  <div id="new_publication">
-    <div class="show_add_publication button_right">
-      <TMPL_IF NAME=logged_in>
+
+  <TMPL_IF NAME=logged_in>
+    <div id="new_publication">
+      <div class="show_add_publication button_right">
         <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
-      <TMPL_ELSE>
-        <form id="login_form" action="./handler.cgi" method=get>
-          <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-          <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-          <input id="button" type="submit" name="login" value="Add New Publication" class="btn btn-primary btn-sm"/>
-        </form>
-      </TMPL_IF>
-    </div>
-    <div class="add_publication">
-      <h4>Add new publication</h4>
-      <div class="add_publication_feedback" role="alert">
       </div>
-      <form id="add_publication" role="form" method="post" action="./handler.cgi">
-        <div class="form-group">
-          <label>PMID</label>
-          <div id="find_article">
-            <input type="button" name="find_article" value="Find article" class="btn btn-primary btn-sm find"/>
-            <div id="pmid">
-              <input type="text" class="form-control pmid" name="pmid" placeholder="PMID e.g. 24509478" value="">
+      <div class="add_publication">
+        <h4>Add new publication</h4>
+        <div class="add_publication_feedback" role="alert">
+        </div>
+        <form id="add_publication" role="form" method="post" action="./handler.cgi">
+          <div class="form-group">
+            <label>PMID</label>
+            <div id="find_article">
+              <input type="button" name="find_article" value="Find article" class="btn btn-primary btn-sm find"/>
+              <div id="pmid">
+                <input type="text" class="form-control pmid" name="pmid" placeholder="PMID e.g. 24509478" value="">
+              </div>
             </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" class="form-control title" name="title" placeholder="Title" value="">
-        </div>
-        <div class="form-group">
-          <label>Source</label>
-          <input type="text" class="form-control source" name="source" placeholder="Source" value="">
-        </div>
-        <div class="align_buttons_right">
-          <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-          <input id="button" type="submit" class="btn btn-primary btn-sm" name="add_publication" value="Add"/>
-          <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
-        </div>
-      </form>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control title" name="title" placeholder="Title" value="">
+          </div>
+          <div class="form-group">
+            <label>Source</label>
+            <input type="text" class="form-control source" name="source" placeholder="Source" value="">
+          </div>
+          <div class="align_buttons_right">
+            <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+            <input id="button" type="submit" class="btn btn-primary btn-sm" name="add_publication" value="Add"/>
+            <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
+    <div class="clear"></div>
+  </TMPL_IF>
 
-  <div class="clear"></div>
   <TMPL_LOOP NAME=GFD_publications>
     <div class="publication">
-
       <TMPL_IF NAME=pmid>
         <p><a href="http://europepmc.org/search?query=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></p>
       <TMPL_ELSE>
@@ -61,7 +55,9 @@
               <th>User</th>
               <th>Date</th>
               <th>Comment</th>
-              <th>Delete</th>
+              <TMPL_IF NAME=logged_in>
+                <th>Delete</th>
+              </TMPL_IF>
             </tr>
           </thead>
           <tbody>
@@ -70,28 +66,23 @@
                 <td><TMPL_VAR NAME=user></td>
                 <td><TMPL_VAR NAME=date></td>
                 <td><TMPL_VAR NAME=comment_text></td>
-                <td>
-                  <form id="delete_GFD_publication_comment" action="./handler.cgi" method="get">
-                    <input type="hidden" name="GFD_publication_comment_id" value="<TMPL_VAR NAME=GFD_publication_comment_id>"/>
-                    <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-                    <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete" class="btn btn-primary btn-sm"/>
-                  </form>
-                </td>
+                <TMPL_IF NAME=logged_in>
+                  <td>
+                    <form id="delete_GFD_publication_comment" action="./handler.cgi" method="get">
+                      <input type="hidden" name="GFD_publication_comment_id" value="<TMPL_VAR NAME=GFD_publication_comment_id>"/>
+                      <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+                      <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete" class="btn btn-primary btn-sm"/>
+                    </form>
+                  </td>
+                </TMPL_IF>
               </tr>
             </TMPL_LOOP> <!-- end comments-->
           </tbody>
         </table>
       </TMPL_IF> <!-- end comments-->
+      <TMPL_IF NAME=logged_in>
         <div class="show_add_comment button_right">
-          <TMPL_IF NAME=logged_in>
-            <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
-          <TMPL_ELSE>
-            <form id="login_form" action="./handler.cgi" method=get>
-              <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
-              <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
-              <input id="button" type="submit" name="login" value="Add New Comment" class="btn btn-primary btn-sm"/>
-            </form>
-          </TMPL_IF>
+          <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
         </div>
         <div class="add_comment">
           <form id="add_GFD_publication_comment" action="./handler.cgi" method="get">
@@ -104,6 +95,7 @@
             </div>
           </form>
         </div>
+      </TMPL_IF>
     </div> <!-- end class publication -->
   </TMPL_LOOP>  
 </div>
