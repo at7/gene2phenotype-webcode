@@ -20,8 +20,8 @@ sub download_data {
 
   my $csv = Text::CSV->new ( { binary => 1, eol => "\r\n" } ) or die "Cannot use CSV: ".Text::CSV->error_diag ();
   open my $fh, ">:encoding(utf8)", "$csv_file" or die "$csv_file: $!";
-  $csv->eol ("\r\n");  
-
+  $csv->eol ("\r\n");
+  $csv->print($fh, ['gene symbol', 'gene mim', 'disease name', 'disease mim', 'DDD category', 'allelic requirement', 'mutation consequence', 'phenotypes', 'organ specificity list', 'pmids']);
   foreach my $GFD (@$GFDs) {
   # Header: Gene_name Gene_mim Disease_name Disease_mim DDD_category Allelic_requirement Mutation_consequence Phenotypes Organs PMIDs
     my $gene_symbol = $GFD->get_GenomicFeature()->gene_symbol || 'No gene symbol'; 
