@@ -55,6 +55,7 @@ my $constants = {
   ADDED_PUBLICATION_SUC => { msg => 'Successfully added a new publication', type => 'success'},
   DELETED_GFDPHENOTYPE_SUC => { msg => 'Successfully deleted a phenotype entry.', type => 'success'},
   ADDED_GFDPC_SUC => { msg => 'Successfully added a new comment.', type => 'success'},
+  ADDED_GFDPhenotypeC_SUC => {msg => 'Successfully added a new comment.', type => 'success'},
   DELETED_GFD_ACTION_SUC => { msg => 'Successfully deleted a genomic feature disease action.', type => 'success'},
   DELETED_GFDPC_SUC => { msg => 'Successfully deleted the comment.', type => 'success'},
   UPDATED_PHENOTYPES_SUC => {msg => 'Successfully updated the list of phenotypes.', type => 'success'},
@@ -609,7 +610,20 @@ sub get_phenotypes {
     my $phenotype = $GFDPhenotype->get_Phenotype;
     my $stable_id = $phenotype->stable_id;
     my $name = $phenotype->name;
+    my $comments = $GFDPhenotype->get_all_GFDPhenotypeComments; 
+    my @comments_tmpl = ();
+    foreach my $comment (@$comments) {
+      push @comments_tmpl, {
+        user => $comment->get_User()->username,
+        date => $comment->created,
+        comment_text => $comment->comment_text,
+#        GFD_publication_comment_id => $comment->dbID,
+#        GFD_id => $GFD->dbID,
+      }; 
+    }
+
     push @phenotypes_tmpl, {
+      GFD_phenotype_comments => \@comments_tmpl,
       stable_id => $stable_id,
       name => $name,
       GFD_phenotype_id => $GFDPhenotype->dbID,
@@ -750,6 +764,27 @@ sub add_GFD_publication_comment {
 
   $gfd_p_c_a->store($GFD_publication_comment, $user);
   return 'ADDED_GFDPC_SUC';
+}
+
+sub add_GFD_phenotype_comment {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $GFD_phenotype_id = shift;
+  my $comment = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $gfd_p_c_a = $registry->get_adaptor('GFD_phenotype_comment');
+  my $GFD_phenotype_comment = G2P::GFDPhenotypeComment->new({
+    comment_text => $comment,
+    GFD_phenotype_id => $GFD_phenotype_id,
+    registry => $registry,
+  });
+
+  $gfd_p_c_a->store($GFD_phenotype_comment, $user);
+  return 'ADDED_GFDPhenotypeC_SUC';
 }
 
 sub delete_GFD_publication_comment {
