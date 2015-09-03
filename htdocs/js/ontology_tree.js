@@ -3,25 +3,44 @@ $( document ).ready(function() {
   $.jstree.defaults.core.themes.dots = false;
   $.jstree.defaults.core.themes.icons = false;
   $.jstree.defaults.checkbox.three_state = false;
-
   var GFD_id = $('#phenotype_tree span').attr('id');
+
   $('#phenotype_tree').jstree({
     
-    'core' : {
-      'data' : {
-        "url" : "populate_onotology_tree.cgi",
-
-        "data" : function (node) {
-          return { "id" : node.id,
-                   "GFD_id" : GFD_id };
-        }
+    "search" : {
+      'ajax' : {
+        url : 'populate_onotology_tree.cgi',
+        dataType : "json",
+        error : function(data, type){
+          console.log(type);
+        },
+        success: function(data, type) {
+        }, 
       }
     },
+
     "checkbox" : {
       "keep_selected_style" : false
     },
-    "plugins" : [ "checkbox", "sort" ]
+
+    "plugins" : [ "checkbox", "sort", "search" ],
+
+    'core' : {
+      'data' : {
+        "url" : "populate_onotology_tree.cgi",
+        "data" : function (node) {
+          return { "id" : node.id,
+                   "GFD_id" : GFD_id,
+                   "type" : 'expand' };
+        }
+      }
+    },
   });
+  $("#search_phenotype").click(function() {
+    var phenotype_name = $("#query_phenotype_name").val(); 
+    $("#phenotype_tree").jstree("search", phenotype_name);
+  });
+
 
   $('#phenotype_tree').on('select_node.jstree', function(e, data) {
     var ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
