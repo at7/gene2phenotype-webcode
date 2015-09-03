@@ -5,7 +5,7 @@
       <label>Search Phenotype from the Human Phenotype Ontology:</label>
 
       <div id="search_phenotype">
-        <button type="submit" class="btn btn-primary btn-sm" style="float: right">Search</button>
+        <button type="submit" class="btn btn-primary btn-sm" id="search_phenotype_button" style="float: right">Search</button>
         <div style="overflow: hidden; padding-right: .5em;">
           <input type="search" id="query_phenotype_name" style='width:100%'/>
         </div>
@@ -13,8 +13,13 @@
 
       <div class="clear"></div>
 
-      <div id="phenotype_tree">
-        <span id="<TMPL_VAR NAME=GFD_id>"></span> 
+      <div id="add_phenotype_bg" class="">
+        <div id="add_phenotype_msg">
+          <p class="text-danger">Phenotypes have changed. If you want to store the changes please click the 'Update Phenotype Tree' button.</p>
+        </div>
+        <div id="phenotype_tree">
+          <span id="<TMPL_VAR NAME=GFD_id>"></span> 
+        </div>
       </div>
       <div>
         <form id="update_phenotype_tree" role="form" method="get" action="./handler.cgi">
@@ -39,11 +44,54 @@
         <a href="http://www.human-phenotype-ontology.org/hpoweb/showterm?id=<TMPL_VAR NAME=stable_id>"><TMPL_VAR NAME=name></a>
       </div>
       <TMPL_IF NAME=logged_in>
+        <TMPL_IF NAME=GFD_phenotype_comments>
+          <h4>Comments:</h4>
+          <table class="table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Date</th>
+              <th>Comment</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <TMPL_LOOP NAME=GFD_phenotype_comments>
+              <tr>
+                <td><TMPL_VAR NAME=user></td>
+                <td><TMPL_VAR NAME=date></td>
+                <td><TMPL_VAR NAME=comment_text></td>
+                <td>
+                </td>
+              </tr>
+            </TMPL_LOOP> <!-- end comments-->
+          </tbody>
+        </table>
+      </TMPL_IF>
+      </TMPL_IF> <!-- end comments-->
+
+
+      <TMPL_IF NAME=logged_in>
         <div class="phenotype_right">
           <form id="GFD_phenotype" action="./handler.cgi" method="get">
             <input type="hidden" name="GFD_phenotype_id" value="<TMPL_VAR NAME=GFD_phenotype_id>"/>
             <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-            <input id="button" type="submit" name="delete_GFD_phenotype" value="Delete" class="btn btn-primary btn-sm"/>
+            <input id="button" type="submit" name="delete_GFD_phenotype" value="Delete Phenotype" class="btn btn-primary btn-sm"/>
+          </form>
+        </div>
+
+        <div class="show_add_comment button_right">
+          <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
+        </div>
+        <div class="add_comment">
+          <form id="add_GFD_phenotype_comment" action="./handler.cgi" method="get">
+            <div class="comment_text_area"><textarea class="form-control" name="GFD_phenotype_comment" rows="3"></textarea></div>
+            <input type="hidden" name="GFD_phenotype_id" value="<TMPL_VAR NAME=GFD_phenotype_id>"/>
+            <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+            <div class="align_buttons_right">
+              <input id="button" type="submit" name="add_GFD_phenotype_comment" value="Add" class="btn btn-primary btn-sm"/>
+              <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment"/>
+            </div>
           </form>
         </div>
       </TMPL_IF>
