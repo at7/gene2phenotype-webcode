@@ -36,11 +36,10 @@ $( document ).ready(function() {
       }
     },
   });
-  $("#search_phenotype").click(function() {
+  $("#search_phenotype #search_phenotype_button").click(function() {
     var phenotype_name = $("#query_phenotype_name").val(); 
     $("#phenotype_tree").jstree("search", phenotype_name);
   });
-
 
   $('#phenotype_tree').on('select_node.jstree', function(e, data) {
     var ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
