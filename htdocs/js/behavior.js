@@ -1,8 +1,7 @@
 $(document).ready(function(){
-
-  $("#query_phenotype_name, #query, #query_gene_name, #query_disease_name").click(function(){
+  $('#ensembl_variants_table').DataTable();
+  $("#query_phenotype_name, #query, #query_gene_name, #query_disease_name" ).click(function(){
     var id = $(this).attr('id');
-    console.log(id);
     $(this).autocomplete({
       source: function(request, response) {
         $.ajax({
@@ -25,7 +24,6 @@ $(document).ready(function(){
       select: function(event, ui) {}
     });
   }); 
-
 
   $(".phenotype_right").mouseenter(function(){
     $(this).prev().css('background-color', '#D4D8D1');
