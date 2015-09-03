@@ -153,8 +153,8 @@ dd {
 #ontology {
   margin-bottom: 3em;
   padding-bottom: 1em;
-  border-bottom-style: solid;
-  border-bottom-color: #D4D8D1;
+/*  border-bottom-style: solid;*/
+/*  border-bottom-color: #D4D8D1;*/
 }
 
 #disclaimer_form {
@@ -177,4 +177,15 @@ dd {
   margin: 0px;
 }
 
+#update_phenotype_tree {
+  display: none;
+}
+
+#add_phenotype_bg {
+
+}
+
+#add_phenotype_msg {
+  display: none;
+}
 
