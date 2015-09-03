@@ -43,20 +43,23 @@ $( document ).ready(function() {
   });
   $("#search_phenotype #search_phenotype_button").click(function() {
     var phenotype_name = $("#query_phenotype_name").val(); 
+    $('#phenotype_tree').jstree(true).get_node('1', true).addClass("jstree-loading");
     $("#phenotype_tree").jstree("search", phenotype_name);
   });
 
   $('#phenotype_tree').on('select_node.jstree', function(e, data) {
     var ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
-    var list = ids_string.split(',');
+    var list = [];
+    if (ids_string) {
+      list = ids_string.split(',');
+    }
     var new_id = data.node.id;
+    console.log(new_id);
     if (!contains(list, new_id)) {
       list.push(new_id);
-      ids_string = list.join();
       $("#update_phenotype_tree input[name=phenotype_ids]").val(list);
     }
     ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
-    
     if (!(compareArrays(init_list, list))) {
       // show update button
       $("#update_phenotype_tree").css("display", "block"); 
@@ -72,14 +75,16 @@ $( document ).ready(function() {
 
   $('#phenotype_tree').on('deselect_node.jstree', function(e, data){
     var ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
-    var list = ids_string.split(',');
+    var list = []; 
+    if (ids_string) {
+      list = ids_string.split(',');
+    }
     var delete_id = data.node.id;
     for (var i = list.length - 1; i >= 0; i--) {
       if (list[i] === delete_id) {
         list.splice(i, 1);
       }
     }
-    ids_string = list.join();
     $("#update_phenotype_tree input[name=phenotype_ids]").val(list);
 
     if (!(compareArrays(init_list, list))) {
