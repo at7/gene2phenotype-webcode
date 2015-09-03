@@ -2,7 +2,15 @@
   <h3><a class="anchor" name="phenotypes">Phenotypes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
   <TMPL_IF NAME=logged_in>
     <div id="ontology">  
-      <label>Select Phenotypes from the Human Phenotype Ontology:</label>
+      <label>Search Phenotype from the Human Phenotype Ontology:</label>
+
+      <div id="search_phenotype">
+        <input type="search" id="query_phenotype_name"/>
+        <button type="submit">Search</button>
+      </div>
+
+      <div class="clear"></div>
+
       <div id="phenotype_tree">
         <span id="<TMPL_VAR NAME=GFD_id>"></span> 
       </div>
@@ -18,24 +26,6 @@
       <div class="clear"></div>
     </div>
 
-    <div id="new_phenotype">
-      <div class="show_add_publication button_right">
-        <input type="button" name="show_add_publication" value="Add New Phenotype" class="btn btn-primary btn-sm show_add_publication_button"/>
-      </div>
-      <div class="add_publication">
-        <label>Select Phenotype from the Human Phenotype Ontology List:</label>
-        <form id="add_publication" role="form" method="post" action="./handler.cgi">
-          <div class="form-group">
-            <input id="query_phenotype_name" type="text" name="phenotype_name" placeholder="Select phenotype name" class="form-control">
-          </div>
-          <div class="align_buttons_right">
-            <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-            <input id="button" type="submit" class="btn btn-primary btn-sm" name="add_phenotype" value="Add"/>
-            <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
-          </div>
-        </form>
-      </div>
-    </div>
     <div class="clear"></div>
   </TMPL_IF>
 
