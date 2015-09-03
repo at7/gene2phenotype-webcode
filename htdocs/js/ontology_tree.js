@@ -5,6 +5,11 @@ $( document ).ready(function() {
   $.jstree.defaults.checkbox.three_state = false;
   var GFD_id = $('#phenotype_tree span').attr('id');
 
+  // store list of phenotypes
+  var init_ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
+  var init_list = init_ids_string.split(',');
+  console.log(init_ids_string);
+
   $('#phenotype_tree').jstree({
     
     "search" : {
@@ -51,6 +56,18 @@ $( document ).ready(function() {
       $("#update_phenotype_tree input[name=phenotype_ids]").val(list);
     }
     ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
+    
+    if (!(compareArrays(init_list, list))) {
+      // show update button
+      $("#update_phenotype_tree").css("display", "block"); 
+      $("#add_phenotype_bg").attr('class', 'bg-danger');
+      $("#add_phenotype_msg").css("display", "block"); 
+    } else {
+      $("#update_phenotype_tree").css("display", "none"); 
+      $("#add_phenotype_bg").attr('class', '');
+      $("#add_phenotype_msg").css("display", "none"); 
+    }
+
   });
 
   $('#phenotype_tree').on('deselect_node.jstree', function(e, data){
@@ -64,8 +81,18 @@ $( document ).ready(function() {
     }
     ids_string = list.join();
     $("#update_phenotype_tree input[name=phenotype_ids]").val(list);
-  });
 
+    if (!(compareArrays(init_list, list))) {
+      $("#update_phenotype_tree").css("display", "block"); 
+      $("#add_phenotype_bg").attr('class', 'bg-danger');
+      $("#add_phenotype_msg").css("display", "block"); 
+    } else {
+      $("#update_phenotype_tree").css("display", "none"); 
+      $("#add_phenotype_bg").attr('class', '');
+      $("#add_phenotype_msg").css("display", "none"); 
+    }
+
+  });
 
   function contains(a, obj) {
     for (var i = 0; i < a.length; i++) {
@@ -76,7 +103,26 @@ $( document ).ready(function() {
     return false;
   }
 
+  function compareArrays(arr1, arr2) {
+    return $(arr1).not(arr2).length === 0 && $(arr2).not(arr1).length === 0;
+  }
+
+
+
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
