@@ -5,8 +5,10 @@
       <label>Search Phenotype from the Human Phenotype Ontology:</label>
 
       <div id="search_phenotype">
-        <input type="search" id="query_phenotype_name"/>
-        <button type="submit">Search</button>
+        <button type="submit" class="btn btn-primary btn-sm" style="float: right">Search</button>
+        <div style="overflow: hidden; padding-right: .5em;">
+          <input type="search" id="query_phenotype_name" style='width:100%'/>
+        </div>
       </div>
 
       <div class="clear"></div>
@@ -28,6 +30,8 @@
 
     <div class="clear"></div>
   </TMPL_IF>
+
+  <label>List of Phenotypes from the Human Phenotype Ontology:</label>
 
   <TMPL_LOOP NAME=phenotypes>
     <div class="phenotype_list">
