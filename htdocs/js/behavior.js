@@ -25,11 +25,11 @@ $(document).ready(function(){
     });
   }); 
 
-  $(".phenotype_right").mouseenter(function(){
+  $(".align_right").mouseenter(function(){
     $(this).prev().css('background-color', '#D4D8D1');
   }); 
 
-  $(".phenotype_right").mouseleave(function(){
+  $(".align_right").mouseleave(function(){
     $(this).prev().css('background-color', 'white');
   }); 
 
@@ -46,6 +46,26 @@ $(document).ready(function(){
         $($span).addClass("glyphicon glyphicon-chevron-up");
       }
     });
+  });
+
+  $(".button_show_add_comment_phenotype").click(function(){
+    $button = $(this);
+    $first_parent_div = $button.parent();
+    $third_parent_div = $first_parent_div.parent().parent();      
+    $next_div = $third_parent_div.next();
+    $next_div.show(function(){
+      $first_parent_div.hide();
+    });   
+  });
+
+  $(".discard_add_comment_phenotype").click(function(){
+    $button = $(this);
+    $third_parent_div = $button.parent().parent().parent();
+    $prev_div = $third_parent_div.prev(); 
+    $prev_div_child = $prev_div.find('.show_add_comment_phenotype');
+    $prev_div_child.show(function(){
+      $third_parent_div.hide();
+    });  
   });
 
   $(".edit").click(function(){
