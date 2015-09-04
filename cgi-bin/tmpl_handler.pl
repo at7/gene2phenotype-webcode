@@ -617,8 +617,8 @@ sub get_phenotypes {
         user => $comment->get_User()->username,
         date => $comment->created,
         comment_text => $comment->comment_text,
-#        GFD_publication_comment_id => $comment->dbID,
-#        GFD_id => $GFD->dbID,
+        GFD_phenotype_comment_id => $comment->dbID,
+        GFD_id => $GFD->dbID,
       }; 
     }
 
@@ -800,6 +800,22 @@ sub delete_GFD_publication_comment {
   my $GFD_publication_comment = $gfd_p_c_a->fetch_by_dbID($GFD_publication_comment_id);  
 
   $gfd_p_c_a->delete($GFD_publication_comment, $user);
+  return 'DELETED_GFDPC_SUC';
+}
+
+sub delete_GFD_phenotype_comment {
+  my $session = shift;
+  my $GFD_id = shift;
+  my $GFD_phenotype_comment_id = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $gfd_p_c_a = $registry->get_adaptor('GFD_phenotype_comment');
+  my $GFD_phenotype_comment = $gfd_p_c_a->fetch_by_dbID($GFD_phenotype_comment_id);  
+
+  $gfd_p_c_a->delete($GFD_phenotype_comment, $user);
   return 'DELETED_GFDPC_SUC';
 }
 
