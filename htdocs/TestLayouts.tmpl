@@ -1,0 +1,55 @@
+<div>
+
+  <div class="align_left">
+    <p>Phenotype name</p>
+  </div>
+  <div class="align_right">
+
+    <div class="align_inline">
+      <form id="GFD_phenotype">
+        <input id="button" type="submit" name="delete_GFD_phenotype" value="Delete Phenotype" class="btn btn-primary btn-sm"/>
+      </form>
+    </div>
+
+    <div class="align_inline">
+      <div class="show_add_comment_phenotype">
+        <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm button_show_add_comment_phenotype"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="add_comment_phenotype">
+    <form id="add_GFD_phenotype_comment" action="./handler.cgi" method="get">
+      <div class="comment_text_area"><textarea class="form-control" name="GFD_phenotype_comment" rows="3"></textarea></div>
+      <input type="hidden" name="GFD_phenotype_id" value="<TMPL_VAR NAME=GFD_phenotype_id>"/>
+      <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+      <div class="align_buttons_right">
+        <input id="button" type="submit" name="add_GFD_phenotype_comment" value="Add" class="btn btn-primary btn-sm"/>
+        <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment_phenotype"/>
+      </div>
+    </form>
+  </div>
+  <div class="clear"></div>
+  <div>
+    <label>Comments:</label>
+    <table class="table">
+      <thead>
+        <tr>
+        <th>User</th>
+        <th>Date</th>
+        <th>Comment</th>
+        <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td>User</td>
+        <td>Date</td>
+        <td>Comment</td>
+        <td>Delete</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>  
+
+</div>
