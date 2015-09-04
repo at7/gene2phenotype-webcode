@@ -189,3 +189,27 @@ dd {
   display: none;
 }
 
+#add_phenotype_info_msg {
+  display: none;
+}
+
+.align_left {
+  float: left;
+}
+
+.align_right {
+  float: right;
+}
+
+.align_inline {
+  display: inline-block;
+}
+
+.add_comment_phenotype {
+  display: none;
+  padding-top: 3em;
+}
+
+
+
+
