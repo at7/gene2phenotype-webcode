@@ -8,7 +8,6 @@ $( document ).ready(function() {
   // store list of phenotypes
   var init_ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
   var init_list = init_ids_string.split(',');
-  console.log(init_ids_string);
 
   $('#phenotype_tree').jstree({
     
@@ -43,9 +42,14 @@ $( document ).ready(function() {
   });
   $("#search_phenotype #search_phenotype_button").click(function() {
     var phenotype_name = $("#query_phenotype_name").val(); 
-    $('#phenotype_tree').jstree(true).get_node('1', true).addClass("jstree-loading");
+    $('#add_phenotype_info_msg').show();
     $("#phenotype_tree").jstree("search", phenotype_name);
   });
+
+  $('#phenotype_tree').on('after_open.jstree', function(e, data) {
+    $('#add_phenotype_info_msg').hide();
+  });
+
 
   $('#phenotype_tree').on('select_node.jstree', function(e, data) {
     var ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
