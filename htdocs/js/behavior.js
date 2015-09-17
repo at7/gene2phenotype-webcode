@@ -1,4 +1,11 @@
 $(document).ready(function(){
+ 
+  $("#select_panel").change(function(){
+    var value =  $(this).val(); 
+    var img_src = '../images/G2P-' + value + '.png';
+    $('img[alt="panel_image"]').attr('src', img_src);
+  }); 
+
   $('#ensembl_variants_table').DataTable();
   $("#query_phenotype_name, #query, #query_gene_name, #query_disease_name" ).click(function(){
     var id = $(this).attr('id');
