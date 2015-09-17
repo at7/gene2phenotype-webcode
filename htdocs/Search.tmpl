@@ -4,7 +4,9 @@
       <p><TMPL_VAR NAME=message></p>
     </div>
   </TMPL_IF>
-  <div style="float:left; margin-right: 25px"><img src="../images/DDG2P.png" alt="DDG2P" height="150" width="150"></div>
+
+  <div "id=panel_image" style="float:left; margin-right: 25px"><img src="../images/G2P-all.png" alt="panel_image" height="150" width="150"></div>
+
   <div id="search-body">
     <form id="search_field" method="get" action="./handler.cgi">
       <p class="ui-widget">
@@ -12,7 +14,17 @@
           <div class="button_right">
             <input id="button" type="submit" class="btn btn-primary btn-sm"/>
             <div class="input_left">
-              <input id="query" type="text" name="search_term" style='width:100%' />
+              <label>Search panel </label> 
+              <select name="panel" id="select_panel">
+                <option value="all" selected>ALL</option>
+                <option value="cardiac">Cardiac</option>
+                <option value="DD">DD</option>
+                <option value="ear">Ear</option>
+                <option value="eye">Eye</option>
+                <option value="skin">Skin</option>
+              </select>
+              <label>for:</label> 
+              <input id="query" type="text" name="search_term" style='width:77%' />
             </div>
           </div>
         </div>
