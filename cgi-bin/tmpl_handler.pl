@@ -138,11 +138,47 @@ sub identify_search_type {
 sub set_login_status {
   my $tmpl = shift;
   my $session = shift;
+  set_default_panel($tmpl, $session);
   if ($session->param('is_logged_in')) {
     $tmpl->param(logged_in => 1);
     return 1;
   }
   return 0;
+}
+
+sub set_default_panel {
+  my $tmpl = shift;
+  my $session = shift;
+
+  my $panel = 'all';
+
+  if ($session->param('is_logged_in')) {
+    my $user_adaptor = $registry->get_adaptor('user');
+    my $email = $session->param('email');
+    my $user = $user_adaptor->fetch_by_email($email);
+    if ($user->panel()) {
+      my @panels = split(',', $user->panel);
+      $panel = $panels[0];
+    }
+  }
+  my $attribute_adaptor = $registry->get_adaptor('attribute');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
+  my @tmpl = ();
+  foreach my $value (sort keys %$attribs) {
+    my $id = $attribs->{$value};
+    my $is_selected =  ($value eq $panel) ? 'selected' : '';
+    my $value_uc = ucfirst $value;
+    if ($value eq 'all' || $value eq 'dd') {
+      $value_uc = uc $value;
+    }
+    push @tmpl, {
+      'selected' => $is_selected,
+      'panel_attrib_value' => $value,
+      'panel_attrib_value_uc' => $value_uc,
+    };   
+  }
+  $tmpl->param(panel_img => $panel);
+  $tmpl->param(panel_img_loop => \@tmpl);  
 }
 
 sub set_message {
