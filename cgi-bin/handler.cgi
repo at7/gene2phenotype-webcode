@@ -74,7 +74,8 @@ if ($cgi->param('login')) {
   show_login();
 } elsif ($cgi->param('search_term')) {
   my $search_term = $cgi->param('search_term');
-  display_search_results($session, $search_term);
+  my $panel = $cgi->param('panel');
+  display_search_results($session, $search_term, $panel);
 } elsif ($cgi->param('search_type')) {
   my $search_type = $cgi->param('search_type');
   my $dbID = $cgi->param('dbID');
