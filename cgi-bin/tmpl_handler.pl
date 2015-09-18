@@ -274,6 +274,7 @@ sub edit_data {
 sub display_search_results {
   my $session = shift;
   my $search_term = shift;
+  my $panel = shift;
   my $logged_in = set_login_status($tmpl, $session);
   set_default_panel($tmpl, $session);
 
@@ -295,23 +296,24 @@ sub display_search_results {
     my $dbID = $disease->dbID;
     $tmpl->param(disease_results => [{disease_name => $name, search_type => 'disease', dbID => $dbID}]); 
 
-    $gfds = $genomic_feature_disease_adaptor->fetch_all_by_Disease($disease); 
+    $gfds = $genomic_feature_disease_adaptor->fetch_all_by_Disease_panel($disease, $panel); 
   } elsif ($search_type eq 'gene_symbol') {
     my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($search_term);
     my $name = $genomic_feature->gene_symbol;
     my $dbID = $genomic_feature->dbID;
     $tmpl->param(gene_results => [{gene_symbol => $name, search_type => 'gene_symbol', dbID => $dbID}]);
-    $gfds = $genomic_feature_disease_adaptor->fetch_all_by_GenomicFeature($genomic_feature);
+    $gfds = $genomic_feature_disease_adaptor->fetch_all_by_GenomicFeature_panel($genomic_feature, $panel);
   } 
 
   my @gfd_results = ();
-  foreach my $gfd (@$gfds) {
+  foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
     my $genomic_feature = $gfd->get_GenomicFeature;
     my $gene_symbol = $genomic_feature->gene_symbol;
     my $disease = $gfd->get_Disease;
     my $disease_name = $disease->name;
     my $dbID = $gfd->dbID;
-    push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID};
+    my $panel = $gfd->panel;
+    push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
   }
 
   $tmpl->param(gfd_results => \@gfd_results);
