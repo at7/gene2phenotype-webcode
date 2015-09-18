@@ -98,28 +98,10 @@
         <dl>
           <dt>Username</dt>
           <dd><TMPL_VAR NAME=username></dd>
-<!--
-          <span class="edit_account_link">
-            <form id="edit_username_form" action="./handler.cgi" method="get">
-              <fieldset>
-                <input type="hidden" name="edit_username" value="edit_username"/>
-                <a href='#' onclick="document.getElementById('edit_username_form').submit();">Edit</a>
-              </fieldset>
-            </form>
-          </span>
--->
           <dt>Email</dt>
           <dd><TMPL_VAR NAME=email></dd>
-<!--
-          <span class="edit_account_link">
-            <form id="edit_email_form" action="./handler.cgi" method="get">
-              <fieldset>
-                <input type="hidden" name="edit_email" value="edit_email"/>
-                <a href='#' onclick="document.getElementById('edit_email_form').submit();">Edit</a>
-              </fieldset>
-            </form>
-          </span>
--->
+          <dt>Panel</dt>
+          <dd><TMPL_VAR NAME=user_panel></dd>
           <dt>Password</dt>
           <dd>
             <form id="edit_pwd_form" action="./handler.cgi" method="get">
