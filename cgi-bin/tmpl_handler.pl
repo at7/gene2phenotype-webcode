@@ -106,35 +106,6 @@ sub get_message_hash {
   return $constants->{$text};
 }
 
-sub show_downloads_page {
-  my $session = shift;
-  set_login_status($tmpl, $session);
-  $tmpl->param(downloads => 1);
-  print $tmpl->output();
-  return;
-}
-
-sub show_disclaimer_page {
-  my $session = shift;
-  set_login_status($tmpl, $session);
-  $tmpl->param(disclaimer => 1);
-  print $tmpl->output();
-  return;
-}
-
-sub identify_search_type {
-  my $search_term = shift;
-  my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
-  if ($genomic_feature_adaptor->fetch_by_gene_symbol($search_term)) {
-    return 'gene_symbol';
-  }
-  my $disease_adaptor = $registry->get_adaptor('disease');
-  if ($disease_adaptor->fetch_by_name($search_term)) {
-    return 'disease_name';
-  }
-  return 'no_entry_in_db';
-}
-
 sub set_login_status {
   my $tmpl = shift;
   my $session = shift;
@@ -149,9 +120,7 @@ sub set_login_status {
 sub set_default_panel {
   my $tmpl = shift;
   my $session = shift;
-
   my $panel = 'all';
-
   if ($session->param('is_logged_in')) {
     my $user_adaptor = $registry->get_adaptor('user');
     my $email = $session->param('email');
@@ -179,6 +148,36 @@ sub set_default_panel {
   }
   $tmpl->param(panel_img => $panel);
   $tmpl->param(panel_img_loop => \@tmpl);  
+}
+
+
+sub show_downloads_page {
+  my $session = shift;
+  set_login_status($tmpl, $session);
+  $tmpl->param(downloads => 1);
+  print $tmpl->output();
+  return;
+}
+
+sub show_disclaimer_page {
+  my $session = shift;
+  set_login_status($tmpl, $session);
+  $tmpl->param(disclaimer => 1);
+  print $tmpl->output();
+  return;
+}
+
+sub identify_search_type {
+  my $search_term = shift;
+  my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
+  if ($genomic_feature_adaptor->fetch_by_gene_symbol($search_term)) {
+    return 'gene_symbol';
+  }
+  my $disease_adaptor = $registry->get_adaptor('disease');
+  if ($disease_adaptor->fetch_by_name($search_term)) {
+    return 'disease_name';
+  }
+  return 'no_entry_in_db';
 }
 
 sub set_message {
