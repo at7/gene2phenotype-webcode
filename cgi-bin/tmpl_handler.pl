@@ -119,7 +119,7 @@ sub set_login_status {
 sub set_default_panel {
   my $tmpl = shift;
   my $session = shift;
-  my $panel = 'all';
+  my $panel = 'ALL';
   if ($session->param('is_logged_in')) {
     my $user_adaptor = $registry->get_adaptor('user');
     my $email = $session->param('email');
@@ -135,20 +135,14 @@ sub set_default_panel {
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
     my $is_selected =  ($value eq $panel) ? 'selected' : '';
-    my $value_uc = ucfirst $value;
-    if ($value eq 'all' || $value eq 'dd') {
-      $value_uc = uc $value;
-    }
     push @tmpl, {
       'selected' => $is_selected,
       'panel_attrib_value' => $value,
-      'panel_attrib_value_uc' => $value_uc,
     };   
   }
   $tmpl->param(panel_img => $panel);
   $tmpl->param(panel_img_loop => \@tmpl);  
 }
-
 
 sub show_downloads_page {
   my $session = shift;
@@ -356,6 +350,7 @@ sub display_data {
     }
 
     my $genomic_feature = $genomic_feature_disease->get_GenomicFeature;
+    
     my $genomic_feature_attributes = get_genomic_feature_attributes($genomic_feature);
     my $disease = $genomic_feature_disease->get_Disease;
     my $disease_attributes = get_disease_attributes($disease);
