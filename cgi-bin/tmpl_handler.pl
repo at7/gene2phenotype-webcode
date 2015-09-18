@@ -245,11 +245,13 @@ sub show_account_data {
   my $user_adaptor = $registry->get_adaptor('user');
   my $user = $user_adaptor->fetch_by_email($email);
   my $name = $user->username();
+  my $user_panel = $user->panel();
 
   if ($type eq 'account') {
     $tmpl->param(account_info => 1);
     $tmpl->param(email => $email);
     $tmpl->param(username => $name);
+    $tmpl->param(user_panel => $user_panel);
   } elsif ($type eq 'edit_pwd') {
     $tmpl->param(edit_pwd => 1);
   } elsif ($type eq 'edit_username') {
