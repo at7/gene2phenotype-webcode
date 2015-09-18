@@ -167,7 +167,8 @@ elsif ($cgi->param('new_gene_disease')) {
 elsif ($cgi->param('add_gene_disease')) {
   my $gene_name = $cgi->param('gene_name');
   my $disease_name = $cgi->param('disease_name');
-  add_new_gene_disease($session, $gene_name, $disease_name);
+  my $panel = $cgi->param('panel');
+  add_new_gene_disease($session, $gene_name, $disease_name, $panel);
 }
 elsif ($cgi->param('add_GFD_publication_comment')) {
   my $GFD_id = $cgi->param('GFD_id');
