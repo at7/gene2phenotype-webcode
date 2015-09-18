@@ -5,7 +5,7 @@
     </div>
   </TMPL_IF>
 
-  <div "id=panel_image" style="float:left; margin-right: 25px"><img src="../images/G2P-all.png" alt="panel_image" height="150" width="150"></div>
+  <div "id=panel_image" style="float:left; margin-right: 25px"><img src="../images/G2P-<TMPL_VAR NAME=panel_img>.png" alt="panel_image" height="150" width="150"></div>
 
   <div id="search-body">
     <form id="search_field" method="get" action="./handler.cgi">
@@ -16,12 +16,9 @@
             <div class="input_left">
               <label>Search panel </label> 
               <select name="panel" id="select_panel">
-                <option value="all" selected>ALL</option>
-                <option value="cardiac">Cardiac</option>
-                <option value="DD">DD</option>
-                <option value="ear">Ear</option>
-                <option value="eye">Eye</option>
-                <option value="skin">Skin</option>
+                <TMPL_LOOP NAME=panel_img_loop>
+                  <option value="<TMPL_VAR NAME=panel_attrib_value>" <TMPL_VAR NAME=selected>><TMPL_VAR NAME=panel_attrib_value></option>
+                </TMPL_LOOP>
               </select>
               <label>for:</label> 
               <input id="query" type="text" name="search_term" style='width:77%' />
