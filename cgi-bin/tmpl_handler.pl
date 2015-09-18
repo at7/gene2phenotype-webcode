@@ -109,7 +109,6 @@ sub get_message_hash {
 sub set_login_status {
   my $tmpl = shift;
   my $session = shift;
-  set_default_panel($tmpl, $session);
   if ($session->param('is_logged_in')) {
     $tmpl->param(logged_in => 1);
     return 1;
@@ -154,6 +153,7 @@ sub set_default_panel {
 sub show_downloads_page {
   my $session = shift;
   set_login_status($tmpl, $session);
+  set_default_panel($tmpl, $session);
   $tmpl->param(downloads => 1);
   print $tmpl->output();
   return;
@@ -162,6 +162,7 @@ sub show_downloads_page {
 sub show_disclaimer_page {
   my $session = shift;
   set_login_status($tmpl, $session);
+  set_default_panel($tmpl, $session);
   $tmpl->param(disclaimer => 1);
   print $tmpl->output();
   return;
@@ -193,6 +194,7 @@ sub set_message {
 sub display_search {
   my $session = shift;
   set_login_status($tmpl, $session);
+  set_default_panel($tmpl, $session);
   print $tmpl->output();
   return;
 }
@@ -204,6 +206,7 @@ sub show_default_page {
     set_message($tmpl, $message);
   }
   set_login_status($tmpl, $session);
+  set_default_panel($tmpl, $session);
   print $tmpl->output();
   return;
 }
@@ -279,6 +282,7 @@ sub display_search_results {
   my $session = shift;
   my $search_term = shift;
   my $logged_in = set_login_status($tmpl, $session);
+  set_default_panel($tmpl, $session);
 
   if (!defined $search_term) {
     print $tmpl->output();
@@ -335,6 +339,7 @@ sub display_data {
   }
 
   my $logged_in = set_login_status($tmpl, $session);
+  set_default_panel($tmpl, $session);
   $tmpl->param(search_type => $search_type);
   $tmpl->param(dbID => $dbID);
 
