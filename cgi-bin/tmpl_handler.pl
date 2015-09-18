@@ -133,7 +133,6 @@ sub set_default_panel {
   my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
   my @tmpl = ();
   foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
     my $is_selected =  ($value eq $panel) ? 'selected' : '';
     push @tmpl, {
       'selected' => $is_selected,
@@ -446,7 +445,7 @@ sub new_gene_disease {
   set_message($tmpl, $message) if ($message);
   set_default_panel($tmpl, $session);
   $tmpl->param(new_gene_disease => 1);
-  $tmpl->param(add_new_gene_disease => $logged_in);
+#  $tmpl->param(add_new_gene_disease => $logged_in);
   print $tmpl->output();
 }
 
@@ -454,6 +453,7 @@ sub add_new_gene_disease {
   my $session = shift;
   my $gene_name = shift;
   my $disease_name = shift;
+  my $panel_value = shift;
   if (!$gene_name || !$disease_name) {
     new_gene_disease($session, 'ERROR_ADD_GENE_DISEASE_PAIR');
     return; 
@@ -463,6 +463,7 @@ sub add_new_gene_disease {
   my $user_adaptor = $registry->get_adaptor('user');
   my $user = $user_adaptor->fetch_by_email($email);
 
+  my $attribute_adaptor = $registry->get_adaptor('attribute');
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
   my $disease_adaptor = $registry->get_adaptor('disease');
   my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
@@ -476,11 +477,13 @@ sub add_new_gene_disease {
   }
 
   my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_GenomicFeature_Disease($genomic_feature, $disease);
+  my $panel_id = $attribute_adaptor->attrib_id_for_value($panel_value);
 
   if (!$genomic_feature_disease) {
     $genomic_feature_disease = G2P::GenomicFeatureDisease->new({
       genomic_feature_id => $genomic_feature->dbID(),
       disease_id => $disease->dbID(),
+      panel => $panel_id
     });
     $genomic_feature_disease = $genomic_feature_disease_adaptor->store($genomic_feature_disease, $user);
   }
