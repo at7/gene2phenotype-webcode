@@ -6,8 +6,8 @@
         <label class="col-sm-2 control-label">Panel </label>
         <div class="col-sm-10">
           <select class="form-control" name="panel">
-            <TMPL_LOOP NAME=panel_img_loop>
-              <option value="<TMPL_VAR NAME=panel_attrib_value>" <TMPL_VAR NAME=selected>><TMPL_VAR NAME=panel_attrib_value></option>
+            <TMPL_LOOP NAME=new_GD_panel_loop>
+              <option value="<TMPL_VAR NAME=user_panel_value>"><TMPL_VAR NAME=user_panel_value></option>
             </TMPL_LOOP>
           </select>
         </div>
