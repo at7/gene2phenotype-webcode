@@ -445,7 +445,20 @@ sub new_gene_disease {
   set_message($tmpl, $message) if ($message);
   set_default_panel($tmpl, $session);
   $tmpl->param(new_gene_disease => 1);
-#  $tmpl->param(add_new_gene_disease => $logged_in);
+  # set allowed panels depending on user's settings
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $email = $session->param('email');
+  my $user = $user_adaptor->fetch_by_email($email);
+  my @panels = split(',', $user->panel);
+
+  my @tmpl = ();
+  foreach my $value (sort @panels) {
+    push @tmpl, {
+      'user_panel_value' => $value,
+    };   
+  }
+  $tmpl->param(new_GD_panel_loop => \@tmpl);  
+
   print $tmpl->output();
 }
 
