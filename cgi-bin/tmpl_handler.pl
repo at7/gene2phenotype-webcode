@@ -342,7 +342,8 @@ sub display_data {
     $tmpl->param(GFD_id => $dbID);
     my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
     my $genomic_feature_disease = $genomic_feature_disease_adaptor->fetch_by_dbID($dbID);
-
+    my $panel = $genomic_feature_disease->panel();
+    $tmpl->param(panel => $panel);
     if ($genomic_feature_disease->is_visible) {
       $tmpl->param(authorised => 1);
     } else {
@@ -443,6 +444,7 @@ sub new_gene_disease {
   my $message = shift;
   my $logged_in = set_login_status($tmpl, $session);
   set_message($tmpl, $message) if ($message);
+  set_default_panel($tmpl, $session);
   $tmpl->param(new_gene_disease => 1);
   $tmpl->param(add_new_gene_disease => $logged_in);
   print $tmpl->output();
