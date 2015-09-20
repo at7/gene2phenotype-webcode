@@ -8,24 +8,18 @@
   <div "id=panel_image" style="float:left; margin-right: 25px"><img src="../images/G2P-<TMPL_VAR NAME=panel_img>.png" alt="panel_image" height="150" width="150"></div>
 
   <div id="search-body">
-    <form id="search_field" method="get" action="./handler.cgi">
-      <p class="ui-widget">
-        <div class="form-group">
-          <div class="button_right">
-            <input id="button" type="submit" class="btn btn-primary btn-sm"/>
-            <div class="input_left">
-              <label>Search panel </label> 
-              <select name="panel" id="select_panel">
-                <TMPL_LOOP NAME=panel_img_loop>
-                  <option value="<TMPL_VAR NAME=panel_attrib_value>" <TMPL_VAR NAME=selected>><TMPL_VAR NAME=panel_attrib_value></option>
-                </TMPL_LOOP>
-              </select>
-              <label>for:</label> 
-              <input id="query" type="text" name="search_term" style='width:77%' />
-            </div>
-          </div>
-        </div>
-      </p>
+    <form  class="form-inline" id="search_field" method="get" action="./handler.cgi">
+      <div class="form-group">
+        <label>Search panel </label> 
+        <select name="panel" id="select_panel">
+          <TMPL_LOOP NAME=panel_img_loop>
+            <option value="<TMPL_VAR NAME=panel_attrib_value>" <TMPL_VAR NAME=selected>><TMPL_VAR NAME=panel_attrib_value></option>
+          </TMPL_LOOP>
+        </select>
+        <label>for:</label> 
+        <input id="query" type="text" name="search_term" style="width:400px"/>
+        <input id="button" type="submit" class="btn btn-primary btn-sm"/>
+      </div>
     </form>
     <div class="hint">
       <p>
