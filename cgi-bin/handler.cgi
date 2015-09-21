@@ -75,10 +75,12 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('search_term')) {
   my $search_term = $cgi->param('search_term');
   my $panel = $cgi->param('panel');
+  store_last_action($session, 'display_search_results', {panel => $panel, search_term => $search_term}); 
   display_search_results($session, $search_term, $panel);
 } elsif ($cgi->param('search_type')) {
   my $search_type = $cgi->param('search_type');
   my $dbID = $cgi->param('dbID');
+  store_last_action($session, 'display_data', {search_type => $search_type, dbID => $dbID}); 
   display_data($session, $search_type, $dbID, $message);
 } elsif ($cgi->param('logout')) {
   logout();
@@ -107,6 +109,7 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('recover_pwd')) {
   show_recover_pwd_page($session);
 } elsif ($cgi->param('show_downloads')) {
+  store_last_action($session, 'show_downloads', {}); 
   show_downloads_page($session);
 } elsif ($cgi->param('show_disclaimer')) {
   show_disclaimer_page($session);
@@ -260,13 +263,7 @@ sub show_login {
 sub logout {
   $session->param('is_logged_in', 0);
   $session->flush(); 
-  my $search_type = $session->param('search_type');
-  my $dbID = $session->param('dbID');
-  if ($search_type && $dbID) {
-    display_data($session, $search_type, $dbID);
-  } else {
-    display_search_results($session, $search_term);
-  }
+  restore_last_action($session);         
 }
 
 sub login {
@@ -277,13 +274,7 @@ sub login {
     $session->param('is_logged_in', 1);
     $session->param('email', $email);
     $session->flush(); 
-    my $search_type = $session->param('search_type');
-    my $dbID = $session->param('dbID');
-    if ($search_type && $dbID) {
-      display_data($session, $search_type, $dbID);
-    } else {
-      display_search_results($session, $search_term);
-    }
+    restore_last_action($session);         
   } else {
     show_login_page($session, 'LOGIN_FAILED');
   }
@@ -318,13 +309,7 @@ sub send_recover_pwd_mail {
 
   $mail{smtp} = 'smtp.ebi.ac.uk';
   my $success = sendmail(%mail);
-#  if ($success) {
-#    show_default_page($session); # message email was send
-#    return;
-#  } else {
-#    show_default_page($session); # error sending email, print $Mail::Sendmail::error, $Mail::Sendmail::log
-#    return;
-#  }
+  print STDERR ">>> send recover pwd mail; success: $success\n";
   _redirect();
 }
 
@@ -496,5 +481,33 @@ sub store_message {
 
 sub clear_message {
   $session->clear(['message']);
+}
+
+sub store_last_action {
+  my $session = shift;
+  my $action = shift;
+  my $params = shift;
+  $session->param('last_action', $action);
+  $session->param('last_action_params', $params);
+  $session->flush(); 
+} 
+
+sub restore_last_action {
+  my $session = shift;
+  my $last_action = $session->param('last_action'); 
+  my $params = $session->param('last_action_params'); 
+  if ($last_action eq 'display_data') {
+    my $search_type = $params->{'search_type'};
+    my $dbID = $params->{'dbID'};
+    display_data($session, $search_type, $dbID);
+  } elsif ($last_action eq 'display_search_results') {
+    my $panel = $params->{'panel'};
+    my $search_term = $params->{'search_term'};
+    display_search_results($session, $search_term, $panel);
+  } elsif ($last_action eq 'show_downloads') {
+    show_downloads_page($session);
+  } else {
+    show_login_page($session);
+  }
 }
 
