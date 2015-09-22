@@ -247,6 +247,7 @@ elsif ($cgi->param('update_phenotype_tree')) {
   _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 else {
+  store_last_action($session, 'show_default_page', {}); 
   show_default_page($session);
 }
 
@@ -309,8 +310,8 @@ sub send_recover_pwd_mail {
 
   $mail{smtp} = 'smtp.ebi.ac.uk';
   my $success = sendmail(%mail);
-  print STDERR ">>> send recover pwd mail; success: $success\n";
-  _redirect();
+  my $action = get_last_action_for_redirect($session);
+  _redirect($action);
 }
 
 sub show_recover_pwd_page {
@@ -365,9 +366,9 @@ sub recover_pwd {
     $session->param('is_logged_in', 1);
     $session->param('email', $email);
     $session->flush(); 
-    show_default_page($session, 'reset_pwd_successful');
+    restore_last_action($session, 'RESET_PWD_SUC');
   } else {
-    show_default_page($session, 'reset_pwd_failed');
+    restore_last_action($session, 'RESET_PWD_ERROR');
   }
 }
 
@@ -492,20 +493,42 @@ sub store_last_action {
   $session->flush(); 
 } 
 
-sub restore_last_action {
+sub get_last_action_for_redirect {
   my $session = shift;
   my $last_action = $session->param('last_action'); 
   my $params = $session->param('last_action_params'); 
   if ($last_action eq 'display_data') {
     my $search_type = $params->{'search_type'};
     my $dbID = $params->{'dbID'};
-    display_data($session, $search_type, $dbID);
+    return "search_type=$search_type&dbID=$dbID";
   } elsif ($last_action eq 'display_search_results') {
     my $panel = $params->{'panel'};
     my $search_term = $params->{'search_term'};
-    display_search_results($session, $search_term, $panel);
+    return "panel=$panel&search_term=$search_term";
+  } elsif ($last_action eq 'show_downloads') {
+    return "show_downloads=all";
+  } else { # show default page
+    return '';
+  }
+}
+
+sub restore_last_action {
+  my $session = shift;
+  my $message = shift;
+  my $last_action = $session->param('last_action'); 
+  my $params = $session->param('last_action_params'); 
+  if ($last_action eq 'display_data') {
+    my $search_type = $params->{'search_type'};
+    my $dbID = $params->{'dbID'};
+    display_data($session, $search_type, $dbID, $message);
+  } elsif ($last_action eq 'display_search_results') {
+    my $panel = $params->{'panel'};
+    my $search_term = $params->{'search_term'};
+    display_search_results($session, $search_term, $panel, $message);
   } elsif ($last_action eq 'show_downloads') {
     show_downloads_page($session);
+  } elsif ($last_action eq 'show_default_page') {
+    show_default_page($session);
   } else {
     show_login_page($session);
   }
