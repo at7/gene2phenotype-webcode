@@ -119,7 +119,10 @@ sub set_login_status {
 sub set_default_panel {
   my $tmpl = shift;
   my $session = shift;
+  my $set_panel_to = shift;
+
   my $panel = 'ALL';
+
   if ($session->param('is_logged_in')) {
     my $user_adaptor = $registry->get_adaptor('user');
     my $email = $session->param('email');
@@ -129,6 +132,9 @@ sub set_default_panel {
       $panel = $panels[0];
     }
   }
+
+  $panel = $set_panel_to || $panel;
+
   my $attribute_adaptor = $registry->get_adaptor('attribute');
   my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
   my @tmpl = ();
@@ -278,7 +284,7 @@ sub display_search_results {
   my $search_term = shift;
   my $panel = shift;
   my $logged_in = set_login_status($tmpl, $session);
-  set_default_panel($tmpl, $session);
+  set_default_panel($tmpl, $session, $panel);
 
   if (!defined $search_term) {
     print $tmpl->output();
