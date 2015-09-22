@@ -8,8 +8,8 @@
   <div "id=panel_image" style="float:left; margin-right: 25px"><img src="../images/G2P-<TMPL_VAR NAME=panel_img>.png" alt="panel_image" height="150" width="150"></div>
 
   <div id="search-body">
-    <form  class="form-inline" id="search_field" method="get" action="./handler.cgi">
-      <div class="form-group">
+    <form id="search_field" method="get" action="./handler.cgi">
+      <div style="float: left; margin-right: 0.5em;">
         <label>Search panel </label> 
         <select name="panel" id="select_panel">
           <TMPL_LOOP NAME=panel_img_loop>
@@ -17,8 +17,12 @@
           </TMPL_LOOP>
         </select>
         <label>for:</label> 
-        <input id="query" type="text" name="search_term" style="width:400px"/>
-        <input id="button" type="submit" class="btn btn-primary btn-sm"/>
+      </div>
+      <div style="margin-left: 25em;">
+        <input id="button" type="submit" class="btn btn-primary btn-sm" style="float: right"/>
+        <div style="overflow: hidden; padding-right: .5em;">
+          <input id="query" type="text" name="search_term" style="width: 100%"/>
+        </div>
       </div>
     </form>
     <div class="hint">
