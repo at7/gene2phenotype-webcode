@@ -314,16 +314,17 @@ sub display_search_results {
   } 
 
   my @gfd_results = ();
-  foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
-    my $genomic_feature = $gfd->get_GenomicFeature;
-    my $gene_symbol = $genomic_feature->gene_symbol;
-    my $disease = $gfd->get_Disease;
-    my $disease_name = $disease->name;
-    my $dbID = $gfd->dbID;
-    my $panel = $gfd->panel;
-    push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+  if (@gfd_results) {
+    foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
+      my $genomic_feature = $gfd->get_GenomicFeature;
+      my $gene_symbol = $genomic_feature->gene_symbol;
+      my $disease = $gfd->get_Disease;
+      my $disease_name = $disease->name;
+      my $dbID = $gfd->dbID;
+      my $panel = $gfd->panel;
+      push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+    }
   }
-
   $tmpl->param(gfd_results => \@gfd_results);
   $tmpl->param(search_term => $search_term);
   $tmpl->param(display_search_results => 1);
