@@ -311,10 +311,12 @@ sub display_search_results {
     my $dbID = $genomic_feature->dbID;
     $tmpl->param(gene_results => [{gene_symbol => $name, search_type => 'gene_symbol', dbID => $dbID}]);
     $gfds = $genomic_feature_disease_adaptor->fetch_all_by_GenomicFeature_panel($genomic_feature, $panel);
-  } 
+  } else {
+    $gfds = [];
+  }
 
   my @gfd_results = ();
-  if (@gfd_results) {
+  if (@$gfds) {
     foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
       my $genomic_feature = $gfd->get_GenomicFeature;
       my $gene_symbol = $genomic_feature->gene_symbol;
