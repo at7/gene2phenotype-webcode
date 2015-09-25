@@ -590,27 +590,58 @@ sub get_variations {
   foreach my $gene (@genes) {
     my $vfs = $vfa->fetch_all_by_Slice_constraint($gene->feature_Slice, "vf.clinical_significance='pathogenic'");
     my $consequence_count = {};
+
     foreach my $vf (@$vfs) {
+      my $assembly = 'GRCh38';
+      my $seq_region_name = $vf->seq_region_name;
+      my $seq_region_start = $vf->seq_region_start;
+      my $seq_region_end = $vf->seq_region_end;
+
+      my $coords = "$seq_region_start-$seq_region_end";
+
+      if ($seq_region_start == $seq_region_end) {
+        $coords = $seq_region_start;
+      }
+
+      my $var_class = $vf->var_class;
+      my $source = $vf->source_name;
+
+      my $allele_string = $vf->allele_string;
+
+      my $consequence = $vf->most_severe_OverlapConsequence();
+      my $most_severe_consequence = $consequence->SO_term;
+      $counts->{$most_severe_consequence}++;
+
       my $variant_name = $vf->variation_name;
-      my $clin_sgn = join(', ', @{$vf->get_all_clinical_significance_states});
-      my $tvs = $vf->get_all_TranscriptVariations();
-      foreach my $tv (@$tvs) {
-        foreach my $consequence (@{$tv->consequence_type}) {
-          $counts->{$consequence}++;
-        }
-        my $consequence_types = join(', ', @{$tv->consequence_type});
-        my @hgvs_transcripts = ();
-        for my $hgvs_notation (values %{$tv->hgvs_transcript}) {
-          if (defined $hgvs_notation) {
-            push @hgvs_transcripts, $hgvs_notation;
-          }
-        }
-        my $hgvs_transcript = (scalar @hgvs_transcripts > 0) ? join(', ', @hgvs_transcripts) : '';
+
+      my @tvs = @{$vf->get_all_TranscriptVariations()};
+      my @filtered_tvs = grep {$_->display_consequence eq $most_severe_consequence} @tvs;
+      my @canonical_tvs = grep { $_->transcript->is_canonical == 1 && $_->transcript->stable_id !~ /^LRG/ } @filtered_tvs;
+      my $TV;
+      if (@canonical_tvs) {
+        $TV = $canonical_tvs[0];
+      } else {
+        $TV = $filtered_tvs[0];
+      }
+
+      my $transcript_stable_id = $TV->transcript->stable_id;
+      my @tvas = @{$TV->get_all_alternate_TranscriptVariationAlleles};
+      foreach my $tva (@tvas) {
+        # alternate allele
+        my $polyphen_prediction = $tva->polyphen_prediction || '-';
+        my $sift_prediction = $tva->sift_prediction || '-';
+        my $pep_allele_string = $tva->pep_allele_string || '-';
         push @variations_tmpl, {
+          location => "$seq_region_name:$coords",
           variant_name => $variant_name,
-          consequence => $consequence_types, 
-          hgvs_transcript => $hgvs_transcript,
-          clin_sgn => $clin_sgn,
+          variant_source => $source,
+          variant_class => $var_class,
+          allele_string => $allele_string,
+          consequence => $most_severe_consequence,
+          transcript_stable_id => $transcript_stable_id,
+          pep_allele_string => $pep_allele_string,
+          polyphen_prediction => $polyphen_prediction,
+          sift_prediction => $sift_prediction, 
         };
       }
     }
