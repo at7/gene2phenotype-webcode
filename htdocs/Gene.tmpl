@@ -15,26 +15,38 @@
   <div class="clear"></div>
   <div class="variations">
     <TMPL_IF NAME=variations>
-    <h4>All pathogenic variants from Ensembl that overlap transcripts of the given gene:</h4>
+    <p>The following variants are retrieved from Ensembl. We only select variants that have been annotated as pathogenic by ClinVar. For each of the variants we display the most severe consequence. If there are multiple transcripts producing the consequence, we choose the canonical transcript, otherwise we select the transcript randomly.</p>
     <div class="chart" data="<TMPL_VAR NAME=consequence_counts ESCAPE=HTML>" >
       <svg></svg>
     </div>
     <table id="ensembl_variants_table">
       <thead>
         <tr>
+          <th>Location</th>
           <th>Variant name</th>
-          <th>Consequences</th>
-          <th>HGVS transcript</th>
-          <th>Clinical significance</th>
+          <th>Variant source</th>
+          <th>Variant class</th>
+          <th>Alleles REF/ALT</th>
+          <th>Most severe consequence</th>
+          <th>Transcript ID</th>
+          <th>Amino acid change</th>
+          <th>PolyPhen prediction</th>
+          <th>SIFT prediction</th>
         </tr>
       </thead>
       <tbody>
         <TMPL_LOOP NAME=variations>
           <tr>
+            <td><TMPL_VAR NAME=location></td>
             <td><a href="http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=<TMPL_VAR NAME=variant_name>"><TMPL_VAR NAME=variant_name></a></td>
+            <td><TMPL_VAR NAME=variant_source></td>
+            <td><TMPL_VAR NAME=variant_class></td>
+            <td><TMPL_VAR NAME=allele_string></td>
             <td><TMPL_VAR NAME=consequence></td>
-            <td><TMPL_VAR NAME=hgvs_transcript></td>
-            <td><TMPL_VAR NAME=clin_sgn></td>
+            <td><TMPL_VAR NAME=transcript_stable_id></td>
+            <td><TMPL_VAR NAME=pep_allele_string></td>
+            <td><TMPL_VAR NAME=polyphen_prediction></td>
+            <td><TMPL_VAR NAME=sift_prediction></td>
           </tr>
         </TMPL_LOOP> <!-- end variation loop-->
       </tbody>
