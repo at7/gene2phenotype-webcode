@@ -822,7 +822,7 @@ sub get_organs {
   my $GFD = shift;
   my @organs_tmpl = ();
   my $organs = $GFD->get_all_GFDOrgans;
-  foreach my $organ (@$organs) {
+  foreach my $organ (sort {$a->get_Organ->name cmp $b->get_Organ->name} @$organs) {
     my $name = $organ->get_Organ()->name;
     push @organs_tmpl, {
       name => $name,
