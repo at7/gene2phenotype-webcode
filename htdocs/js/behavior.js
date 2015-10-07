@@ -98,7 +98,7 @@ $(document).ready(function(){
     $button = $(this);
     $button_parent = $button.parent();
     $this_content = $button.closest(".show_add_comment");
-    $show_content = $this_content.next();
+    $show_content = $this_content.parent().next();
     $show_content.show(function(){
       $button_parent.hide();
     });
@@ -108,8 +108,9 @@ $(document).ready(function(){
     $button = $(this);
     $this_content = $button.closest(".add_comment");
     $prev_content = $this_content.prev();
+    $prev_div_child = $prev_content.find('.show_add_comment');
     $this_content.hide(function(){
-      $prev_content.show();
+      $prev_div_child.show();
     });
   });
 
