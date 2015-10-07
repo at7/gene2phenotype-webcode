@@ -2,8 +2,7 @@
   <h3><a class="anchor" name="phenotypes">Phenotypes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
   <TMPL_IF NAME=logged_in>
     <div id="ontology">  
-      <label>Search Phenotype from the Human Phenotype Ontology:</label>
-
+      <label>Search Phenotype in the Human Phenotype Ontology:</label>
       <div id="search_phenotype">
         <button type="submit" class="btn btn-primary btn-sm" id="search_phenotype_button" style="float: right">Search</button>
         <div style="overflow: hidden; padding-right: .5em;">
@@ -38,8 +37,6 @@
 
     <div class="clear"></div>
   </TMPL_IF>
-
-  <label>List of Phenotypes from the Human Phenotype Ontology:</label>
 
   <TMPL_LOOP NAME=phenotypes>
     <div class="phenotype_list">
@@ -78,36 +75,23 @@
 
       <div class="clear"></div>
       <div>
-        <TMPL_IF NAME=logged_in>
-          <TMPL_IF NAME=GFD_phenotype_comments>
+        <TMPL_IF NAME=GFD_phenotype_comments>
           <label>Comments:</label>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Date</th>
-                <th>Comment</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              <TMPL_LOOP NAME=GFD_phenotype_comments>
-                <tr>
-                  <td><TMPL_VAR NAME=user></td>
-                  <td><TMPL_VAR NAME=date></td>
-                  <td><TMPL_VAR NAME=comment_text></td>
-                  <td>
-                    <form id="delete_GFD_phenotype_comment" action="./handler.cgi" method="get">
-                      <input type="hidden" name="GFD_phenotype_comment_id" value="<TMPL_VAR NAME=GFD_phenotype_comment_id>"/>
-                      <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-                      <input id="button" type="submit" name="delete_GFD_phenotype_comment" value="Delete" class="btn btn-primary btn-sm"/>
-                    </form>
-                  </td>
-                </tr>
-              </TMPL_LOOP> <!-- end comments-->
-            </tbody>
-          </table>
-          </TMPL_IF>
+          <TMPL_LOOP NAME=GFD_phenotype_comments>
+            <div class="comment">
+              <div class="align_left"><p><TMPL_VAR NAME=comment_text> (<TMPL_VAR NAME=user> <TMPL_VAR NAME=date>)</p></div> 
+              <TMPL_IF NAME=logged_in>
+                <div class="align_right">
+                  <form id="delete_GFD_phenotype_comment" action="./handler.cgi" method="get">
+                    <input type="hidden" name="GFD_phenotype_comment_id" value="<TMPL_VAR NAME=GFD_phenotype_comment_id>"/>
+                    <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+                    <input id="button" type="submit" name="delete_GFD_phenotype_comment" value="Delete Comment" class="btn btn-primary btn-sm"/>
+                  </form>
+                </div>
+              </TMPL_IF>
+            </div>
+            <div class="clear"></div>
+          </TMPL_LOOP>
         </TMPL_IF> <!-- end comments-->
       </div>
     </div>
