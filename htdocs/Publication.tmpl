@@ -41,47 +41,20 @@
 
   <TMPL_LOOP NAME=GFD_publications>
     <div class="publication">
-      <TMPL_IF NAME=pmid>
-        <p><a href="http://europepmc.org/search?query=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></p>
-      <TMPL_ELSE>
-        <p>PMID:<TMPL_VAR NAME=title></p>
-      </TMPL_IF>
+      <div class="align_left" style="width:85%">
+        <TMPL_IF NAME=pmid>
+          <p><a href="http://europepmc.org/search?query=<TMPL_VAR NAME=pmid>"><TMPL_VAR NAME=title></a></p>
+        <TMPL_ELSE>
+          <p>PMID:<TMPL_VAR NAME=title></p>
+        </TMPL_IF>
+      </div> 
       <TMPL_IF NAME=logged_in>
-      <TMPL_IF NAME=comments>
-        <label>Comments:</label>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Date</th>
-              <th>Comment</th>
-              <th>Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            <TMPL_LOOP NAME=comments>
-              <tr>
-                <td><TMPL_VAR NAME=user></td>
-                <td><TMPL_VAR NAME=date></td>
-                <td><TMPL_VAR NAME=comment_text></td>
-                <td>
-                  <form id="delete_GFD_publication_comment" action="./handler.cgi" method="get">
-                    <input type="hidden" name="GFD_publication_comment_id" value="<TMPL_VAR NAME=GFD_publication_comment_id>"/>
-                    <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-                    <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete" class="btn btn-primary btn-sm"/>
-                  </form>
-                </td>
-              </tr>
-            </TMPL_LOOP> <!-- end comments-->
-          </tbody>
-        </table>
-      </TMPL_IF>
-      </TMPL_IF> <!-- end comments-->
-
-      <TMPL_IF NAME=logged_in>
-        <div class="show_add_comment button_right">
-          <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
+        <div class="align_right">
+          <div class="show_add_comment">
+            <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
+          </div>
         </div>
+
         <div class="add_comment">
           <form id="add_GFD_publication_comment" action="./handler.cgi" method="get">
             <div class="comment_text_area"><textarea class="form-control" name="GFD_publication_comment" rows="3"></textarea></div>
@@ -94,6 +67,27 @@
           </form>
         </div>
       </TMPL_IF>
-    </div> <!-- end class publication -->
-  </TMPL_LOOP>  
+    </div>
+    <div class="clear"></div>
+    <div>
+      <TMPL_IF NAME=comments>
+        <label>Comments:</label>
+        <TMPL_LOOP NAME=comments>
+          <div class="comment">
+            <div class="align_left"><p><TMPL_VAR NAME=comment_text> (<TMPL_VAR NAME=user> <TMPL_VAR NAME=date>)</p></div> 
+            <TMPL_IF NAME=logged_in>
+              <div class="align_right">
+                <form id="delete_GFD_publication_comment" action="./handler.cgi" method="get">
+                  <input type="hidden" name="GFD_publication_comment_id" value="<TMPL_VAR NAME=GFD_publication_comment_id>"/>
+                  <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
+                  <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete Comment" class="btn btn-primary btn-sm"/>
+                </form>
+              </div>
+            </TMPL_IF>
+          </div>
+          <div class="clear"></div>
+        </TMPL_LOOP>
+      </TMPL_IF> <!-- end comments-->
+    </div>
+  </TMPL_LOOP>
 </div>
