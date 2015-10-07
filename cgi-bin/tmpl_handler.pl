@@ -658,7 +658,7 @@ sub get_GFD_publications {
   my $GFD = shift;
   my @GFD_publications_tmpl = ();
   my $GFD_publications = $GFD->get_all_GFDPublications;
-  foreach my $GFD_publication (@$GFD_publications) {
+  foreach my $GFD_publication (sort {$a->get_Publication->title cmp $b->get_Publication->title} @$GFD_publications) {
     my $publication = $GFD_publication->get_Publication;
     my $comments = $GFD_publication->get_all_GFDPublicationComments; 
     my @comments_tmpl = ();
