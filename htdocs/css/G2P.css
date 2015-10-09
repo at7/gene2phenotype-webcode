@@ -21,13 +21,13 @@
 
 .display_attributes {
   float: left;
-  width: 60%;
+  width: auto;
 }
 
 .align_buttons_right, .show_toggle_view_button {
   float: right;
   display: block;
- /* margin-right: 23%*/
+  margin-left: 0.5em;
 }
 
 .header_gene_disease {
@@ -81,6 +81,7 @@ dd {
 .show_edit_content {
   background: #D4D8D1;
   border-top-style: solid;
+  border-color: #737373;
   display: none;
   margin-bottom: 8em;
 }
