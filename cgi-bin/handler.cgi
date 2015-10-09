@@ -42,7 +42,7 @@ sub init_CGI {
   my $cookie = $cgi->cookie( -name => $session->name, -value  => $session->id );
   $session->flush();
 
-  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment add_GFD_phenotype_comment delete_GFD_publication_comment delete_GFD_phenotype_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility edit_organ_list update_disease delete_GFD_phenotype add_phenotype update_phenotype_tree/;
+  my @redirect_after_action = qw/download edit_DDD_category edit_GFD_action add_GFD_action add_GFD_publication_comment add_GFD_phenotype_comment delete_GFD_publication_comment delete_GFD_phenotype_comment delete_GFD_action add_publication send_recover_pwd_mail_button set_visibility edit_organ_list update_disease delete_GFD_phenotype add_phenotype update_phenotype_tree delete_GFD_publication/;
   if (!(grep {$cgi->param($_)} @redirect_after_action)) {
     print $cgi->header( -cookie => $cookie );
   }
@@ -232,6 +232,12 @@ elsif ($cgi->param('delete_GFD_phenotype')) {
   my $GFD_id = $cgi->param('GFD_id');
   my $GFD_phenotype_id = $cgi->param('GFD_phenotype_id');
   my $msg = delete_GFDPhenotype($session, $GFD_phenotype_id);
+  _redirect("search_type=gfd&dbID=$GFD_id", $msg);
+}
+elsif ($cgi->param('delete_GFD_publication')) {
+  my $GFD_id = $cgi->param('GFD_id'); 
+  my $GFD_publication_id = $cgi->param('GFD_publication_id');
+  my $msg = delete_GFDPublication($session, $GFD_publication_id);
   _redirect("search_type=gfd&dbID=$GFD_id", $msg);
 }
 elsif ($cgi->param('add_phenotype')) {

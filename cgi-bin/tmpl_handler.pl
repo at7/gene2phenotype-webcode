@@ -54,6 +54,7 @@ my $constants = {
   ADDED_GFDPHENOTYPE_SUC => { msg => 'Successfully added a new phenotype for the genomic feature disease pair.', type => 'success'},
   ADDED_PUBLICATION_SUC => { msg => 'Successfully added a new publication', type => 'success'},
   DELETED_GFDPHENOTYPE_SUC => { msg => 'Successfully deleted a phenotype entry.', type => 'success'},
+  DELETED_GFDPUBLICATION_SUC => { msg => 'Successfully deleted publication entry.', type => 'success'},
   ADDED_GFDPC_SUC => { msg => 'Successfully added a new comment.', type => 'success'},
   ADDED_GFDPhenotypeC_SUC => {msg => 'Successfully added a new comment.', type => 'success'},
   DELETED_GFD_ACTION_SUC => { msg => 'Successfully deleted a genomic feature disease action.', type => 'success'},
@@ -742,7 +743,21 @@ sub delete_GFDPhenotype {
   my $GFDphenotype = $GFDPA->fetch_by_dbID($GFD_phenotype_id);  
   $GFDPA->delete($GFDphenotype, $user);
   return 'DELETED_GFDPHENOTYPE_SUC';
-} 
+}
+
+sub delete_GFDPublication {
+  my $session = shift;
+  my $GFD_publication_id = shift;
+
+  my $email = $session->param('email');
+  my $user_adaptor = $registry->get_adaptor('user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $GFDPA = $registry->get_adaptor('genomic_feature_disease_publication');
+  my $GFDpublication = $GFDPA->fetch_by_dbID($GFD_publication_id);  
+  $GFDPA->delete($GFDpublication, $user);
+  return 'DELETED_GFDPUBLICATION_SUC';
+}
 
 sub add_GFDPhenotype {
   my $session = shift;
