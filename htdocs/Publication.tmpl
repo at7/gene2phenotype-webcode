@@ -83,7 +83,7 @@
         <label>Comments:</label>
         <TMPL_LOOP NAME=comments>
           <div class="comment">
-            <div class="align_left" style="width:90%"><p><TMPL_VAR NAME=comment_text> (<TMPL_VAR NAME=user> <TMPL_VAR NAME=date>)</p></div> 
+            <div class="align_left"><p><TMPL_VAR NAME=comment_text> (<TMPL_VAR NAME=user> <TMPL_VAR NAME=date>)</p></div> 
             <TMPL_IF NAME=logged_in>
               <div class="align_right">
                 <form id="delete_GFD_publication_comment" action="./handler.cgi" method="get">
