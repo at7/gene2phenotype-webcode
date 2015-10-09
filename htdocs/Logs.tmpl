@@ -1,52 +1,23 @@
 <div>
   <h3><a class="anchor" name="user_activity">User activity</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
-  <h4>DDD Category</h4>
+
   <TMPL_IF NAME=gfd_logs>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>User</th>
-          <th>Date</th>
-          <th>Action</th>
-          <th>DDD category</th>
-        </tr>
-      </thead>
-      <tbody>
-        <TMPL_LOOP NAME=gfd_logs>
-          <tr>
-            <td><TMPL_VAR NAME=user></td>
-            <td><TMPL_VAR NAME=date></td>
-            <td><TMPL_VAR NAME=action></td>
-            <td><TMPL_VAR NAME=DDD_category></td>
-          </tr>
-        </TMPL_LOOP> <!-- end gfd_logs-->
-      </tbody>
-    </table>
-  </TMPL_IF>
-  <TMPL_IF NAME=gfda_logs>
-    <h4>Gene-Disease Mechanism</h4>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>User</th>
-          <th>Date</th>
-          <th>Action</th>
-          <th>Allelic requirement</th>
-          <th>Mutation consequence</th>
-        </tr>
-      </thead>
-      <tbody>
-        <TMPL_LOOP NAME=gfda_logs>
-          <tr>
-            <td><TMPL_VAR NAME=user></td>
-            <td><TMPL_VAR NAME=date></td>
-            <td><TMPL_VAR NAME=action></td>
-            <td><TMPL_VAR NAME=allelic_requirement></td>
-            <td><TMPL_VAR NAME=mutation_consequence></td>
-          </tr>
-        </TMPL_LOOP> <!-- end gfd_logs-->
-      </tbody>
-    </table>
+    <label>DDD Category</label>
+    <TMPL_LOOP NAME=gfd_logs>
+    <div class="comment">
+      <div class="align_left"><p><strong>Action:</strong> <TMPL_VAR NAME=action>, <strong>DDD category:</strong> <TMPL_VAR NAME=DDD_category> (<TMPL_VAR NAME=user> <TMPL_VAR NAME=date>)</p></div> 
+    </div>
+    <div class="clear"></div>
+    </TMPL_LOOP>
   </TMPL_IF>
 
+  <TMPL_IF NAME=gfda_logs>
+    <label>Gene-Disease Mechanism</label>
+    <TMPL_LOOP NAME=gfda_logs>
+    <div class="comment">
+      <div class="align_left"><p><strong>Action:</strong> <TMPL_VAR NAME=action>, <strong>Allelic requirement:</strong> <TMPL_VAR NAME=allelic_requirement>, <strong>Mutation consequence:</strong> <TMPL_VAR NAME=mutation_consequence> (<TMPL_VAR NAME=user> <TMPL_VAR NAME=date>)</p></div> 
+    </div>
+    <div class="clear"></div>
+    </TMPL_LOOP>
+  </TMPL_IF>
 </div>
