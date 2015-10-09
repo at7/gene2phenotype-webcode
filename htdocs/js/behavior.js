@@ -98,7 +98,7 @@ $(document).ready(function(){
     $button = $(this);
     $button_parent = $button.parent();
     $this_content = $button.closest(".show_add_comment");
-    $show_content = $this_content.parent().next();
+    $show_content = $this_content.parent().parent().next();
     $show_content.show(function(){
       $button_parent.hide();
     });
@@ -181,6 +181,23 @@ $(document).ready(function(){
     $(".add_publication_feedback").empty();
     $(".add_publication_feedback").removeClass("alert alert-danger");
     return 1;
+  });
+
+  $(".confirm").confirm({
+    text: "Delete entry?",
+    title: "Confirmation required",
+    confirm: function(button) {
+      var form = button.closest("form");
+      form.submit();  
+    },
+    cancel: function() {
+    },
+    confirmButton: "Confirm",
+    cancelButton: "Discard",
+    post: false,
+    confirmButtonClass: "btn btn-primary btn-sm",
+    cancelButtonClass: "btn btn-primary btn-sm",
+    dialogClass: "modal-dialog modal-lg" // Bootstrap classes for large modal 
   });
 
 });
