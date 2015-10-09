@@ -54,8 +54,10 @@
 }
 
 dl {
- width:100%;
- overflow:hidden;
+  width:100%;
+  overflow:hidden;
+  padding: 0;
+  margin: 0;
 }
 
 dt {
@@ -214,5 +216,9 @@ dd {
 .comment {
   margin-left: 0.5em;
   margin-top: 0.5em;
+}
+
+.add_GDM {
+  margin-bottom: 1.5em;
 }
 
