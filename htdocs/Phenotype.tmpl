@@ -49,7 +49,8 @@
             <form id="GFD_phenotype" action="./handler.cgi" method="get">
               <input type="hidden" name="GFD_phenotype_id" value="<TMPL_VAR NAME=GFD_phenotype_id>"/>
               <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-              <input id="button" type="submit" name="delete_GFD_phenotype" value="Delete Phenotype" class="btn btn-primary btn-sm"/>
+              <input type="hidden" name="delete_GFD_phenotype" value="Delete Phenotype"/>
+              <input type="submit" name="delete_GFD_phenotype" value="Delete Phenotype" class="btn btn-primary btn-sm confirm"/>
             </form>
           </div>
 
@@ -85,7 +86,8 @@
                   <form id="delete_GFD_phenotype_comment" action="./handler.cgi" method="get">
                     <input type="hidden" name="GFD_phenotype_comment_id" value="<TMPL_VAR NAME=GFD_phenotype_comment_id>"/>
                     <input type="hidden" name="GFD_id" value="<TMPL_VAR NAME=GFD_id>"/>
-                    <input id="button" type="submit" name="delete_GFD_phenotype_comment" value="Delete Comment" class="btn btn-primary btn-sm"/>
+                    <input type="hidden" name="delete_GFD_phenotype_comment" value="Delete Comment"/>
+                    <input id="button" type="submit" name="delete_GFD_phenotype_comment" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
                   </form>
                 </div>
               </TMPL_IF>
