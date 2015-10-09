@@ -87,6 +87,7 @@ dd {
 
 .add_comment {
   display: none;
+  padding-top: 3em;
 }
 
 .show_add_comment {
