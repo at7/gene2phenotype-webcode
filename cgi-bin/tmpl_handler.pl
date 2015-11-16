@@ -510,7 +510,8 @@ sub add_new_gene_disease {
     $genomic_feature_disease = G2P::GenomicFeatureDisease->new({
       genomic_feature_id => $genomic_feature->dbID(),
       disease_id => $disease->dbID(),
-      panel => $panel_id
+      panel_attrib => $panel_id,
+      registry => $registry,
     });
     $genomic_feature_disease = $genomic_feature_disease_adaptor->store($genomic_feature_disease, $user);
   }
