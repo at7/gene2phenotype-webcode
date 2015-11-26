@@ -171,7 +171,7 @@ sub show_disclaimer_page {
 sub identify_search_type {
   my $search_term = shift;
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
-  if ($genomic_feature_adaptor->fetch_by_gene_symbol($search_term)) {
+  if ($genomic_feature_adaptor->fetch_by_gene_symbol($search_term) || $genomic_feature_adaptor->fetch_by_synonym($search_term)) {
     return 'gene_symbol';
   }
   my $disease_adaptor = $registry->get_adaptor('disease');
@@ -307,7 +307,7 @@ sub display_search_results {
 
     $gfds = $genomic_feature_disease_adaptor->fetch_all_by_Disease_panel($disease, $panel); 
   } elsif ($search_type eq 'gene_symbol') {
-    my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($search_term);
+    my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($search_term) || $genomic_feature_adaptor->fetch_by_synonym($search_term);
     my $name = $genomic_feature->gene_symbol;
     my $dbID = $genomic_feature->dbID;
     $tmpl->param(gene_results => [{gene_symbol => $name, search_type => 'gene_symbol', dbID => $dbID}]);
@@ -524,10 +524,12 @@ sub get_genomic_feature_attributes {
   my $gene_symbol = $genomic_feature->gene_symbol;
   my $gene_mim = $genomic_feature->mim;
   my $ensembl_stable_id = $genomic_feature->ensembl_stable_id;
+  my $synonyms = $genomic_feature->synonyms; 
   return {
     ensembl_stable_id => $ensembl_stable_id,
     gene_symbol => $gene_symbol,
     gene_mim => $gene_mim,
+    synonyms => $synonyms,
   };
 }
 
