@@ -371,7 +371,10 @@ sub display_data {
 
     my $GFD_variants = get_GFD_variants($genomic_feature_disease); 
 
-    my $get_var = get_variations($genomic_feature->gene_symbol);
+#    my $get_var = get_variations($genomic_feature->gene_symbol);
+    my $get_var = get_variations($genomic_feature);
+
+
     my $variations = $get_var->{'tmpl'}; 
     my $counts = $get_var->{'counts'};
 
@@ -438,7 +441,7 @@ sub display_data {
     my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
     my $genomic_feature = $genomic_feature_adaptor->fetch_by_dbID($dbID);
     my $genomic_feature_attributes = get_genomic_feature_attributes($genomic_feature);
-    my $get_var = get_variations($genomic_feature->gene_symbol);
+    my $get_var = get_variations($genomic_feature);
     my $variations = $get_var->{'tmpl'}; 
     my $counts = $get_var->{'counts'};
     $tmpl->param($genomic_feature_attributes);
@@ -583,81 +586,55 @@ sub get_GFD_variants {
 }
 
 sub get_variations {
-  my $gene_symbol = shift;
+  my $GF = shift;
+  my $ensembl_variant_adaptor = $registry->get_adaptor('ensembl_variant');
 
-  my $gene_adaptor = $ensembl_registry->get_adaptor('human', 'core', 'gene');
-  my $vfa = $ensembl_registry->get_adaptor('human', 'variation', 'variationfeature');
-  my @genes = @{ $gene_adaptor->fetch_all_by_external_name($gene_symbol) };
+  my $ensembl_variants = $ensembl_variant_adaptor->fetch_all_by_GenomicFeature($GF);
 
   my @variations_tmpl = ();
   my $counts = {};
-=begin
-  foreach my $gene (@genes) {
-    my $vfs = $vfa->fetch_all_by_Slice_constraint($gene->feature_Slice, "vf.clinical_significance='pathogenic'");
-    my $consequence_count = {};
+  foreach my $ensembl_variant (@$ensembl_variants) {
+    my $assembly = 'GRCh38';
+    my $seq_region_name = $ensembl_variant->seq_region;
+    my $seq_region_start = $ensembl_variant->seq_region_start;
+    my $seq_region_end = $ensembl_variant->seq_region_end;
 
-    foreach my $vf (@$vfs) {
-      my $assembly = 'GRCh38';
-      my $seq_region_name = $vf->seq_region_name;
-      my $seq_region_start = $vf->seq_region_start;
-      my $seq_region_end = $vf->seq_region_end;
+    my $coords = "$seq_region_start-$seq_region_end";
 
-      my $coords = "$seq_region_start-$seq_region_end";
-
-      if ($seq_region_start == $seq_region_end) {
-        $coords = $seq_region_start;
-      }
-
-      my $var_class = $vf->var_class;
-      my $source = $vf->source_name;
-
-      my $allele_string = $vf->allele_string;
-
-      my $consequence = $vf->most_severe_OverlapConsequence();
-      my $most_severe_consequence = $consequence->SO_term;
-      $counts->{$most_severe_consequence}++;
-
-      my $variant_name = $vf->variation_name;
-
-      my @tvs = @{$vf->get_all_TranscriptVariations()};
-      my @filtered_tvs = grep {$_->display_consequence eq $most_severe_consequence} @tvs;
-      my @canonical_tvs = grep { $_->transcript->is_canonical == 1 && $_->transcript->stable_id !~ /^LRG/ } @filtered_tvs;
-      my $TV;
-      if (@canonical_tvs) {
-        $TV = $canonical_tvs[0];
-      } else {
-        $TV = $filtered_tvs[0];
-      }
-
-      my $transcript_stable_id = $TV->transcript->stable_id;
-      my @tvas = @{$TV->get_all_alternate_TranscriptVariationAlleles};
-      foreach my $tva (@tvas) {
-        # alternate allele
-        my $polyphen_prediction = $tva->polyphen_prediction || '-';
-        my $sift_prediction = $tva->sift_prediction || '-';
-        my $pep_allele_string = $tva->pep_allele_string || '-';
-        push @variations_tmpl, {
-          location => "$seq_region_name:$coords",
-          variant_name => $variant_name,
-          variant_source => $source,
-          variant_class => $var_class,
-          allele_string => $allele_string,
-          consequence => $most_severe_consequence,
-          transcript_stable_id => $transcript_stable_id,
-          pep_allele_string => $pep_allele_string,
-          polyphen_prediction => $polyphen_prediction,
-          sift_prediction => $sift_prediction, 
-        };
-      }
+    if ($seq_region_start == $seq_region_end) {
+      $coords = $seq_region_start;
     }
+
+    my $source = $ensembl_variant->source;
+
+    my $allele_string = $ensembl_variant->allele_string;
+
+    my $consequence = $ensembl_variant->consequence;
+    $counts->{$consequence}++;
+
+    my $variant_name = $ensembl_variant->name;
+
+    my $transcript_stable_id = $ensembl_variant->feature_stable_id;
+    # alternate allele
+    my $polyphen_prediction = $ensembl_variant->polyphen_prediction || '-';
+    my $sift_prediction = $ensembl_variant->sift_prediction || '-';
+    my $pep_allele_string = $ensembl_variant->amino_acid_string || '-';
+    push @variations_tmpl, {
+      location => "$seq_region_name:$coords",
+      variant_name => $variant_name,
+      variant_source => $source,
+      allele_string => $allele_string,
+      consequence => $consequence,
+      transcript_stable_id => $transcript_stable_id,
+      pep_allele_string => $pep_allele_string,
+      polyphen_prediction => $polyphen_prediction,
+      sift_prediction => $sift_prediction, 
+    };
   }
   my @array = ();
   while (my ($consequence, $count) = each %$counts) {
     push @array, {'label' => $consequence, 'value' => $count, 'color' => $consequence_colors->{$consequence} || '#d0d6fe'};
   }
-=end
-=cut
-  my @array = ();
   my $encoded_counts = encode_json(\@array);
   return { 'tmpl' => \@variations_tmpl, 'counts' => $encoded_counts };
 }
