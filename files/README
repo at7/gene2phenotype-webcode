@@ -19,3 +19,4 @@ part of contiguous gene duplication, part of contiguous genomic interval deletio
   - phenotypes:             semicolon-separated list of HPO (http://www.human-phenotype-ontology.org/) IDs
   - organ specificity list: semicolon-separated list of organs
   - pmids:                  semicolon-separated list of PMIDs 
+  - panel:                  G2P panel: Cardiac, DD, Ear, Eye or Skin
