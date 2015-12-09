@@ -10,6 +10,7 @@ use CGI::Session qw(-ip-match);
 use CGI::Session::Auth;
 use DBI;
 use Mail::Sendmail;
+use File::Path qw(make_path remove_tree);
 
 $CGI::DISABLE_UPLOADS = 1;
 require "./tmpl_handler.pl"; # cgi-bin
@@ -114,17 +115,23 @@ if ($cgi->param('login')) {
 } elsif ($cgi->param('show_disclaimer')) {
   show_disclaimer_page($session);
 } elsif ($cgi->param('download')) { 
-  my $file = download_data($downloads_dir);
-  open(my $DLFILE, '<', "$downloads_dir/$file");
+  my $panel = $cgi->param('download');
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
+  my $stamp = join('_', ($mday, $mon, $hour, $min, $sec));
+  my $tmp_dir = "$downloads_dir/$stamp";
+  make_path($tmp_dir);
+  my $file = download_data($tmp_dir, $panel);
+  open(my $DLFILE, '<', "$tmp_dir/$file");
   print $cgi->header(
           -type => 'application/x-download',
           -attachment => $file,
-          -Content_length  => -s "$downloads_dir/$file",
+          -Content_length  => -s "$tmp_dir/$file",
         );
   binmode $DLFILE;
   print while <$DLFILE>;
   undef ($DLFILE);
-  unlink "$downloads_dir/$file";
+  unlink "$tmp_dir/$file";
+  remove_tree($tmp_dir);
   _redirect("show_downloads=all");
 }
 elsif ($cgi->param('edit_DDD_category')) {
