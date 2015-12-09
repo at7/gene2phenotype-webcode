@@ -5,8 +5,24 @@
     <li>
       <form id="download_form" action="./handler.cgi" method="get">
         <fieldset>
-          <input type="hidden" name="download" value="all"/>
-          <a href='#' onclick="document.getElementById('download_form').submit();">All DD gene-disease pairs and attributes (G2P.csv)<img src="../images/export.png" alt="export"></a>
+          <input type="hidden" name="download" value="ALL"/>
+          <a href='#' onclick="document.getElementById('download_form').submit();">All gene-disease pairs and attributes (G2P.csv.gz)<img src="../images/export.png" alt="export"></a>
+        </fieldset>
+      </form>
+    </li>
+    <li>
+      <form id="download_form_DD" action="./handler.cgi" method="get">
+        <fieldset>
+          <input type="hidden" name="download" value="DD"/>
+          <a href='#' onclick="document.getElementById('download_form_DD').submit();">DD gene-disease pairs and attributes (DDG2P.csv.gz)<img src="../images/export.png" alt="export"></a>
+        </fieldset>
+      </form>
+    </li>
+    <li>
+      <form id="download_form_Skin" action="./handler.cgi" method="get">
+        <fieldset>
+          <input type="hidden" name="download" value="Skin"/>
+          <a href='#' onclick="document.getElementById('download_form_Skin').submit();">Skin gene-disease pairs and attributes (SkinG2P.csv.gz)<img src="../images/export.png" alt="export"></a>
         </fieldset>
       </form>
     </li>
