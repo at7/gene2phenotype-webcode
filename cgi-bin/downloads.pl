@@ -47,19 +47,27 @@ sub download_data_api {
 
 sub download_data {
   my $downloads_dir = shift;
-  my $csv_file_name = "G2P.csv";
+  my $panel_name = shift;
+  my $csv_file_name = 'G2P.csv';
+  if ($panel_name eq 'DD') {
+    $csv_file_name = 'DDG2P.csv';
+  } elsif ($panel_name eq 'Skin') {
+    $csv_file_name = 'SkinG2P.csv';
+  } else {
+    $csv_file_name = 'G2P.csv';
+  }
   my $csv_file = "$downloads_dir/$csv_file_name";
 
   my $dbh = $registry->{dbh};
 
   my $csv = Text::CSV->new ( { binary => 1, eol => "\r\n" } ) or die "Cannot use CSV: ".Text::CSV->error_diag ();
   open my $fh, ">:encoding(utf8)", "$csv_file" or die "$csv_file: $!";
-  $csv->print($fh, ['gene symbol', 'gene mim', 'disease name', 'disease mim', 'DDD category', 'allelic requirement', 'mutation consequence', 'phenotypes', 'organ specificity list', 'pmids']);
+  $csv->print($fh, ['gene symbol', 'gene mim', 'disease name', 'disease mim', 'DDD category', 'allelic requirement', 'mutation consequence', 'phenotypes', 'organ specificity list', 'pmids', 'panel']);
 
   $csv->eol ("\r\n");
 
   my $gfd_attribute_tables = {
-    phenotype => {sql => 'SELECT gfdp.genomic_feature_disease_id, p.name FROM genomic_feature_disease_phenotype gfdp, phenotype p WHERE gfdp.phenotype_id = p.phenotype_id;'},
+    phenotype => {sql => 'SELECT gfdp.genomic_feature_disease_id, p.stable_id FROM genomic_feature_disease_phenotype gfdp, phenotype p WHERE gfdp.phenotype_id = p.phenotype_id;'},
     organ => {sql => 'SELECT gfdo.genomic_feature_disease_id, o.name FROM genomic_feature_disease_organ gfdo, organ o WHERE gfdo.organ_id = o.organ_id'},
     publication => {sql => 'SELECT gfdp.genomic_feature_disease_id, p.pmid FROM genomic_feature_disease_publication gfdp, publication p WHERE gfdp.publication_id = p.publication_id;'},
   };
@@ -82,60 +90,47 @@ sub download_data {
     my ($id, $value) = @$row;
     $attribs->{$id} = $value;
   }
+  my $where = ($panel_name eq 'ALL') ? '' : "WHERE a.value = '$panel_name'";
 
-  $sth = $dbh->prepare(q{
-    SELECT gfd.genomic_feature_disease_id, gf.gene_symbol, gf.mim, d.name, d.mim, gfd.DDD_category_attrib, gfda.allelic_requirement_attrib, gfda.mutation_consequence_attrib
+  $sth = $dbh->prepare(qq{
+    SELECT gfd.genomic_feature_disease_id, gf.gene_symbol, gf.mim, d.name, d.mim, gfd.DDD_category_attrib, gfda.allelic_requirement_attrib, gfda.mutation_consequence_attrib, a.value
     FROM genomic_feature_disease gfd
     LEFT JOIN genomic_feature_disease_action gfda ON gfd.genomic_feature_disease_id = gfda.genomic_feature_disease_id
     LEFT JOIN genomic_feature gf ON gfd.genomic_feature_id = gf.genomic_feature_id
     LEFT JOIN disease d ON gfd.disease_id = d.disease_id
+    LEFT JOIN attrib a ON gfd.panel_attrib = a.attrib_id
+    $where;
   });
 
   $sth->execute() or die 'Could not execute statement: ' . $sth->errstr;
-  while (my @row = $sth->fetchrow_array()) {
-    my $gfd_id = shift @row;
-    $row[0] ||= 'No gene symbol';
-    $row[1] ||= 'No gene mim';
-    $row[2] ||= 'No disease name';
-    $row[3] ||= 'No disease mim';
-    if ($row[4]) {
-      $row[4] = $attribs->{$row[4]};
-    } else {
-      $row[4] = 'No DDD category';
-    }
-    if ($row[5]) {
-      my @allelic_requirements = ();
-      foreach my $id (split(',', $row[5])) {
-        push @allelic_requirements, $attribs->{$id};
-      }
-      $row[5] = join(',', @allelic_requirements);
-    } else {
-      $row[5] = undef;
-    }
-    if ($row[6]) {
-      my @mutation_consequences = ();
-      foreach my $id (split(',', $row[6])) {
-        push @mutation_consequences, $attribs->{$id};
-      }
-      $row[6] = join(',', @mutation_consequences);
-    } else {
-      $row[6] = undef;
-    }
+  my ($gfd_id, $gene_symbol, $gene_mim, $disease_name, $disease_mim, $DDD_category_attrib, $ar_attrib, $mc_attrib, $panel);
+  $sth->bind_columns(\($gfd_id, $gene_symbol, $gene_mim, $disease_name, $disease_mim, $DDD_category_attrib, $ar_attrib, $mc_attrib, $panel));
+  while ( $sth->fetch ) {
+    $gene_symbol ||= 'No gene symbol';
+    $gene_mim ||= 'No gene mim';
+    $disease_name ||= 'No disease name';
+    $disease_mim ||= 'No disease mim';
+    my $DDD_category = ($DDD_category_attrib) ? $attribs->{$DDD_category_attrib} : 'No DDD category';
+    my $allelic_requirement = ($ar_attrib) ? join(',', map { $attribs->{$_} } split(',', $ar_attrib)) : undef;
+    my $mutation_consequence = ($mc_attrib) ? join(',', map { $attribs->{$_} } split(',', $mc_attrib)) : undef;
 
+    my @annotations = ();
     if ($gfd_attributes->{$gfd_id}) {
       foreach my $table (qw/phenotype organ publication/) {
         if ($gfd_attributes->{$gfd_id}->{$table}) {
-          push @row, join(';', keys %{$gfd_attributes->{$gfd_id}->{$table}});
+          push @annotations, join(';', keys %{$gfd_attributes->{$gfd_id}->{$table}});
         } else {
-          push @row, undef;
+          push @annotations, undef;
         }
       }
     } else {
-      push @row, (undef, undef, undef);
+      push @annotations, (undef, undef, undef);
     }
+
+    my @row = ($gene_symbol, $gene_mim, $disease_name, $disease_mim, $DDD_category, $allelic_requirement, $mutation_consequence, @annotations, $panel);
+
     $csv->print ($fh, \@row);
   }
-
   close $fh or die "$csv: $!";
   system("/usr/bin/gzip $csv_file");
   return "$csv_file_name.gz"
