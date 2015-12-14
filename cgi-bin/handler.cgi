@@ -114,6 +114,8 @@ if ($cgi->param('login')) {
   show_downloads_page($session);
 } elsif ($cgi->param('show_disclaimer')) {
   show_disclaimer_page($session);
+} elsif ($cgi->param('show_documentation')) {
+  show_documentation_page($session);
 } elsif ($cgi->param('download')) { 
   my $panel = $cgi->param('download');
   my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
