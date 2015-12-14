@@ -14,7 +14,14 @@
             </form>
           </li>
           <li>&middot;</li>
-          <li>Help</li>
+          <li>
+            <form id="documentation_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="show_documentation" value="view"/>
+                <a href='#' onclick="document.getElementById('documentation_form').submit();">Documentation</a>
+              </fieldset>
+            </form>
+          </li>
         </ul>
       </div>
       <div class="container">
