@@ -160,7 +160,7 @@ dd {
 /*  border-bottom-color: #D4D8D1;*/
 }
 
-#disclaimer_form {
+#disclaimer_form, #documentation_form {
   display: inline-block;
 }
 
