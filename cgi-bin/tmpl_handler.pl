@@ -168,6 +168,15 @@ sub show_disclaimer_page {
   return;
 }
 
+sub show_documentation_page {
+  my $session = shift;
+  set_login_status($tmpl, $session);
+  set_default_panel($tmpl, $session);
+  $tmpl->param(documentation => 1);
+  print $tmpl->output();
+  return;
+}
+
 sub identify_search_type {
   my $search_term = shift;
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
