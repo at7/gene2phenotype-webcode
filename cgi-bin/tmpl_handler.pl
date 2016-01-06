@@ -187,6 +187,12 @@ sub identify_search_type {
   if ($disease_adaptor->fetch_by_name($search_term)) {
     return 'disease_name';
   }
+  my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
+  my $genomic_features = $genomic_feature_adaptor->fetch_all_by_substring($search_term);
+  if (@$diseases || @$genomic_features) {
+    return 'contains_search_term'; 
+  }
+
   return 'no_entry_in_db';
 }
 
@@ -307,41 +313,103 @@ sub display_search_results {
   my $genomic_feature_adaptor = $registry->get_adaptor('genomic_feature');
   my $genomic_feature_disease_adaptor = $registry->get_adaptor('genomic_feature_disease');
 
-  my $gfds;
-  if ($search_type eq 'disease_name') {
-    my $disease = $disease_adaptor->fetch_by_name($search_term); 
-    my $name = $disease->name;
-    my $dbID = $disease->dbID;
-    $tmpl->param(disease_results => [{disease_name => $name, search_type => 'disease', dbID => $dbID}]); 
-
-    $gfds = $genomic_feature_disease_adaptor->fetch_all_by_Disease_panel($disease, $panel); 
-  } elsif ($search_type eq 'gene_symbol') {
-    my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($search_term) || $genomic_feature_adaptor->fetch_by_synonym($search_term);
-    my $name = $genomic_feature->gene_symbol;
-    my $dbID = $genomic_feature->dbID;
-    $tmpl->param(gene_results => [{gene_symbol => $name, search_type => 'gene_symbol', dbID => $dbID}]);
-    $gfds = $genomic_feature_disease_adaptor->fetch_all_by_GenomicFeature_panel($genomic_feature, $panel);
-  } else {
-    $gfds = [];
-  }
-
-  my @gfd_results = ();
-  if (@$gfds) {
-    foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
-      my $genomic_feature = $gfd->get_GenomicFeature;
-      my $gene_symbol = $genomic_feature->gene_symbol;
-      my $disease = $gfd->get_Disease;
+  if ($search_type eq 'contains_search_term') {
+    my $lc_search_term = lc $search_term;
+    my $uc_search_term = uc $search_term;
+    my @disease_names = ();
+    my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
+    foreach my $disease ( sort { $a->name cmp $b->name } @$diseases) {
       my $disease_name = $disease->name;
-      my $dbID = $gfd->dbID;
-      my $panel = $gfd->panel;
-      push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
-    }
-  }
-  $tmpl->param(gfd_results => \@gfd_results);
-  $tmpl->param(search_term => $search_term);
-  $tmpl->param(display_search_results => 1);
-  print $tmpl->output();
+      my $dbID = $disease->dbID;
 
+      $disease_name =~ s/$lc_search_term/<b>$lc_search_term<\/b>/g;
+      $disease_name =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
+
+      my $gfds = $genomic_feature_disease_adaptor->fetch_all_by_Disease_panel($disease, $panel); 
+      my @gfd_results = ();
+      foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
+        my $genomic_feature = $gfd->get_GenomicFeature;
+        my $gene_symbol = $genomic_feature->gene_symbol;
+        my $disease = $gfd->get_Disease;
+        my $disease_name = $disease->name;
+        my $dbID = $gfd->dbID;
+        my $panel = $gfd->panel;
+        push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+      }
+      push @disease_names, {display_disease_name => $disease_name, gfd_results => \@gfd_results, search_type => 'disease', dbID => $dbID};
+    }   
+    if (@disease_names) {
+      $tmpl->param(substring_disease_results => \@disease_names);
+    }
+    my @gene_names = ();
+    my $genes = $genomic_feature_adaptor->fetch_all_by_substring($search_term); 
+    foreach my $gene ( sort { $a->gene_symbol cmp $b->gene_symbol } @$genes) {
+      my $gene_symbol = $gene->gene_symbol;
+      my $dbID = $gene->dbID;
+
+      $gene_symbol =~ s/$lc_search_term/<b>$lc_search_term<\/b>/g;
+      $gene_symbol =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
+
+      my $gfds = $genomic_feature_disease_adaptor->fetch_all_by_GenomicFeature_panel($gene, $panel); 
+      my @gfd_results = ();
+      foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
+        my $genomic_feature = $gfd->get_GenomicFeature;
+        my $gene_symbol = $genomic_feature->gene_symbol;
+        my $disease = $gfd->get_Disease;
+        my $disease_name = $disease->name;
+        my $dbID = $gfd->dbID;
+        my $panel = $gfd->panel;
+        push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+      }
+
+      push @gene_names, {gene_symbol => $gene_symbol, gfd_results => \@gfd_results, search_type => 'gene_symbol', dbID => $dbID};
+    }   
+    if (@gene_names) {
+      $tmpl->param(substring_gene_results => \@gene_names);
+    }
+
+    $tmpl->param(search_term => $search_term);
+    $tmpl->param(display_search_results => 1);
+    $tmpl->param(substring_results => 1);
+
+    print $tmpl->output();
+
+  } else {
+    my $gfds;
+    if ($search_type eq 'disease_name') {
+      my $disease = $disease_adaptor->fetch_by_name($search_term); 
+      my $name = $disease->name;
+      my $dbID = $disease->dbID;
+      $tmpl->param(disease_results => [{disease_name => $name, search_type => 'disease', dbID => $dbID}]); 
+
+      $gfds = $genomic_feature_disease_adaptor->fetch_all_by_Disease_panel($disease, $panel); 
+    } elsif ($search_type eq 'gene_symbol') {
+      my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($search_term) || $genomic_feature_adaptor->fetch_by_synonym($search_term);
+      my $name = $genomic_feature->gene_symbol;
+      my $dbID = $genomic_feature->dbID;
+      $tmpl->param(gene_results => [{gene_symbol => $name, search_type => 'gene_symbol', dbID => $dbID}]);
+      $gfds = $genomic_feature_disease_adaptor->fetch_all_by_GenomicFeature_panel($genomic_feature, $panel);
+    } else {
+      $gfds = [];
+    }
+
+    my @gfd_results = ();
+    if (@$gfds) {
+      foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
+        my $genomic_feature = $gfd->get_GenomicFeature;
+        my $gene_symbol = $genomic_feature->gene_symbol;
+        my $disease = $gfd->get_Disease;
+        my $disease_name = $disease->name;
+        my $dbID = $gfd->dbID;
+        my $panel = $gfd->panel;
+        push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+      }
+    }
+    $tmpl->param(gfd_results => \@gfd_results);
+    $tmpl->param(search_term => $search_term);
+    $tmpl->param(display_search_results => 1);
+    print $tmpl->output();
+  }
 }
 
 sub display_data {
