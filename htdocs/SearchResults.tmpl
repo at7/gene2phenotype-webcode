@@ -1,6 +1,79 @@
 <div class="container">
   <h3>Search results for <TMPL_VAR NAME=search_term>:</h3>
   <ul>
+    <TMPL_IF NAME=substring_results>
+      <TMPL_IF NAME=substring_disease_results>
+        <li>
+          <div>
+            <h4>Diseases:</h4>
+            <ul>
+              <TMPL_LOOP NAME=substring_disease_results>
+                <li>
+                  <form id="<TMPL_VAR NAME=dbID>" action="./handler.cgi" method="get">
+                    <fieldset>
+                      <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+                      <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
+                    </fieldset>  
+                    <a href='#' onclick="document.getElementById(<TMPL_VAR NAME=dbID>).submit();"><TMPL_VAR NAME=display_disease_name></a>
+                  </form>
+                </li>
+                <TMPL_IF NAME=gfd_results>
+                  <ul>
+                    <TMPL_LOOP NAME=gfd_results>
+                      <li>
+                        <form id="<TMPL_VAR NAME=dbID>" action="./handler.cgi" method="get">
+                          <fieldset>
+                            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+                            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
+                          </fieldset>  
+                          <a href='#' onclick="document.getElementById(<TMPL_VAR NAME=dbID>).submit();"><strong>Panel:</strong> <em><TMPL_VAR NAME=GFD_panel></em> <strong>Gene:</strong> <em><TMPL_VAR NAME=gene_symbol></em> <strong>Disease:</strong> <em><TMPL_VAR NAME=disease_name></em></a>
+                        </form>
+                      </li>
+                    </TMPL_LOOP>
+                  </ul> 
+                </TMPL_IF>
+              </TMPL_LOOP>
+            </ul>
+          </div>        
+        </li>
+      </TMPL_IF>  
+      <TMPL_IF NAME=substring_gene_results>
+        <li>
+          <div>
+            <h4>Genes:</h4>
+            <ul>
+              <TMPL_LOOP NAME=substring_gene_results>
+                <li>
+                  <form id="<TMPL_VAR NAME=dbID>" action="./handler.cgi" method="get">
+                    <fieldset>
+                      <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+                      <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
+                    </fieldset>  
+                    <a href='#' onclick="document.getElementById(<TMPL_VAR NAME=dbID>).submit();"><TMPL_VAR NAME=gene_symbol></a>
+                  </form>
+                </li>
+                <TMPL_IF NAME=gfd_results>
+                  <ul>
+                    <TMPL_LOOP NAME=gfd_results>
+                      <li>
+                        <form id="<TMPL_VAR NAME=dbID>" action="./handler.cgi" method="get">
+                          <fieldset>
+                            <input type="hidden" name="search_type" value="<TMPL_VAR NAME=search_type>"/>
+                            <input type="hidden" name="dbID" value="<TMPL_VAR NAME=dbID>"/>
+                          </fieldset>  
+                          <a href='#' onclick="document.getElementById(<TMPL_VAR NAME=dbID>).submit();"><strong>Panel:</strong> <em><TMPL_VAR NAME=GFD_panel></em> <strong>Gene:</strong> <em><TMPL_VAR NAME=gene_symbol></em> <strong>Disease:</strong> <em><TMPL_VAR NAME=disease_name></em></a>
+                        </form>
+                      </li>
+                    </TMPL_LOOP>
+                  </ul> 
+                </TMPL_IF>
+              </TMPL_LOOP>
+            </ul>
+          </div>        
+        </li>
+      </TMPL_IF>  
+    </TMPL_IF>
+
     <TMPL_IF NAME=gene_results>
       <li>
         <div>
