@@ -327,7 +327,7 @@ sub display_search_results {
 
       my $gfds = $genomic_feature_disease_adaptor->fetch_all_by_Disease_panel($disease, $panel); 
       my @gfd_results = ();
-      foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds) {
+      foreach my $gfd (sort { ( $a->panel cmp $b->panel ) || ( $a->get_GenomicFeature->gene_symbol cmp $b->get_GenomicFeature->gene_symbol ) } @$gfds) {
         my $genomic_feature = $gfd->get_GenomicFeature;
         my $gene_symbol = $genomic_feature->gene_symbol;
         my $disease = $gfd->get_Disease;
